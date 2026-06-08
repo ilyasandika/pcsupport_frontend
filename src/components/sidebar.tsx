@@ -4,7 +4,6 @@ import {BukitAsam} from "./logo.tsx";
 import {NavLink} from "react-router";
 
 export const Sidebar = () => {
-    const [activeMenu, setActiveMenu] = useState('dashboard');
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const menuItems = [
@@ -53,7 +52,7 @@ export const Sidebar = () => {
 			    className={( props =>
 				`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all
 				${props.isActive ? 
-				    'bg-[#344689] text-white shadow-sm' 
+				    'bg-ptba-primary text-white' 
 				    : 'text-gray-700 hover:bg-gray-100'}
 				`
 				)}
@@ -70,13 +69,13 @@ export const Sidebar = () => {
 	    <div className="p-4 border-t border-gray-200">
 		<div className="bg-blue-50 rounded-lg p-4">
 		    <div className="flex items-center gap-2 mb-2">
-			<div className="w-8 h-8 bg-[#344689] rounded-full flex items-center justify-center">
+			<div className="w-8 h-8 bg-ptba-primary rounded-full flex items-center justify-center">
 			    <HelpCircle className="w-4 h-4 text-white" />
 			</div>
 			<span className="font-semibold text-sm text-gray-900">Need Help?</span>
 		    </div>
 		    <p className="text-xs text-gray-600 mb-3">Contact IT support team</p>
-		    <button className="w-full bg-[#344689] text-white text-xs font-medium py-2 rounded-lg hover:bg-[#2a3670] transition-colors">
+		    <button className="w-full bg-ptba-primary text-white text-xs font-medium py-2 rounded-lg hover:bg-[#2a3670] transition-colors">
 			Get Support
 		    </button>
 		</div>

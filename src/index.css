@@ -1,1 +1,10 @@
 @import "tailwindcss";
+@theme {
+    --color-ptba-primary: #344689;
+    --color-ptba-yellow: theme('colors.yellow.400');
+    --color-ptba-orange: theme('colors.orange.400');
+    --color-ptba-common: theme('colors.blue.200');
+    --color-ptba-green: theme('colors.green.400');
+
+    --breakpoint-3xl: 112rem;
+}

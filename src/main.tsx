@@ -2,9 +2,10 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import {createBrowserRouter, RouterProvider} from "react-router";
-import {Dashboard} from "./pages/Dashboard.tsx";
 import {Layout} from "./Layout.tsx";
-import {Tickets} from "./pages/Tickets.tsx"
+import {Dashboard} from "./features/dashboard/pages/Dashboard.tsx";
+import {Tickets} from "lucide-react";
+
 
 
 

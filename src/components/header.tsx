@@ -24,7 +24,7 @@ export const Header = ()=> {
 			<span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
 		    </button>
 		    <button className="flex items-center gap-2 px-2 sm:px-3 py-2 hover:bg-gray-100 rounded-lg transition-colors">
-			<div className="w-8 h-8 bg-[#344689] rounded-full flex items-center justify-center text-white text-sm">
+			<div className="w-8 h-8 bg-ptba-primary rounded-full flex items-center justify-center text-white text-sm">
 			    AD
 			</div>
 			<span className="text-sm font-medium text-gray-700 hidden sm:inline">Admin User</span>
