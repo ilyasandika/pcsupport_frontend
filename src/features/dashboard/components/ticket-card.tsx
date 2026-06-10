@@ -36,7 +36,7 @@ export const TicketCard = ({label, value, status, Icon}: ticketCardProps) => {
 		<Icon className={`w-6 h-6 sm:w-8 sm:h-8 ${currentStyle.text}`} />
 		<span className={`text-xs font-medium ${currentStyle.bg} px-2 sm:px-3 py-1 rounded-full`}>{capitalizeWords(status)}</span>
 	    </div>
-	    <div className="text-2xl sm:text-4xl font-bold mb-1">{value}</div>
+	    <div className="text-xl sm:text-3xl font-bold mb-1">{value}</div>
 	    <div className="text-blue-100 text-xs sm:text-sm">{label}</div>
 	</div>
     )

@@ -50,10 +50,10 @@ export const AssetCard = ({assetType = 'nb', value}: assetCardProps) => {
 
     return (
 	<div className={`${cardBg} rounded-xl p-4 sm:p-6 border ${border} `}>
-	    <div className={`w-10 h-10 sm:w-12 sm:h-12 ${iconBg} rounded-lg flex items-center justify-center mb-3 sm:mb-4`}>
+	    <div className={`w-8 h-8 sm:w-12 sm:h-12 ${iconBg} rounded-lg flex items-center justify-center mb-3 sm:mb-4`}>
 		<Icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
 	    </div>
-	    <div className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">{value}</div>
+	    <div className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">{value}</div>
 	    <div className="text-xs sm:text-sm text-gray-600 font-medium">{capitalizeWords(currentAssetLabel)}</div>
 	    {/*<div className="mt-2 text-xs text-green-600 font-medium">+12 this month</div>*/}
 	</div>

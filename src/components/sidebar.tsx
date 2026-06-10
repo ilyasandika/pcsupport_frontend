@@ -14,20 +14,21 @@ export const Sidebar = () => {
 	{ id: 'users', path: 'users',  label: 'Users', icon: Users },
 	{ id: 'documentation', path: 'documentation',  label: 'Documentation', icon: FileText },
 	{ id: 'settings', path: 'settings',  label: 'Settings', icon: Settings },
-	{ id: 'help', path: 'help',  label: 'Help Center', icon: HelpCircle },
+	// { id: 'help', path: 'help',  label: 'Help Center', icon: HelpCircle },
     ];
 
     return (
 	<aside className={`
-        fixed lg:static inset-y-0 left-0 z-50
-        w-64 bg-white border-r border-gray-200 flex flex-col
+        fixed inset-y-0 left-0 z-50
+        w-60 bg-white border-r border-gray-200 flex flex-col
         transform transition-transform duration-300 ease-in-out
+        
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
 	    {/* Sidebar Header */}
-	    <div className="h-22 border-b border-gray-200 flex items-center px-6">
-		<div className="flex items-center justify-between">
-		    <BukitAsam size={38}/>
+	    <div className="h-18 border-b border-gray-200 flex items-center px-6">
+		<div className="flex items-center justify-between align-middle mx-auto">
+		    <BukitAsam size={32}/>
 		    {/* Close button for mobile */}
 		    <button
 			onClick={() => setIsSidebarOpen(false)}
@@ -58,7 +59,7 @@ export const Sidebar = () => {
 				)}
 
 			>
-			    <Icon className="w-5 h-5" />
+			    <Icon className="w-4 h-4" />
 			    <span className="font-medium text-sm">{item.label}</span>
 			</NavLink>
 		    );
@@ -66,7 +67,7 @@ export const Sidebar = () => {
 	    </nav>
 
 	    {/* Sidebar Footer */}
-	    <div className="p-4 border-t border-gray-200">
+	    <div className="hidden xl:block p-4 border-t border-gray-200">
 		<div className="bg-blue-50 rounded-lg p-4">
 		    <div className="flex items-center gap-2 mb-2">
 			<div className="w-8 h-8 bg-ptba-primary rounded-full flex items-center justify-center">

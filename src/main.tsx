@@ -3,10 +3,8 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import {createBrowserRouter, RouterProvider} from "react-router";
 import {Layout} from "./Layout.tsx";
-import {Dashboard} from "./features/dashboard/pages/Dashboard.tsx";
-import {Tickets} from "lucide-react";
-
-
+import {DashboardPage} from "./features/dashboard/pages/dashboard.page.tsx";
+import {TicketPage} from "./features/ticket/pages/ticket.page.tsx";
 
 
 const router = createBrowserRouter([
@@ -16,11 +14,11 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Dashboard/>
+                element: <DashboardPage/>
             },
             {
                 path: 'tickets',
-                element: <Tickets />
+                element: <TicketPage/>
             }
         ]
     }

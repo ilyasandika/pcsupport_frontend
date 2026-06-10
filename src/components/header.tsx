@@ -3,7 +3,7 @@ import {Bell, Menu} from "lucide-react";
 export const Header = ()=> {
     return (
 	// px-6 py-6 sm:px-6 lg:px-8
-	<header className="bg-white border-b border-gray-200 h-22 px-8 flex items-center">
+	<header className="lg:sticky lg:top-0 z-49 w-full bg-white border-b border-gray-200 h-18 px-8 flex items-center">
 	    <div className="flex items-center justify-between w-full">
 		<div className="flex items-center gap-3">
 		    {/* Mobile Menu Button */}
@@ -14,7 +14,7 @@ export const Header = ()=> {
 			<Menu className="w-6 h-6 text-gray-600" />
 		    </button>
 		    <div>
-			<h2 className="text-lg sm:text-xl font-bold text-gray-900">Dashboard</h2>
+			<h2 className="text-md sm:text-lg font-bold text-gray-900">Dashboard</h2>
 			<p className="text-xs sm:text-sm text-gray-500 hidden sm:block">Welcome back, Admin User</p>
 		    </div>
 		</div>
