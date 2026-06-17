@@ -5,6 +5,7 @@ import {createBrowserRouter, RouterProvider} from "react-router";
 import {Layout} from "./Layout.tsx";
 import {DashboardPage} from "./features/dashboard/pages/dashboard.page.tsx";
 import {TicketPage} from "./features/ticket/pages/ticket.page.tsx";
+import {AssetPage} from "./features/asset/pages/asset.page.tsx";
 
 
 const router = createBrowserRouter([
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
             {
                 path: 'tickets',
                 element: <TicketPage/>
+            },
+            {
+                path: 'assets',
+                element: <AssetPage/>
             }
         ]
     }

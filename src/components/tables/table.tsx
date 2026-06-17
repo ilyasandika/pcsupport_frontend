@@ -1,38 +1,43 @@
 import { type Table, flexRender } from '@tanstack/react-table';
-import {ChevronLeft, ChevronRight, Plus, Search} from "lucide-react";
+import {ChevronLeft, ChevronRight, FunnelPlus, Plus, Search} from "lucide-react";
 import { useState } from "react";
 
 interface DataTableProps<TData> {
     table: Table<TData>;
     isLoading?: boolean;
+    name: string;
 }
 
-export default function Table<TData>({ table, isLoading = false }: DataTableProps<TData>) {
+export default function Table<TData>({ table, isLoading = false, name }: DataTableProps<TData>) {
     const [activeFilter, setActiveFilter] = useState<boolean>(false);
 
     return (
 	<div className="w-full space-y-4">
 	    {/* TOOLBAR ATAS */}
-	    <div className="flex items-center px-1 gap-4">
-		<button
-		    onClick={() => setActiveFilter(!activeFilter)}
-		    className={`w-32 flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg border transition-all shadow-sm
+	    <div className="flex justify-between">
+		<span className="text-xl text-ptba-text font-bold">
+		    {name}
+		</span>
+		<div className="flex items-center px-1 gap-4">
+		    <button
+			onClick={() => setActiveFilter(!activeFilter)}
+			className={`flex items-center gap-2 p-2 text-xs font-medium rounded-lg border transition-all shadow-sm
                         ${activeFilter
-			? 'bg-blue-50 text-ptba-primary border-blue-200 hover:bg-blue-100'
-			: 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
-		    }`}
-		>
-		    <Search className="w-4 h-4" />
-		    <span>{activeFilter ? "Hide Filter" : "Filter"}</span>
-		</button>
+			    ? 'bg-blue-50 text-ptba-primary border-blue-200 hover:bg-blue-100'
+			    : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+			}`}
+		    >
+			<FunnelPlus className="w-4 h-4 cursor-pointer" />
+		    </button>
 
-		<button
-		    onClick={() => {}} // Ganti dengan fungsi handler-mu (misal buka modal)
-		    className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-white bg-ptba-primary border border-ptba-primary rounded-lg shadow-sm transition-all cursor-pointer"
-		>
-		    <Plus className="w-4 h-4" />
-		    <span>Tambah Tiket</span>
-		</button>
+		    <button
+			onClick={() => {}} // Ganti dengan fungsi handler-mu (misal buka modal)
+			className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-white bg-ptba-primary border border-ptba-primary rounded-lg shadow-sm transition-all cursor-pointer"
+		    >
+			<Plus className="w-4 h-4" />
+			<span>Create New Ticket</span>
+		    </button>
+		</div>
 	    </div>
 
 	    <div className="overflow-x-auto border border-gray-200 rounded-xl bg-white shadow-sm
@@ -96,7 +101,7 @@ export default function Table<TData>({ table, isLoading = false }: DataTableProp
 				{row.getVisibleCells().map((cell) => (
 				    <td
 					key={cell.id}
-					className="px-6 py-3 text-ptba-text text-xs font-normal border-r border-gray-100 last:border-r-0"
+					className="px-6 py-3 text-ptba-text font-normal border-r border-gray-100 last:border-r-0"
 					style={{ width: `${cell.column.getSize()}px` }}
 				    >
 					<div className="whitespace-normal break-words block line-clamp-2">

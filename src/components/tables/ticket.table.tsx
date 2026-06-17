@@ -24,9 +24,6 @@ export const TicketTable = () =>  {
     }, [])
 
     const columnHelper = createColumnHelper<ITicket>();
-
-
-    // B. Definisi Kolom Menggunakan Column Helper
     const columns: ColumnDef<ITicket, any>[] = useMemo(
 	() => [
 	    columnHelper.accessor('fullNumber', {
@@ -157,6 +154,6 @@ export const TicketTable = () =>  {
     });
 
 // E. Render Halaman
-    return (<Table table={table} />)
+    return (<Table table={table} name='All Tickets' />)
 
 }
