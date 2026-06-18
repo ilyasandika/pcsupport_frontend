@@ -4,9 +4,9 @@ import {AssetCard} from "../components/asset-card.tsx";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import {useEffect, useState} from "react";
 import type {ITicketSummary} from "../../../types/ticket.type.ts";
-import {TicketRepository} from "../../../data/repositories/ticket.repository.tsx";
+import {TicketRepository} from "../../../data/repositories/ticket.repository.ts";
 import type {IAssetSummary} from "../../../types/asset.type.ts";
-import {AssetRepository} from "../../../data/repositories/asset.repository.tsx";
+import {AssetRepository} from "../../../data/repositories/asset.repository.ts";
 import type {IChartData} from "../../../types/common.type.ts";
 
 

@@ -5,24 +5,17 @@ import {
     getCoreRowModel, getFilteredRowModel, getPaginationRowModel,
     useReactTable
 } from "@tanstack/react-table";
-import {useEffect, useMemo, useState} from "react";
+import {useMemo, useState} from "react";
 import Table from "./table.tsx";
 import {ActionButtons} from "./action-button.tsx";
 import type {IAsset} from "../../types/asset.type.ts";
-import {AssetRepository} from "../../data/repositories/asset.repository.tsx";
 
-export const AssetTable = () =>  {
-    const [assets, setAssets] = useState<IAsset[]>([]);
+interface AssetTableProps {
+    data: IAsset[]
+    isLoading?: boolean
+}
 
-    useEffect(()=> {
-	const loadAssets = async () => {
-	    await AssetRepository.getAssets()
-		.then((data) => setAssets(data))
-	}
-
-	loadAssets();
-    }, [])
-
+export const AssetTable = ({data, isLoading = false}: AssetTableProps) =>  {
     const columnHelper = createColumnHelper<IAsset>();
     const columns: ColumnDef<IAsset, any>[] = useMemo(
 	() => [
@@ -151,7 +144,7 @@ export const AssetTable = () =>  {
     const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
 
     const table = useReactTable<IAsset>({
-	data : assets,
+	data,
 	columns,
 	state: {
 	    columnFilters,
@@ -165,6 +158,6 @@ export const AssetTable = () =>  {
 	getPaginationRowModel: getPaginationRowModel(),
     });
 
-    return (<Table table={table} name='All Assets' />)
+    return (<Table table={table} name='All Assets' isLoading={isLoading}/>)
 
 }

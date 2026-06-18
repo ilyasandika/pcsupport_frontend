@@ -5,24 +5,17 @@ import {
     getCoreRowModel, getFilteredRowModel, getPaginationRowModel,
     useReactTable
 } from "@tanstack/react-table";
-import {useEffect, useMemo, useState} from "react";
+import {useMemo, useState} from "react";
 import Table from "./table.tsx";
 import {ActionButtons} from "./action-button.tsx";
 import type {ITicket} from "../../types/ticket.type.ts";
-import {TicketRepository} from "../../data/repositories/ticket.repository.tsx";
 
-export const TicketTable = () =>  {
-    const [tickets, setTickets] = useState<ITicket[]>([]);
+interface TicketTableProps {
+    data: ITicket[]
+    isLoading?: boolean
+}
 
-    useEffect(()=> {
-	const loadTicket = async () => {
-	    await TicketRepository.getAllTickets()
-		.then((data) => setTickets(data))
-	}
-
-	loadTicket();
-    }, [])
-
+export const TicketTable = ({data, isLoading=false}: TicketTableProps ) =>  {
     const columnHelper = createColumnHelper<ITicket>();
     const columns: ColumnDef<ITicket, any>[] = useMemo(
 	() => [
@@ -139,7 +132,7 @@ export const TicketTable = () =>  {
     const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
 
     const table = useReactTable<ITicket>({
-	data : tickets,
+	data,
 	columns,
 	state: {
 	    columnFilters,
@@ -154,6 +147,6 @@ export const TicketTable = () =>  {
     });
 
 // E. Render Halaman
-    return (<Table table={table} name='All Tickets' />)
+    return (<Table table={table} name='All Tickets' isLoading={isLoading} />)
 
 }

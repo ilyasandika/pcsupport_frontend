@@ -3,15 +3,19 @@ import ticketDummy from '../local/ticket/ticket.data.json'
 import ticketSummaryDummy from '../local/ticket/ticket-summary.data.json'
 import type {IChartData} from "../../types/common.type.ts";
 import ticketTren from "../local/ticket/ticket-tren.data.json"
+import {delay} from "../../helper/helper.tsx";
 
 const ticketLocal: ITicketRepository = {
     getAllTickets: async (): Promise<ITicket[]> => {
+	await delay();
 	return ticketDummy as ITicket[];
     },
     getTicketSummary: async (): Promise<ITicketSummary> => {
+	await delay();
 	return ticketSummaryDummy as ITicketSummary;
     },
     getTicketTrend: async (): Promise<IChartData[]> => {
+	await delay();
 	return ticketTren as IChartData[];
     }
 }
