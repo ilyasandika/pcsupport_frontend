@@ -10,7 +10,7 @@ export const Sidebar = () => {
 	{ id: 'dashboard', path: '',  label: 'Dashboard', icon: LayoutDashboard },
 	{ id: 'tickets', path: 'tickets',  label: 'Tickets', icon: Ticket },
 	{ id: 'assets', path: 'assets',  label: 'Assets', icon: Package },
-	{ id: 'reports', path: 'reports',  label: 'Reports', icon: BarChart3 },
+	// { id: 'reports', path: 'reports',  label: 'Reports', icon: BarChart3 },
 	{ id: 'users', path: 'users',  label: 'Users', icon: Users },
 	{ id: 'documentation', path: 'documentation',  label: 'Documentation', icon: FileText },
 	{ id: 'settings', path: 'settings',  label: 'Settings', icon: Settings },

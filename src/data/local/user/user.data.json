@@ -2,7 +2,7 @@
   {
     "id": 1,
     "username": "johndoe",
-    "full_name": "John Doe",
+    "fullName": "John Doe",
     "email": "johndoe@example.com",
     "role": "admin",
     "active": true,
@@ -12,7 +12,7 @@
   {
     "id": 2,
     "username": "alicesmith",
-    "full_name": "Alice Smith",
+    "fullName": "Alice Smith",
     "email": "alice.smith@example.com",
     "role": "engineer",
     "active": true,
@@ -22,7 +22,7 @@
   {
     "id": 3,
     "username": "bobby_hd",
-    "full_name": "Bobby Kurniawan",
+    "fullName": "Bobby Kurniawan",
     "email": "bobby.k@example.com",
     "role": "helpdesk",
     "active": true,
@@ -32,7 +32,7 @@
   {
     "id": 4,
     "username": "claramarcia",
-    "full_name": "Clara Marcia",
+    "fullName": "Clara Marcia",
     "email": "clara.m@example.com",
     "role": "engineer",
     "active": false,
@@ -42,7 +42,7 @@
   {
     "id": 5,
     "username": "david_admin",
-    "full_name": "David Sitorus",
+    "fullName": "David Sitorus",
     "email": "david.s@example.com",
     "role": "admin",
     "active": true,
@@ -52,7 +52,7 @@
   {
     "id": 6,
     "username": "eva_helpdesk",
-    "full_name": "Eva Wijaya",
+    "fullName": "Eva Wijaya",
     "email": "eva.w@example.com",
     "role": "helpdesk",
     "active": true,
@@ -62,7 +62,7 @@
   {
     "id": 7,
     "username": "frank_g",
-    "full_name": "Frank Gery",
+    "fullName": "Frank Gery",
     "email": "frank.gery@example.com",
     "role": "engineer",
     "active": true,
@@ -72,7 +72,7 @@
   {
     "id": 8,
     "username": "grace_p",
-    "full_name": "Grace Puteri",
+    "fullName": "Grace Puteri",
     "email": "grace.p@example.com",
     "role": "helpdesk",
     "active": false,
