@@ -2,47 +2,12 @@ import {AlertCircle, CheckCircle2, Clock, TrendingUp} from "lucide-react";
 import {TicketCard} from "../components/ticket-card.tsx";
 import {AssetCard} from "../components/asset-card.tsx";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import {useEffect, useState} from "react";
-import type {ITicketSummary} from "../../../types/ticket.type.ts";
-import {TicketRepository} from "../../../data/repositories/ticket.repository.ts";
-import type {IAssetSummary} from "../../../types/asset.type.ts";
-import {AssetRepository} from "../../../data/repositories/asset.repository.ts";
-import type {IChartData} from "../../../types/common.type.ts";
+
+import {useLoaderData} from "react-router";
 
 
 export const DashboardPage = () => {
-    const [ticketSummary, setTicketSummary] = useState<ITicketSummary>()
-    const [ticketTrend, setTicketTrend] = useState<IChartData[]>([])
-    const [assetSummary, setAssetSummary] = useState<IAssetSummary>()
-    const [assetSummaryForChart, setAssetSummaryForChart] = useState<IChartData[]>([])
-
-    useEffect(() => {
-	const loadTicketSummary = async () => {
-	    await TicketRepository.getTicketSummary()
-		.then((data) => setTicketSummary(data))
-
-	    await TicketRepository.getTicketTrend()
-		.then((data) => setTicketTrend(data))
-	}
-
-	const loadAssetSummary = async () => {
-	    const data = await AssetRepository.getAssetSummary();
-	    setAssetSummary(data)
-
-	    const chartData: IChartData[] = [
-		{name: 'Notebooks', count: data.nb},
-		{name: 'PC', count: data.pc},
-		{name: 'Mobile Workstation', count: data.mws},
-		{name: 'Workstation', count: data.ws},
-	    ]
-	    setAssetSummaryForChart(chartData);
-	}
-
-	loadAssetSummary();
-	loadTicketSummary();
-    }, [])
-
-
+    const {ticketSummary, ticketTrend, assetSummary, assetSummaryForChart} = useLoaderData()
     return (
 	<div className="flex-1 space-y-6 lg:space-y-8 overflow-auto">
 	    {/*hero*/}

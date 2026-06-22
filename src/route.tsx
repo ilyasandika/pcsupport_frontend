@@ -7,6 +7,7 @@ import {assetLoader} from "./features/asset/loader/asset.loader.ts";
 import {ticketLoader} from "./features/ticket/loader/ticket.loader.ts";
 import {UserPage} from "./features/user/pages/user.page.tsx";
 import {userLoader} from "./features/user/loader/user.loader.tsx";
+import {dashboardLoader} from "./features/dashboard/loader/dashboard.loader.tsx";
 
 export const router = createBrowserRouter([
     {
@@ -15,7 +16,8 @@ export const router = createBrowserRouter([
 	children: [
 	    {
 		index: true,
-		element: <DashboardPage/>
+		element: <DashboardPage/>,
+		loader: dashboardLoader,
 	    },
 	    {
 		path: 'tickets',
