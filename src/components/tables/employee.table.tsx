@@ -1,0 +1,158 @@
+import {
+    type ColumnDef,
+    type ColumnFiltersState,
+    createColumnHelper,
+    getCoreRowModel, getFilteredRowModel, getPaginationRowModel,
+    useReactTable
+} from "@tanstack/react-table";
+import { useMemo, useState } from "react";
+import Table from "./table.tsx";
+import { ActionButtons } from "./action-button.tsx";
+import type { IEmployee } from "../../types/employee.type.ts"; // Sesuaikan path type kamu
+
+interface EmployeeTableProps {
+    data: IEmployee[]
+    isLoading?: boolean
+}
+
+export const EmployeeTable = ({ data, isLoading = false }: EmployeeTableProps) => {
+    const columnHelper = createColumnHelper<IEmployee>();
+
+    const columns: ColumnDef<IEmployee, any>[] = useMemo(
+	() => [
+	    columnHelper.accessor('name', {
+		header: 'Name / NIK',
+		size: 250,
+		cell: (info) => {
+		    const employee = info.row.original;
+		    return (
+			<div>
+			    <div className="font-semibold">
+				{employee.name}
+			    </div>
+			    <div className="text-xs text-gray-500">
+				{`NIK: ${employee.nik || '-'}`}
+			    </div>
+			</div>
+		    );
+		}
+	    }),
+	    columnHelper.accessor('contractType', {
+		header: 'Contract',
+		size: 120,
+		cell: (info) => {
+		    const type = info.getValue();
+		    return (
+			<span className={`px-2 py-0.5 text-xs font-semibold rounded uppercase ${
+			    type === 'organik' ? 'bg-blue-100 text-blue-800' : 'bg-orange-100 text-orange-800'
+			}`}>
+                            {type}
+                        </span>
+		    );
+		}
+	    }),
+	    columnHelper.accessor('position', {
+		header: 'Position',
+		size: 250,
+		cell: (info) => {
+		    const employee = info.row.original;
+		    return (
+			<div>
+			    <div className="font-semibold text-sm">
+				{employee.position}
+			    </div>
+			    <div className="text-xs text-gray-500">
+				{employee.positionId}
+			    </div>
+			</div>
+		    );
+		}
+	    }),
+	    columnHelper.accessor(row => `${row.directorate} ${row.division} ${row.department}`, {
+		id: 'organization',
+		header: 'Organization Unit',
+		size: 300,
+		cell: (info) => {
+		    const emp = info.row.original;
+		    return (
+			<div className="text-sm">
+			    <div className="font-medium text-gray-700">{emp.department || '-'}</div>
+			    <div className="text-xs text-gray-500">
+				{`${emp.division || '-'} • ${emp.directorate || '-'}`}
+			    </div>
+			</div>
+		    );
+		}
+	    }),
+	    columnHelper.accessor('religion', {
+		header: 'Religion',
+		size: 100,
+		cell: (info) => info.getValue() ? info.getValue().toUpperCase() : '-'
+	    }),
+	    columnHelper.accessor(row => `${row.fs || '-'} / ${row.mjl || '-'}`, {
+		id: 'fsMjl',
+		header: 'FS / MJL',
+		size: 120,
+	    }),
+	    columnHelper.accessor('retireDate', {
+		header: 'Retirement Date',
+		size: 180,
+		cell: (info) => {
+		    const rawValue = info.getValue();
+		    if (!rawValue) return '-';
+		    return new Date(rawValue).toLocaleDateString('id-ID', {
+			day: 'numeric',
+			month: 'long',
+			year: 'numeric'
+		    });
+		}
+	    }),
+	    columnHelper.accessor('status', {
+		header: 'Status',
+		size: 100,
+		cell: (info) => {
+		    const active = info.getValue();
+		    return (
+			<span className={`text-xs font-medium ${active ? 'text-green-600' : 'text-red-500'}`}>
+                            {active ? '● Active' : '● Inactive'}
+                        </span>
+		    );
+		}
+	    }),
+	    // Display column untuk tombol aksi (Persis AssetTable)
+	    columnHelper.display({
+		id: 'actions',
+		header: 'Actions',
+		size: 120,
+		cell: () => (
+		    <ActionButtons
+			edit={{ onClick: () => console.log('edit employee') }}
+			document={{ onClick: () => console.log('document employee') }}
+			remove={{ onClick: () => console.log('remove employee') }}
+		    />
+		),
+	    }),
+	],
+	[]
+    );
+
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+    const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
+
+    const table = useReactTable<IEmployee>({
+	data,
+	columns,
+	state: {
+	    columnFilters,
+	    pagination,
+	},
+	renderFallbackValue: '-',
+	onColumnFiltersChange: setColumnFilters,
+	onPaginationChange: setPagination,
+	getCoreRowModel: getCoreRowModel(),
+	getFilteredRowModel: getFilteredRowModel(),
+	getPaginationRowModel: getPaginationRowModel(),
+    });
+
+    return (<Table table={table} name='All Employees' isLoading={isLoading} />)
+}

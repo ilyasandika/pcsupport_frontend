@@ -8,6 +8,8 @@ import {ticketLoader} from "./features/ticket/loader/ticket.loader.ts";
 import {UserPage} from "./features/user/pages/user.page.tsx";
 import {userLoader} from "./features/user/loader/user.loader.tsx";
 import {dashboardLoader} from "./features/dashboard/loader/dashboard.loader.tsx";
+import {EmployeePage} from "./features/employee/pages/employee.page.tsx";
+import {employeeLoader} from "./features/employee/loader/employee.loader.tsx";
 
 export const router = createBrowserRouter([
     {
@@ -33,6 +35,11 @@ export const router = createBrowserRouter([
 		path: 'users',
 		element: <UserPage/>,
 		loader: userLoader,
+	    },
+	    {
+		path: 'employees',
+		element: <EmployeePage/>,
+		loader: employeeLoader,
 	    }
 	]
     }

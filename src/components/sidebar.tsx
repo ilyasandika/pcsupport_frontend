@@ -1,5 +1,16 @@
 import {useState} from "react";
-import {BarChart3, FileText, HelpCircle, LayoutDashboard, Package, Settings, Ticket, Users, X} from "lucide-react";
+import {
+    BarChart3,
+    FileText,
+    HelpCircle,
+    LayoutDashboard,
+    Package,
+    Settings,
+    Ticket,
+    UserRoundCog,
+    Users,
+    X
+} from "lucide-react";
 import {BukitAsam} from "./logo.tsx";
 import {NavLink} from "react-router";
 
@@ -11,7 +22,8 @@ export const Sidebar = () => {
 	{ id: 'tickets', path: 'tickets',  label: 'Tickets', icon: Ticket },
 	{ id: 'assets', path: 'assets',  label: 'Assets', icon: Package },
 	// { id: 'reports', path: 'reports',  label: 'Reports', icon: BarChart3 },
-	{ id: 'users', path: 'users',  label: 'Users', icon: Users },
+	{ id: 'users', path: 'users',  label: 'Users', icon: UserRoundCog },
+	{id: 'employees', path: 'employees', label: 'Employees', icon: Users },
 	{ id: 'documentation', path: 'documentation',  label: 'Documentation', icon: FileText },
 	{ id: 'settings', path: 'settings',  label: 'Settings', icon: Settings },
 	// { id: 'help', path: 'help',  label: 'Help Center', icon: HelpCircle },
