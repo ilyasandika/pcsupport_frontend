@@ -153,6 +153,7 @@ export const AssetTable = ({data, isLoading = false}: AssetTableProps) =>  {
 	renderFallbackValue: '-',
 	onColumnFiltersChange: setColumnFilters,
 	onPaginationChange: setPagination,
+	columnResizeMode: 'onChange',
 	getCoreRowModel: getCoreRowModel(),
 	getFilteredRowModel: getFilteredRowModel(),
 	getPaginationRowModel: getPaginationRowModel(),

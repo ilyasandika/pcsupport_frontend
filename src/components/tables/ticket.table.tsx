@@ -142,6 +142,7 @@ export const TicketTable = ({data, isLoading=false}: TicketTableProps ) =>  {
 	onColumnFiltersChange: setColumnFilters,
 	onPaginationChange: setPagination,
 	getCoreRowModel: getCoreRowModel(),
+	columnResizeMode: 'onChange',
 	getFilteredRowModel: getFilteredRowModel(),
 	getPaginationRowModel: getPaginationRowModel(),
     });

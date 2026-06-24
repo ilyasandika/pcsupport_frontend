@@ -1,4 +1,4 @@
 export interface IChartData {
-    name: string,
+    label: string,
     count: number,
 }

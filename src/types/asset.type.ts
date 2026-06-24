@@ -8,6 +8,7 @@ export interface IAssetSummary {
 export interface IAssetRepository {
     getAssetSummary: () => Promise<IAssetSummary>
     getAssets: () => Promise<IAsset[]>
+    getAssetById: (assetId: number) => Promise<IAsset>
 }
 
 

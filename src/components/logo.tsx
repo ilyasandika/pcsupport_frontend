@@ -2,9 +2,10 @@ import React from 'react';
 
 interface LogoProps extends React.SVGProps<SVGSVGElement> {
     size?: number;
+    colorMode?: 'white' | 'colorful';
 }
 
-export const BukitAsam = ({ size = 50, className, ...props }: LogoProps) => {
+export const BukitAsam = ({ size = 50, colorMode = 'colorful',  className, ...props }: LogoProps) => {
     const calculatedWidth = (280 / 50) * size;
 
     return (
@@ -25,12 +26,22 @@ export const BukitAsam = ({ size = 50, className, ...props }: LogoProps) => {
 	>
 
 	<style type="text/css">
-	    {`
-          .st0{fill:#354485;}
-          .st1{fill:#ED1C24;}
-          .st2{fill:#FFC40D;}
-          .st3{fill:#CE4147;}
-          `}
+	    { colorMode === 'white' ?
+		`
+		  .st0{fill:#FFFFFF;}
+		  .st1{fill:#FFFFFF;}
+		  .st2{fill:#FFFFFF;}
+		  .st3{fill:#FFFFFF;}
+		  `
+		:
+		`
+		  .st0{fill:#354485;}
+		  .st1{fill:#ED1C24;}
+		  .st2{fill:#FFC40D;}
+		  .st3{fill:#CE4147;}
+		  `
+
+	    }
 	</style>
 	    <g>
 	<path className="st0" d="M73.6,45.1c1,0,1.8-0.1,2.4-0.3c0.6-0.2,1.2-0.5,1.6-1c0.4-0.4,0.6-0.9,0.9-1.4c0.2-0.5,0.2-1.1,0.2-1.6

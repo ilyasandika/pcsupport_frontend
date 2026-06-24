@@ -1,27 +1,32 @@
 [
   {
     "id": 1,
-    "fullNumber": "",
+    "fullNumber": "TCK-2026-001",
     "asset": {
-      "id": 101,
-      "serialNumber": "SN-NB-001",
-      "assetTag": "AST-NB-001",
-      "hostname": "LAP-TJE-ENG01",
+      "id": 1,
+      "serialNumber": "847392018",
+      "assetTag": "AST-NB-2026-001",
+      "hostname": "IT-LAP-01",
       "category": "nb",
       "brand": "Lenovo",
-      "model": "ThinkPad L14"
+      "model": "ThinkPad L14 Gen 4"
     },
-    "engineer": null,
+    "engineer": {
+      "id": 2,
+      "username": "alicesmith",
+      "email": "alice.smith@example.com",
+      "role": "engineer"
+    },
     "user": {
-      "employeeId": 5001,
-      "nik": "141414",
-      "name": "John Doe",
+      "employeeId": 1,
+      "nik": "NIK12345678",
+      "name": "Ilyas Andika",
       "userNonEmployee": "PIC"
     },
     "createdBy": {
-      "id": 2,
-      "username": "helpdesk.utama",
-      "email": "helpdesk@bukitasam.co.id",
+      "id": 3,
+      "username": "bobby_hd",
+      "email": "bobby.k@example.com",
       "role": "helpdesk"
     },
     "sla": {
@@ -32,44 +37,44 @@
       "responseTime": 1800
     },
     "location": {
-      "id": 1,
-      "name": "TJE"
+      "id": 10,
+      "name": "Muara Enim (Kantor Pusat)"
     },
-    "problem": "Laptop tidak bisa masuk ke Windows, stuck di logo Lenovo",
-    "status": "open",
+    "problem": "Baterai Laptop Kembung / Drop mendesak casing trackpad terangkat (ThinkPad AST-NB-2026-001)",
+    "status": "in progress",
     "solution": null,
-    "startAt": "",
+    "startAt": "2026-06-22T08:30:00Z",
     "solvedAt": null,
-    "remarks": "Menunggu engineer mengambil antrean tiket"
+    "remarks": "Unit sudah diserahkan ke workshop TI oleh Bobby, sedang ditangani Alice Smith"
   },
   {
     "id": 2,
     "fullNumber": "TCK-2026-002",
     "asset": {
-      "id": 102,
-      "serialNumber": "SN-PC-042",
-      "assetTag": "AST-PC-042",
-      "hostname": "PC-TJE-MKT02",
-      "category": "pc",
-      "brand": "Dell",
-      "model": "OptiPlex 7090"
+      "id": 2,
+      "serialNumber": "938201948",
+      "assetTag": "AST-MWS-2026-002",
+      "hostname": "ENG-MWS-02",
+      "category": "mws",
+      "brand": "ASUS",
+      "model": "ROG Zephyrus G14"
     },
     "engineer": {
-      "id": 5,
-      "username": "budi.engineer",
-      "email": "budi@bukitasam.co.id",
+      "id": 7,
+      "username": "frank_g",
+      "email": "frank.gery@example.com",
       "role": "engineer"
     },
     "user": {
-      "employeeId": 5002,
-      "nik": "141414",
-      "name": "Alice Smith",
-      "userNonEmployee": "Internship Marketing"
+      "employeeId": 2,
+      "nik": "NIK87654321",
+      "name": "Yani",
+      "userNonEmployee": "PIC"
     },
     "createdBy": {
-      "id": 2,
-      "username": "helpdesk.utama",
-      "email": "helpdesk@bukitasam.co.id",
+      "id": 3,
+      "username": "bobby_hd",
+      "email": "bobby.k@example.com",
       "role": "helpdesk"
     },
     "sla": {
@@ -80,44 +85,44 @@
       "responseTime": 900
     },
     "location": {
-      "id": 1,
-      "name": "TJE"
+      "id": 12,
+      "name": "Tanjung Enim (Site)"
     },
-    "problem": "PC tidak bisa terkoneksi ke internet lewat kabel LAN, indikator mati",
-    "status": "in progress",
-    "solution": null,
-    "startAt": "2026-06-09T08:30:00Z",
-    "solvedAt": null,
-    "remarks": "Engineer sedang menuju lokasi untuk mengecek modul switch/kabel LAN"
+    "problem": "Suhu workstation sangat tinggi (overheating) dan fan berisik saat running rendering map tambang",
+    "status": "closed onsite",
+    "solution": "Melakukan repasting thermal paste pada CPU/GPU serta pembersihan debu saringan udara kipas laptop.",
+    "startAt": "2026-06-21T09:00:00Z",
+    "solvedAt": "2026-06-21T10:45:00Z",
+    "remarks": "Selesai ditangani langsung oleh Frank Gery di site, temperatur kembali normal"
   },
   {
     "id": 3,
     "fullNumber": "TCK-2026-003",
     "asset": {
-      "id": 103,
-      "serialNumber": "SN-WS-005",
-      "assetTag": "AST-WS-005",
-      "hostname": "WS-TJE-PLAN05",
-      "category": "ws",
+      "id": 3,
+      "serialNumber": "104938201",
+      "assetTag": "AST-PC-2026-003",
+      "hostname": "SUPPORT-PC-03",
+      "category": "pc",
       "brand": "HP",
-      "model": "Z4 G4 Workstation"
+      "model": "ProDesk 400 G9"
     },
     "engineer": {
-      "id": 6,
-      "username": "agus.support",
-      "email": "agus@bukitasam.co.id",
+      "id": 2,
+      "username": "alicesmith",
+      "email": "alice.smith@example.com",
       "role": "engineer"
     },
     "user": {
-      "employeeId": 5003,
-      "nik": "141414",
-      "name": "Clara Azahra",
-      "userNonEmployee": "Outsourcing Admin"
+      "employeeId": 3,
+      "nik": "NON-001",
+      "name": "Budi Santoso",
+      "userNonEmployee": "Magang / Guest Teacher"
     },
     "createdBy": {
-      "id": 2,
-      "username": "helpdesk.utama",
-      "email": "helpdesk@bukitasam.co.id",
+      "id": 6,
+      "username": "eva_helpdesk",
+      "email": "eva.w@example.com",
       "role": "helpdesk"
     },
     "sla": {
@@ -128,36 +133,36 @@
       "responseTime": 1800
     },
     "location": {
-      "id": 1,
-      "name": "TJE"
+      "id": 14,
+      "name": "Palembang Office"
     },
-    "problem": "Workstation untuk rendering peta tambang melambat drastis saat membuka aplikasi AutoCAD",
+    "problem": "PC Desktop Lab melambat drastis saat membuka file materi ajar berukuran besar",
     "status": "closed visit",
-    "solution": "Melakukan pembersihan file temporary, optimalisasi alokasi RAM di aplikasi, dan membersihkan debu pada heatsink VGA.",
-    "startAt": "2026-06-09T09:00:00Z",
-    "solvedAt": "2026-06-09T10:15:00Z",
-    "remarks": "Selesai ditangani langsung di meja user, performa kembali normal"
+    "solution": "Melakukan pembersihan berkala pada file temporary sistem dan menonaktifkan aplikasi startup non-esensial.",
+    "startAt": "2026-06-19T10:00:00Z",
+    "solvedAt": "2026-06-19T11:15:00Z",
+    "remarks": "Tiket dibuat oleh Eva, diselesaikan oleh Alice langsung di ruang kelas/lab"
   },
   {
     "id": 4,
     "fullNumber": "TCK-2026-004",
     "asset": null,
     "engineer": {
-      "id": 5,
-      "username": "budi.engineer",
-      "email": "budi@bukitasam.co.id",
+      "id": 7,
+      "username": "frank_g",
+      "email": "frank.gery@example.com",
       "role": "engineer"
     },
     "user": {
-      "employeeId": 5003,
-      "nik": "141414",
-      "name": "Clara Azahra",
+      "employeeId": 3,
+      "nik": "NIK12345678",
+      "name": "Ilyas Andika",
       "userNonEmployee": "PIC"
     },
     "createdBy": {
-      "id": 2,
-      "username": "helpdesk.utama",
-      "email": "helpdesk@bukitasam.co.id",
+      "id": 6,
+      "username": "eva_helpdesk",
+      "email": "eva.w@example.com",
       "role": "helpdesk"
     },
     "sla": {
@@ -168,58 +173,63 @@
       "responseTime": 300
     },
     "location": {
-      "id": 1,
-      "name": "TJE"
+      "id": 10,
+      "name": "Muara Enim (Kantor Pusat)"
     },
-    "problem": "Aplikasi internal HRIS tidak bisa diakses, muncul error 500 internal server error",
+    "problem": "Aplikasi internal Asset & Ticketing Management memantulkan error 500 Internal Server Error saat generate laporan",
     "status": "resolved",
-    "solution": "Melakukan restart service docker container HRIS backend dan clearing cache server.",
-    "startAt": "2026-06-09T07:10:00Z",
-    "solvedAt": "2026-06-09T07:35:00Z",
-    "remarks": "Tiket non-aset berhasil diselesaikan via penanganan service backend"
+    "solution": "Melakukan restart service docker container backend NestJS dan melakukan clearing database connections pool cache.",
+    "startAt": "2026-06-20T14:10:00Z",
+    "solvedAt": "2026-06-20T14:45:00Z",
+    "remarks": "Frank membereskan masalah server backend ini secara remote"
   },
   {
     "id": 5,
     "fullNumber": "TCK-2026-005",
     "asset": {
-      "id": 104,
-      "serialNumber": "SN-MWS-012",
-      "assetTag": "AST-MWS-012",
-      "hostname": "MWS-PLG-SURV01",
-      "category": "mws",
-      "brand": "Dell",
-      "model": "Precision 5560"
+      "id": 5,
+      "serialNumber": "726391029",
+      "assetTag": "AST-NB-2026-005",
+      "hostname": "FIN-LAP-05",
+      "category": "nb",
+      "brand": "HP",
+      "model": "EliteBook 840 G10"
     },
     "engineer": {
-      "id": 7,
-      "username": "eko.infra",
-      "email": "eko@bukitasam.co.id",
+      "id": 5,
+      "username": "david_admin",
+      "email": "david.s@example.com",
       "role": "admin"
     },
-    "user": null,
+    "user": {
+      "employeeId": 5,
+      "nik": "NIK11223344",
+      "name": "Siti Aminah",
+      "userNonEmployee": "PIC"
+    },
     "createdBy": {
-      "id": 2,
-      "username": "helpdesk.utama",
-      "email": "helpdesk@bukitasam.co.id",
+      "id": 3,
+      "username": "bobby_hd",
+      "email": "bobby.k@example.com",
       "role": "helpdesk"
     },
     "sla": {
-      "id": 1,
-      "name": "P1",
-      "description": "High Priority Critical System",
-      "resolutionTime": 3600,
-      "responseTime": 300
+      "id": 2,
+      "name": "P2",
+      "description": "Medium Priority Issue",
+      "resolutionTime": 7200,
+      "responseTime": 900
     },
     "location": {
-      "id": 4,
-      "name": "PLG"
+      "id": 10,
+      "name": "Muara Enim (Kantor Pusat)"
     },
-    "problem": "Laptop Mobile Workstation cadangan tim survey tidak mau menyala sama sekali (No Power)",
+    "problem": "Gagal sinkronisasi folder shared network drive keuangan karena isu permission Windows",
     "status": "closed remote",
-    "solution": "Menginstruksikan staf gudang melakukan hard reset dengan mencopot baterai dan menekan tombol power selama 30 detik.",
-    "startAt": "2026-06-09T11:00:00Z",
-    "solvedAt": "2026-06-09T11:12:00Z",
-    "remarks": "Perangkat backup kembali online, tidak memerlukan kunjungan fisik"
+    "solution": "Mengonfigurasi ulang hak akses Read/Write user Siti Aminah melalui Active Directory (AD) security group.",
+    "startAt": "2026-06-18T11:00:00Z",
+    "solvedAt": "2026-06-18T11:30:00Z",
+    "remarks": "Ditangani langsung oleh David Sitorus selaku Sysadmin via domain controller"
   },
   {
     "id": 6,
@@ -227,15 +237,15 @@
     "asset": null,
     "engineer": null,
     "user": {
-      "employeeId": 5004,
-      "nik": "252525",
-      "name": "Randi Permana",
+      "employeeId": 1,
+      "nik": "NIK44332211",
+      "name": "Rian Hidayat",
       "userNonEmployee": "PIC"
     },
     "createdBy": {
-      "id": 2,
-      "username": "helpdesk.utama",
-      "email": "helpdesk@bukitasam.co.id",
+      "id": 6,
+      "username": "eva_helpdesk",
+      "email": "eva.w@example.com",
       "role": "helpdesk"
     },
     "sla": {
@@ -246,44 +256,44 @@
       "responseTime": 1800
     },
     "location": {
-      "id": 3,
-      "name": "JKT"
+      "id": 14,
+      "name": "Palembang Office"
     },
-    "problem": "Permintaan reset password akun email korporat karena lupa kredensial login",
+    "problem": "Permintaan reset password akun email korporat dan pembukaan blokir akun karena salah input kredensial login",
     "status": "open",
     "solution": null,
     "startAt": "",
     "solvedAt": null,
-    "remarks": "Menunggu verifikasi data karyawan oleh IT helpdesk/engineer"
+    "remarks": "Dibuat oleh Eva, status open (belum diambil oleh engineer mana pun)"
   },
   {
     "id": 7,
     "fullNumber": "TCK-2026-007",
     "asset": {
-      "id": 105,
-      "serialNumber": "SN-NB-055",
-      "assetTag": "AST-NB-055",
-      "hostname": "LAP-TRH-FIN03",
-      "category": "nb",
-      "brand": "HP",
-      "model": "ProBook 440"
+      "id": 6,
+      "serialNumber": "293810482",
+      "assetTag": "AST-PC-2026-006",
+      "hostname": "HR-PC-06",
+      "category": "pc",
+      "brand": "Lenovo",
+      "model": "ThinkCentre M70q"
     },
     "engineer": {
-      "id": 6,
-      "username": "agus.support",
-      "email": "agus@bukitasam.co.id",
+      "id": 2,
+      "username": "alicesmith",
+      "email": "alice.smith@example.com",
       "role": "engineer"
     },
     "user": {
-      "employeeId": 5005,
-      "nik": "363636",
-      "name": "Siti Aminah",
-      "userNonEmployee": "Outsourcing Finance"
+      "employeeId": 6,
+      "nik": "NIK44332211",
+      "name": "Rian Hidayat",
+      "userNonEmployee": "PIC"
     },
     "createdBy": {
-      "id": 2,
-      "username": "helpdesk.utama",
-      "email": "helpdesk@bukitasam.co.id",
+      "id": 3,
+      "username": "bobby_hd",
+      "email": "bobby.k@example.com",
       "role": "helpdesk"
     },
     "sla": {
@@ -294,44 +304,44 @@
       "responseTime": 900
     },
     "location": {
-      "id": 2,
-      "name": "TRH"
+      "id": 14,
+      "name": "Palembang Office"
     },
-    "problem": "Blue screen (BSOD) berulang kali dengan kode error PAGE_FAULT_IN_NONPAGED_AREA",
+    "problem": "Blue screen (BSOD) berulang kali setelah update Windows Security Patch dengan kode error PAGE_FAULT_IN_NONPAGED_AREA",
     "status": "closed onsite",
-    "solution": "Membawa laptop ke Ruang TI untuk dibongkar, dilakukan pembersihan pin RAM dan running diagnostic hardware.",
-    "startAt": "2026-06-09T09:15:00Z",
-    "solvedAt": "2026-06-09T10:45:00Z",
-    "remarks": "Selesai dikerjakan di workshop TI, RAM dikonfirmasi normal setelah tes uji"
+    "solution": "Membawa unit Mini PC ke workshop TI, melakukan pembersihan pin kaki RAM fisik menggunakan karet penghapus, dan sukses running diagnostic hardware.",
+    "startAt": "2026-06-15T09:15:00Z",
+    "solvedAt": "2026-06-15T10:45:00Z",
+    "remarks": "Diselesaikan oleh Alice Smith di Palembang workshop Room"
   },
   {
     "id": 8,
     "fullNumber": "TCK-2026-008",
     "asset": {
-      "id": 106,
-      "serialNumber": "SN-PC-109",
-      "assetTag": "AST-PC-109",
-      "hostname": "PC-PLG-SDM04",
-      "category": "pc",
-      "brand": "Asus",
-      "model": "ExpertCenter D7"
+      "id": 7,
+      "serialNumber": "482910394",
+      "assetTag": "AST-MWS-2026-007",
+      "hostname": "GEO-MWS-07",
+      "category": "mws",
+      "brand": "Dell",
+      "model": "Precision 5480"
     },
     "engineer": {
-      "id": 8,
-      "username": "dani.desktop",
-      "email": "dani@bukitasam.co.id",
+      "id": 7,
+      "username": "frank_g",
+      "email": "frank.gery@example.com",
       "role": "engineer"
     },
     "user": {
-      "employeeId": 5006,
-      "nik": "474747",
-      "name": "Dewi Lestari",
+      "employeeId": 7,
+      "nik": "NIK55667788",
+      "name": "Andri Wijaya",
       "userNonEmployee": "PIC"
     },
     "createdBy": {
-      "id": 2,
-      "username": "helpdesk.utama",
-      "email": "helpdesk@bukitasam.co.id",
+      "id": 6,
+      "username": "eva_helpdesk",
+      "email": "eva.w@example.com",
       "role": "helpdesk"
     },
     "sla": {
@@ -342,39 +352,44 @@
       "responseTime": 1800
     },
     "location": {
-      "id": 4,
-      "name": "PLG"
+      "id": 12,
+      "name": "Tanjung Enim (Site)"
     },
-    "problem": "Aplikasi browser Chrome corrupt dan tidak mau terbuka sama sekali",
+    "problem": "Aplikasi Google Chrome dan Edge mendadak corrupt, force close sendiri dan tidak mau terbuka sama sekali",
     "status": "in progress",
     "solution": null,
-    "startAt": "2026-06-09T13:45:00Z",
+    "startAt": "2026-06-22T10:45:00Z",
     "solvedAt": null,
-    "remarks": "Engineer sedang melakukan remote reinstall via AnyDesk"
+    "remarks": "Frank Gery sedang melakukan remote profiling user dan reinstall browser via AnyDesk"
   },
   {
     "id": 9,
     "fullNumber": "TCK-2026-009",
     "asset": {
-      "id": 107,
-      "serialNumber": "SN-NB-BK02",
-      "assetTag": "AST-NB-BK02",
-      "hostname": "LAP-JKT-BACKUP02",
-      "category": "nb",
-      "brand": "Lenovo",
-      "model": "ThinkPad E14"
+      "id": 9,
+      "serialNumber": "883920193",
+      "assetTag": "AST-WS-2026-009",
+      "hostname": "DEV-WS-09",
+      "category": "ws",
+      "brand": "ASUS",
+      "model": "ExpertCenter D900"
     },
     "engineer": {
-      "id": 5,
-      "username": "budi.engineer",
-      "email": "budi@bukitasam.co.id",
+      "id": 2,
+      "username": "alicesmith",
+      "email": "alice.smith@example.com",
       "role": "engineer"
     },
-    "user": null,
+    "user": {
+      "employeeId": 9,
+      "nik": "NON-002",
+      "name": "Eko Prasetyo",
+      "userNonEmployee": "Contractor / Developer"
+    },
     "createdBy": {
-      "id": 2,
-      "username": "helpdesk.utama",
-      "email": "helpdesk@bukitasam.co.id",
+      "id": 3,
+      "username": "bobby_hd",
+      "email": "bobby.k@example.com",
       "role": "helpdesk"
     },
     "sla": {
@@ -385,79 +400,34 @@
       "responseTime": 900
     },
     "location": {
-      "id": 3,
-      "name": "JKT"
+      "id": 10,
+      "name": "Muara Enim (Kantor Pusat)"
     },
-    "problem": "Laptop backup unit korporat gagal booting setelah dilakukan update Windows OS otomatis",
+    "problem": "Kesulitan konfigurasi routing network di dalam Docker Desktop & VPN 1.1.1.1 + WARP untuk akses repositori internal",
     "status": "closed onsite",
-    "solution": "Melakukan roll-back update via Windows Recovery Environment langsung di server room TI.",
-    "startAt": "2026-06-09T08:00:00Z",
-    "solvedAt": "2026-06-09T08:50:00Z",
-    "remarks": "Laptop cadangan siap digunakan kembali sewaktu-waktu"
+    "solution": "Mendatangi meja developer, menambahkan pengecualian routing IP lokal korporat ke dalam konfigurasi berkas konfigurasi tunnel WARP.",
+    "startAt": "2026-06-12T08:00:00Z",
+    "solvedAt": "2026-06-12T08:50:00Z",
+    "remarks": "Alice mendatangi workstation dev MII untuk bypass IP lokal"
   },
   {
     "id": 10,
     "fullNumber": "TCK-2026-010",
-    "asset": null,
-    "engineer": {
-      "id": 6,
-      "username": "agus.support",
-      "email": "agus@bukitasam.co.id",
-      "role": "engineer"
-    },
-    "user": {
-      "employeeId": 5007,
-      "nik": "585858",
-      "name": "Ahmad Subarjo",
-      "userNonEmployee": "PIC"
-    },
-    "createdBy": {
-      "id": 2,
-      "username": "helpdesk.utama",
-      "email": "helpdesk@bukitasam.co.id",
-      "role": "helpdesk"
-    },
-    "sla": {
-      "id": 3,
-      "name": "P3",
-      "description": "Normal Priority Issue",
-      "resolutionTime": 14400,
-      "responseTime": 1800
-    },
-    "location": {
-      "id": 5,
-      "name": "KRTP"
-    },
-    "problem": "Permintaan pembuatan akun SAP baru untuk modul Plant Maintenance (PM)",
-    "status": "resolved",
-    "solution": "Akun SAP berhasil di-generate sesuai form approval atasan, user diberikan kredensial login awal.",
-    "startAt": "2026-06-09T10:20:00Z",
-    "solvedAt": "2026-06-09T11:05:00Z",
-    "remarks": "Selesai di-approve dan dikonfigurasi hak akses modulnya"
-  },
-  {
-    "id": 11,
-    "fullNumber": "",
     "asset": {
-      "id": 108,
-      "serialNumber": "SN-PC-022",
-      "assetTag": "AST-PC-022",
-      "hostname": "PC-KRTP-LOG01",
-      "category": "pc",
+      "id": 10,
+      "serialNumber": "664930291",
+      "assetTag": "AST-NB-2026-010",
+      "hostname": "IT-LAP-10",
+      "category": "nb",
       "brand": "Lenovo",
-      "model": "ThinkCentre M70t"
+      "model": "ThinkPad E14 Gen 5"
     },
     "engineer": null,
-    "user": {
-      "employeeId": 5008,
-      "nik": "696969",
-      "name": "Hendra Wijaya",
-      "userNonEmployee": "Outsourcing Gudang"
-    },
+    "user": null,
     "createdBy": {
-      "id": 2,
-      "username": "helpdesk.utama",
-      "email": "helpdesk@bukitasam.co.id",
+      "id": 3,
+      "username": "bobby_hd",
+      "email": "bobby.k@example.com",
       "role": "helpdesk"
     },
     "sla": {
@@ -468,407 +438,14 @@
       "responseTime": 1800
     },
     "location": {
-      "id": 5,
-      "name": "KRTP"
+      "id": 14,
+      "name": "Palembang Office"
     },
-    "problem": "PC Gudang Logistik lambat saat proses input data barang, disk usage sering 100%",
+    "problem": "Unit stock pool IT baru kembali dari user magang lama, disk usage terdeteksi konstan 100% lambat pasca pengembalian",
     "status": "open",
     "solution": null,
     "startAt": "",
     "solvedAt": null,
-    "remarks": "Rencana pengecekan kesehatan hardisk / usulan upgrade ke SSD"
-  },
-  {
-    "id": 12,
-    "fullNumber": "TCK-2026-012",
-    "asset": {
-      "id": 109,
-      "serialNumber": "SN-NB-102",
-      "assetTag": "AST-NB-102",
-      "hostname": "LAP-PLG-AUD02",
-      "category": "nb",
-      "brand": "Asus",
-      "model": "ZenBook 14"
-    },
-    "engineer": {
-      "id": 8,
-      "username": "dani.desktop",
-      "email": "dani@bukitasam.co.id",
-      "role": "engineer"
-    },
-    "user": {
-      "employeeId": 5009,
-      "nik": "707070",
-      "name": "Rinaawati",
-      "userNonEmployee": "PIC"
-    },
-    "createdBy": {
-      "id": 2,
-      "username": "helpdesk.utama",
-      "email": "helpdesk@bukitasam.co.id",
-      "role": "helpdesk"
-    },
-    "sla": {
-      "id": 2,
-      "name": "P2",
-      "description": "Medium Priority Issue",
-      "resolutionTime": 7200,
-      "responseTime": 900
-    },
-    "location": {
-      "id": 4,
-      "name": "PLG"
-    },
-    "problem": "Keyboard bawaan laptop tidak merespon saat mengetik huruf 'Q', 'W', dan 'E'",
-    "status": "in progress",
-    "solution": null,
-    "startAt": "2026-06-09T14:10:00Z",
-    "solvedAt": null,
-    "remarks": "Sedang dites menggunakan keyboard eksternal untuk pemisahan kendala software/hardware"
-  },
-  {
-    "id": 13,
-    "fullNumber": "TCK-2026-013",
-    "asset": {
-      "id": 110,
-      "serialNumber": "SN-PC-099",
-      "assetTag": "AST-PC-099",
-      "hostname": "PC-TJE-OPR01",
-      "category": "pc",
-      "brand": "Lenovo",
-      "model": "ThinkCentre M70t"
-    },
-    "engineer": {
-      "id": 5,
-      "username": "budi.engineer",
-      "email": "budi@bukitasam.co.id",
-      "role": "engineer"
-    },
-    "user": {
-      "employeeId": 5010,
-      "nik": "818181",
-      "name": "Taufik Hidayat",
-      "userNonEmployee": "PIC"
-    },
-    "createdBy": {
-      "id": 2,
-      "username": "helpdesk.utama",
-      "email": "helpdesk@bukitasam.co.id",
-      "role": "helpdesk"
-    },
-    "sla": {
-      "id": 1,
-      "name": "P1",
-      "description": "High Priority Critical System",
-      "resolutionTime": 3600,
-      "responseTime": 300
-    },
-    "location": {
-      "id": 1,
-      "name": "TJE"
-    },
-    "problem": "Sistem operasi corrupt total setelah mati lampu mendadak, tidak terbaca hardisk-nya",
-    "status": "closed visit",
-    "solution": "Melakukan kunjungan lapangan, penggantian kabel SATA baru, dan install ulang Windows 10 OS.",
-    "startAt": "2026-06-09T08:15:00Z",
-    "solvedAt": "2026-06-09T09:12:00Z",
-    "remarks": "PC operasional tim timbang kembali berfungsi normal"
-  },
-  {
-    "id": 14,
-    "fullNumber": "TCK-2026-014",
-    "asset": {
-      "id": 111,
-      "serialNumber": "SN-MWS-088",
-      "assetTag": "AST-MWS-088",
-      "hostname": "MWS-TRH-ENG04",
-      "category": "mws",
-      "brand": "HP",
-      "model": "ZBook Power G8"
-    },
-    "engineer": {
-      "id": 7,
-      "username": "eko.infra",
-      "email": "eko@bukitasam.co.id",
-      "role": "admin"
-    },
-    "user": null,
-    "createdBy": {
-      "id": 2,
-      "username": "helpdesk.utama",
-      "email": "helpdesk@bukitasam.co.id",
-      "role": "helpdesk"
-    },
-    "sla": {
-      "id": 1,
-      "name": "P1",
-      "description": "High Priority Critical System",
-      "resolutionTime": 3600,
-      "responseTime": 300
-    },
-    "location": {
-      "id": 2,
-      "name": "TRH"
-    },
-    "problem": "Mobile Workstation cadangan tim perencanaan tambang sering restart sendiri saat booting OS",
-    "status": "closed remote",
-    "solution": "Melakukan konfigurasi ulang boot order bios dan menonaktifkan fitur fast startup via remote teamviewer.",
-    "startAt": "2026-06-09T13:00:00Z",
-    "solvedAt": "2026-06-09T13:22:00Z",
-    "remarks": "Sistem operasi kembali berjalan normal setelah konfigurasi"
-  },
-  {
-    "id": 15,
-    "fullNumber": "TCK-2026-015",
-    "asset": null,
-    "engineer": {
-      "id": 6,
-      "username": "agus.support",
-      "email": "agus@bukitasam.co.id",
-      "role": "engineer"
-    },
-    "user": {
-      "employeeId": 5011,
-      "nik": "929292",
-      "name": "Fahmi Idris",
-      "userNonEmployee": "PIC"
-    },
-    "createdBy": {
-      "id": 2,
-      "username": "helpdesk.utama",
-      "email": "helpdesk@bukitasam.co.id",
-      "role": "helpdesk"
-    },
-    "sla": {
-      "id": 3,
-      "name": "P3",
-      "description": "Normal Priority Issue",
-      "resolutionTime": 14400,
-      "responseTime": 1800
-    },
-    "location": {
-      "id": 3,
-      "name": "JKT"
-    },
-    "problem": "Permintaan upgrade kapasitas penyimpanan akun OneDrive dari 100GB menjadi 1TB",
-    "status": "resolved",
-    "solution": "Melakukan asign lisensi Office 365 Enterprise E3 baru ke akun user melalui Admin Center.",
-    "startAt": "2026-06-09T14:00:00Z",
-    "solvedAt": "2026-06-09T14:15:00Z",
-    "remarks": "Kapasitas penyimpanan OneDrive milik user sudah sukses ter-upgrade"
-  },
-  {
-    "id": 16,
-    "fullNumber": "",
-    "asset": null,
-    "engineer": null,
-    "user": {
-      "employeeId": 5012,
-      "nik": "151515",
-      "name": "Gita Gutawa",
-      "userNonEmployee": "PIC"
-    },
-    "createdBy": {
-      "id": 2,
-      "username": "helpdesk.utama",
-      "email": "helpdesk@bukitasam.co.id",
-      "role": "helpdesk"
-    },
-    "sla": {
-      "id": 3,
-      "name": "P3",
-      "description": "Normal Priority Issue",
-      "resolutionTime": 14400,
-      "responseTime": 1800
-    },
-    "location": {
-      "id": 1,
-      "name": "TJE"
-    },
-    "problem": "Mengalami kesulitan konfigurasi VPN 1.1.1.1 + WARP untuk akses portal internal dari luar jaringan kantor",
-    "status": "open",
-    "solution": null,
-    "startAt": "",
-    "solvedAt": null,
-    "remarks": "Menunggu respon klaim tiket dari tim admin security"
-  },
-  {
-    "id": 17,
-    "fullNumber": "TCK-2026-017",
-    "asset": {
-      "id": 112,
-      "serialNumber": "SN-NB-087",
-      "assetTag": "AST-NB-087",
-      "hostname": "LAP-TRH-PDK04",
-      "category": "nb",
-      "brand": "Dell",
-      "model": "Latitude 3420"
-    },
-    "engineer": {
-      "id": 6,
-      "username": "agus.support",
-      "email": "agus@bukitasam.co.id",
-      "role": "engineer"
-    },
-    "user": {
-      "employeeId": 5013,
-      "nik": "262626",
-      "name": "Iwan Fals",
-      "userNonEmployee": "Outsourcing Legal"
-    },
-    "createdBy": {
-      "id": 2,
-      "username": "helpdesk.utama",
-      "email": "helpdesk@bukitasam.co.id",
-      "role": "helpdesk"
-    },
-    "sla": {
-      "id": 2,
-      "name": "P2",
-      "description": "Medium Priority Issue",
-      "resolutionTime": 7200,
-      "responseTime": 900
-    },
-    "location": {
-      "id": 2,
-      "name": "TRH"
-    },
-    "problem": "Baterai laptop kembung (swollen battery) sehingga mendesak casing trackpad terangkat",
-    "status": "closed onsite",
-    "solution": "User menyerahkan laptop ke Ruang TI. Engineer melakukan penggantian unit modul baterai internal original yang baru.",
-    "startAt": "2026-06-09T10:00:00Z",
-    "solvedAt": "2026-06-09T11:40:00Z",
-    "remarks": "Selesai dieksekusi di workshop TI demi keamanan operasional perangkat"
-  },
-  {
-    "id": 18,
-    "fullNumber": "TCK-2026-018",
-    "asset": {
-      "id": 113,
-      "serialNumber": "SN-WS-090",
-      "assetTag": "AST-WS-090",
-      "hostname": "WS-JKT-GEO01",
-      "category": "ws",
-      "brand": "Lenovo",
-      "model": "ThinkStation P340"
-    },
-    "engineer": {
-      "id": 5,
-      "username": "budi.engineer",
-      "email": "budi@bukitasam.co.id",
-      "role": "engineer"
-    },
-    "user": {
-      "employeeId": 5014,
-      "nik": "373737",
-      "name": "Kartika Putri",
-      "userNonEmployee": "PIC"
-    },
-    "createdBy": {
-      "id": 2,
-      "username": "helpdesk.utama",
-      "email": "helpdesk@bukitasam.co.id",
-      "role": "helpdesk"
-    },
-    "sla": {
-      "id": 3,
-      "name": "P3",
-      "description": "Normal Priority Issue",
-      "resolutionTime": 14400,
-      "responseTime": 1800
-    },
-    "location": {
-      "id": 3,
-      "name": "JKT"
-    },
-    "problem": "Workstation Pemetaan Geologi melambat parah, sering freeze saat melakukan processing poin awan (cloud point)",
-    "status": "in progress",
-    "solution": null,
-    "startAt": "2026-06-09T14:30:00Z",
-    "solvedAt": null,
-    "remarks": "Engineer sedang bersiap membawa software diagnostic tool untuk mengecek NVMe SSD throttling"
-  },
-  {
-    "id": 19,
-    "fullNumber": "TCK-2026-019",
-    "asset": {
-      "id": 114,
-      "serialNumber": "SN-PC-BK05",
-      "assetTag": "AST-PC-BK05",
-      "hostname": "PC-TJE-BACKUP05",
-      "category": "pc",
-      "brand": "HP",
-      "model": "ProDesk 400"
-    },
-    "engineer": {
-      "id": 6,
-      "username": "agus.support",
-      "email": "agus@bukitasam.co.id",
-      "role": "engineer"
-    },
-    "user": null,
-    "createdBy": {
-      "id": 2,
-      "username": "helpdesk.utama",
-      "email": "helpdesk@bukitasam.co.id",
-      "role": "helpdesk"
-    },
-    "sla": {
-      "id": 2,
-      "name": "P2",
-      "description": "Medium Priority Issue",
-      "resolutionTime": 7200,
-      "responseTime": 900
-    },
-    "location": {
-      "id": 1,
-      "name": "TJE"
-    },
-    "problem": "PC Desktop cadangan di gudang IT berbunyi beep panjang terus menerus saat dinyalakan dan gagal tampil ke layar",
-    "status": "closed onsite",
-    "solution": "Membongkar unit di laboratorium TI, melakukan reseating RAM, dan membersihkan slot motherboard.",
-    "startAt": "2026-06-09T11:00:00Z",
-    "solvedAt": "2026-06-09T11:35:00Z",
-    "remarks": "Masalah RAM kotor selesai ditangani, unit masuk kembali ke status ready stok"
-  },
-  {
-    "id": 20,
-    "fullNumber": "TCK-2026-020",
-    "asset": null,
-    "engineer": {
-      "id": 8,
-      "username": "dani.desktop",
-      "email": "dani@bukitasam.co.id",
-      "role": "engineer"
-    },
-    "user": {
-      "employeeId": 5015,
-      "nik": "484848",
-      "name": "Lukman Hakim",
-      "userNonEmployee": "PIC"
-    },
-    "createdBy": {
-      "id": 2,
-      "username": "helpdesk.utama",
-      "email": "helpdesk@bukitasam.co.id",
-      "role": "helpdesk"
-    },
-    "sla": {
-      "id": 3,
-      "name": "P3",
-      "description": "Normal Priority Issue",
-      "resolutionTime": 14400,
-      "responseTime": 1800
-    },
-    "location": {
-      "id": 4,
-      "name": "PLG"
-    },
-    "problem": "Gagal sinkronisasi folder shared network drive departemen SDM karena isu permission Windows",
-    "status": "resolved",
-    "solution": "Mengonfigurasi ulang hak akses Read/Write user lewat Active Directory (AD) security group.",
-    "startAt": "2026-06-09T09:10:00Z",
-    "solvedAt": "2026-06-09T09:40:00Z",
-    "remarks": "Masalah hak akses terselesaikan tanpa kunjungan fisik maupun penanganan aset hardware"
+    "remarks": "Bobby mendaftarkan tiket stock pool ini biar dicek oleh tim infra/desktop later"
   }
 ]

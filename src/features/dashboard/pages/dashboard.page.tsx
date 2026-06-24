@@ -8,6 +8,7 @@ import {useLoaderData} from "react-router";
 
 export const DashboardPage = () => {
     const {ticketSummary, ticketTrend, assetSummary, assetSummaryForChart} = useLoaderData()
+    console.log(ticketSummary, ticketTrend, assetSummary, assetSummaryForChart)
     return (
 	<div className="flex-1 space-y-6 lg:space-y-8 overflow-auto">
 	    {/*hero*/}
@@ -57,7 +58,7 @@ export const DashboardPage = () => {
 		    <ResponsiveContainer width="100%" height={240}>
 			<LineChart data={ticketTrend}>
 			    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-			    <XAxis dataKey="name" stroke="#9ca3af" style={{ fontSize: '12px' }} />
+			    <XAxis dataKey="label" stroke="#9ca3af" style={{ fontSize: '12px' }} />
 			    <YAxis stroke="#9ca3af" style={{ fontSize: '12px' }} />
 			    <Tooltip
 				contentStyle={{
@@ -85,7 +86,7 @@ export const DashboardPage = () => {
 		    <ResponsiveContainer width="100%" height={240}>
 			<BarChart data={assetSummaryForChart}>
 			    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-			    <XAxis dataKey="name" stroke="#9ca3af" style={{ fontSize: '12px' }} />
+			    <XAxis dataKey="label" stroke="#9ca3af" style={{ fontSize: '12px' }} />
 			    <YAxis stroke="#9ca3af" style={{ fontSize: '12px' }} />
 			    <Tooltip
 				contentStyle={{

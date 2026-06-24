@@ -1,6 +1,5 @@
 import {useState} from "react";
 import {
-    BarChart3,
     FileText,
     HelpCircle,
     LayoutDashboard,

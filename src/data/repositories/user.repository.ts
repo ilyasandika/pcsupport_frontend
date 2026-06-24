@@ -6,7 +6,7 @@ import {delay} from "../../helper/helper.tsx";
 const userLocal: IUserRepository = {
     getUsers: async (): Promise<IUser[]> => {
 	await delay();
-	return userDummy as IUser[];
+	return userDummy as unknown as IUser[];
     }
 }
 

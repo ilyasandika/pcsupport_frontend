@@ -8,7 +8,8 @@ import {
 import { useMemo, useState } from "react";
 import Table from "./table.tsx";
 import { ActionButtons } from "./action-button.tsx";
-import type { IEmployee } from "../../types/employee.type.ts"; // Sesuaikan path type kamu
+import type { IEmployee } from "../../types/employee.type.ts";
+import {useNavigate} from "react-router";
 
 interface EmployeeTableProps {
     data: IEmployee[]
@@ -17,7 +18,7 @@ interface EmployeeTableProps {
 
 export const EmployeeTable = ({ data, isLoading = false }: EmployeeTableProps) => {
     const columnHelper = createColumnHelper<IEmployee>();
-
+    const navigate = useNavigate();
     const columns: ColumnDef<IEmployee, any>[] = useMemo(
 	() => [
 	    columnHelper.accessor('name', {
@@ -124,8 +125,11 @@ export const EmployeeTable = ({ data, isLoading = false }: EmployeeTableProps) =
 		id: 'actions',
 		header: 'Actions',
 		size: 120,
-		cell: () => (
+		cell: (info) => (
 		    <ActionButtons
+			detail={{
+			    onClick: () => navigate(`${info.row.original.id}`)
+			}}
 			edit={{ onClick: () => console.log('edit employee') }}
 			document={{ onClick: () => console.log('document employee') }}
 			remove={{ onClick: () => console.log('remove employee') }}
@@ -149,6 +153,7 @@ export const EmployeeTable = ({ data, isLoading = false }: EmployeeTableProps) =
 	renderFallbackValue: '-',
 	onColumnFiltersChange: setColumnFilters,
 	onPaginationChange: setPagination,
+	columnResizeMode: 'onChange',
 	getCoreRowModel: getCoreRowModel(),
 	getFilteredRowModel: getFilteredRowModel(),
 	getPaginationRowModel: getPaginationRowModel(),

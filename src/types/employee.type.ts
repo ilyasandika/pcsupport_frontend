@@ -1,8 +1,11 @@
+import type {IAssetAssignment} from "./asset-assignment.type.ts";
+import type {ITicket} from "./ticket.type.ts";
+
 export interface IEmployee {
     id: number;
     nik: string;
     name: string;
-    contractType: 'organik' | 'pkwt';
+    contractType: string;
     position: string;
     positionId: string;
     fs: string;
@@ -13,11 +16,14 @@ export interface IEmployee {
     division: string;
     department: string;
     status?: boolean;
-    retireDate?: Date;
-    createdAt: Date;
-    updatedAt: Date;
+    retireDate?: string | null | undefined;
+    assetAssignments?: IAssetAssignment[],
+    tickets?: ITicket[],
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface IEmployeeRepository {
     getEmployees: () => Promise<IEmployee[]>
+    getEmployeeDetail: (employeeId: number) => Promise<IEmployee>
 }

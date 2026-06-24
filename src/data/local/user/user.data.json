@@ -1,82 +1,165 @@
+
 [
+
   {
+
     "id": 1,
+
     "username": "johndoe",
+
     "fullName": "John Doe",
+
     "email": "johndoe@example.com",
+
     "role": "admin",
+
     "active": true,
+
     "createdAt": "2026-01-15T08:30:00Z",
+
     "updatedAt": "2026-01-15T08:30:00Z"
+
   },
+
   {
+
     "id": 2,
+
     "username": "alicesmith",
+
     "fullName": "Alice Smith",
+
     "email": "alice.smith@example.com",
+
     "role": "engineer",
+
     "active": true,
+
     "createdAt": "2026-02-10T10:15:30Z",
+
     "updatedAt": "2026-06-12T14:20:00Z"
+
   },
+
   {
+
     "id": 3,
+
     "username": "bobby_hd",
+
     "fullName": "Bobby Kurniawan",
+
     "email": "bobby.k@example.com",
+
     "role": "helpdesk",
+
     "active": true,
+
     "createdAt": "2026-03-01T09:00:00Z",
+
     "updatedAt": "2026-03-01T09:00:00Z"
+
   },
+
   {
+
     "id": 4,
+
     "username": "claramarcia",
+
     "fullName": "Clara Marcia",
+
     "email": "clara.m@example.com",
+
     "role": "engineer",
+
     "active": false,
+
     "createdAt": "2026-01-20T11:45:00Z",
+
     "updatedAt": "2026-05-01T16:30:15Z"
+
   },
+
   {
+
     "id": 5,
+
     "username": "david_admin",
+
     "fullName": "David Sitorus",
+
     "email": "david.s@example.com",
+
     "role": "admin",
+
     "active": true,
+
     "createdAt": "2026-04-11T07:25:00Z",
+
     "updatedAt": "2026-06-18T08:00:00Z"
+
   },
+
   {
+
     "id": 6,
+
     "username": "eva_helpdesk",
+
     "fullName": "Eva Wijaya",
+
     "email": "eva.w@example.com",
+
     "role": "helpdesk",
+
     "active": true,
+
     "createdAt": "2026-05-05T13:10:00Z",
+
     "updatedAt": "2026-05-05T13:10:00Z"
+
   },
+
   {
+
     "id": 7,
+
     "username": "frank_g",
+
     "fullName": "Frank Gery",
+
     "email": "frank.gery@example.com",
+
     "role": "engineer",
+
     "active": true,
+
     "createdAt": "2026-02-28T15:40:00Z",
+
     "updatedAt": "2026-06-10T11:12:00Z"
+
   },
+
   {
+
     "id": 8,
+
     "username": "grace_p",
+
     "fullName": "Grace Puteri",
+
     "email": "grace.p@example.com",
+
     "role": "helpdesk",
+
     "active": false,
+
     "createdAt": "2026-03-15T10:00:00Z",
+
     "updatedAt": "2026-04-20T09:30:00Z"
+
   }
-]
+
+] 
+

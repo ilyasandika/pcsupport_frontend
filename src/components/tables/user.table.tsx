@@ -19,7 +19,6 @@ interface UserTableProps {
 
 export const UserTable = ({ data, isLoading = false }: UserTableProps) => {
     const columnHelper = createColumnHelper<IUser>();
-
     const columns: ColumnDef<IUser, any>[] = useMemo(
 	() => [
 	    columnHelper.accessor('username', {
@@ -114,6 +113,7 @@ export const UserTable = ({ data, isLoading = false }: UserTableProps) => {
 	onColumnFiltersChange: setColumnFilters,
 	onPaginationChange: setPagination,
 	getCoreRowModel: getCoreRowModel(),
+	columnResizeMode: 'onChange',
 	getFilteredRowModel: getFilteredRowModel(),
 	getPaginationRowModel: getPaginationRowModel(),
     });

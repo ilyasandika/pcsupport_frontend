@@ -10,10 +10,21 @@ export const TicketStatus = {
   Resolved : 'resolved',
 }
 
+export interface ITicketStatusResponse {
+  total : number,
+  open : number,
+  pending : number,
+  inProgress : number,
+  closedRemote : number,
+  closedVisit : number,
+  closedOnsite : number,
+  resolved : number,
+}
+
 export interface ITicketSummary {
   total: number,
   open: number,
-  onProgress: number,
+  inProgress: number,
   closed: number,
 }
 
@@ -72,5 +83,6 @@ export interface ITicket {
 export interface ITicketRepository {
   getAllTickets: () => Promise<ITicket[]>
   getTicketSummary: () => Promise<ITicketSummary>
-  getTicketTrend: () => Promise<IChartData[]>
+  getTicketTrend: (range?: 'week' | 'month' | 'year') => Promise<IChartData[]>
+  getTicketsByEmployeeId: (employeeId: number) => Promise<ITicket[]>
 }

@@ -13,10 +13,10 @@ const getTicketTrend = async () => {
 const getAssetSummary = async () => {
     const data = await AssetRepository.getAssetSummary();
     const chartData: IChartData[] = [
-	{name: 'Notebooks', count: data.nb},
-	{name: 'PC', count: data.pc},
-	{name: 'Mobile Workstation', count: data.mws},
-	{name: 'Workstation', count: data.ws},
+	{label: 'Notebooks', count: data.nb},
+	{label: 'PC', count: data.pc},
+	{label: 'Mobile Workstation', count: data.mws},
+	{label: 'Workstation', count: data.ws},
     ]
     return {
 	data,
