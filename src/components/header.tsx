@@ -1,6 +1,7 @@
 import {Bell, Menu} from "lucide-react";
 
 export const Header = ()=> {
+    const fullName = localStorage.getItem('fullName')
     return (
 	// px-6 py-6 sm:px-6 lg:px-8
 	<header className="lg:sticky lg:top-0 z-49 w-full bg-white border-b border-gray-200 h-18 px-8 flex items-center">
@@ -15,7 +16,7 @@ export const Header = ()=> {
 		    </button>
 		    <div>
 			<h2 className="text-md sm:text-lg font-bold text-gray-900">Dashboard</h2>
-			<p className="text-xs sm:text-sm text-gray-500 hidden sm:block">Welcome back, Admin User</p>
+			<p className="text-xs sm:text-sm text-gray-500 hidden sm:block">Welcome back, {fullName}</p>
 		    </div>
 		</div>
 		<div className="flex items-center gap-2 sm:gap-4">
@@ -27,7 +28,7 @@ export const Header = ()=> {
 			<div className="w-8 h-8 bg-ptba-primary rounded-full flex items-center justify-center text-white text-sm">
 			    AD
 			</div>
-			<span className="text-sm font-medium text-gray-700 hidden sm:inline">Admin User</span>
+			<span className="text-sm font-medium text-gray-700 hidden sm:inline">{fullName}</span>
 		    </button>
 		</div>
 	    </div>

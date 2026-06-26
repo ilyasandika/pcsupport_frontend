@@ -30,56 +30,53 @@ export interface ITicketSummary {
 
 export type TicketStatusType = typeof TicketStatus[keyof typeof TicketStatus];
 
+
 export interface ITicket {
-  id: number,
-  fullNumber: string,
+  id: number;
+  fullNumber: string;
+  problem: string;
+  status: TicketStatusType
+  solution?: string;
+  startAt: string;
+  solvedAt?: string;
+  remarks?: string;
+  createdAt: string;
   asset?: {
-    id: number,
-    serialNumber: string,
-    assetTag: string,
-    hostname: string,
-    category: 'nb' | 'mws' | 'pc' | 'ws',
-    brand: string,
-    model: string,
-  }
+    serialNumber: string;
+    assetTag: string;
+    hostname: string;
+    category: 'nb' | 'mws' | 'ws' | 'pc';
+    assetAssigment: {
+      name: string;
+      nik: string;
+      userNonEmployeeName?: string;
+    };
+  };
   engineer?: {
-    id: number,
-    username: string,
-    email: string,
-    role: 'admin' | 'engineer' | 'helpdesk',
-  }
-  user?: {
-    employeeId: number,
-    nik: string,
-    name: string,
-    userNonEmployee?: string,
-  }
+    fullName: string;
+    role: 'admin' | 'engineer' | 'user' | string;
+  };
+  employee?: {
+    name: string;
+    nik: string;
+  };
   createdBy: {
-    id: number,
-    username: string,
-    email: string,
-    role: string,
-  }
-  sla: {
-    id: number,
-    name: 'P1' | 'P2' | 'P3',
-    description: string,
-    resolutionTime: number,
-    responseTime: number,
-  }
+    fullName: string;
+    role: 'admin' | 'engineer' | 'user' | string;
+  };
+  slaPolicy: {
+    id: number;
+    name: string;
+    description: string;
+    responseTimeSeconds: number;
+    resolutionTimeSeconds: number;
+    isBusinessHourOnly: boolean;
+  };
+
   location: {
-    id: number,
-    name: string // TJE | TRH | JKT | PLG | KRTP,
-  },
-
-  problem: string,
-  status: TicketStatusType,
-  solution?: string,
-  startAt: string,
-  solvedAt?: string,
-  remarks?: string,
+    name: string;
+  };
 }
-
 export interface ITicketRepository {
   getAllTickets: () => Promise<ITicket[]>
   getTicketSummary: () => Promise<ITicketSummary>

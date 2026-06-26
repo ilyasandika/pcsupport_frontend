@@ -9,7 +9,7 @@ import axiosInstance from "../api/interceptors.ts";
 const ticketLocal: ITicketRepository = {
     getAllTickets: async (): Promise<ITicket[]> => {
 	await delay();
-	return ticketDummy as ITicket[];
+	return ticketDummy as unknown as ITicket[];
     },
     getTicketSummary: async (): Promise<ITicketSummary> => {
 	await delay();
@@ -24,13 +24,15 @@ const ticketLocal: ITicketRepository = {
 	return ticketDummy.filter(ticket => {
 	    if (!ticket.user) return false;
 	    return ticket.user.employeeId === employeeId;
-	}) as ITicket[];
+	}) as unknown as ITicket[];
     }
 }
 
 const ticketApi: ITicketRepository = {
     getAllTickets: async (): Promise<ITicket[]> => {
-	return [];
+	const res = await axiosInstance.get('/tickets')
+	console.log(res.data)
+	return res.data;
     },
     getTicketSummary: async (): Promise<ITicketSummary> => {
 	const res = await axiosInstance.get('tickets/count/status')

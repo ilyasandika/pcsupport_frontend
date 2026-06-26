@@ -8,7 +8,7 @@ import {
 import {useMemo, useState} from "react";
 import Table from "./table.tsx";
 import {ActionButtons} from "./action-button.tsx";
-import type {ITicket} from "../../types/ticket.type.ts";
+import {type ITicket, TicketStatus} from "../../types/ticket.type.ts";
 
 interface TicketTableProps {
     data: ITicket[]
@@ -17,40 +17,66 @@ interface TicketTableProps {
 
 export const TicketTable = ({data, isLoading=false}: TicketTableProps ) =>  {
     const columnHelper = createColumnHelper<ITicket>();
+
+    const closedStyle = 'bg-ptba-primary/10 text-ptba-primary border-ptba-primary/20'
+    const statusStyles = {
+	[TicketStatus.Open]: 'bg-ptba-green/10 text-ptba-green border-ptba-green/20',
+	[TicketStatus.Pending]: 'bg-ptba-yellow/10 text-ptba-yellow  border-ptba-yellow/20',
+	[TicketStatus.InProgress]: 'bg-ptba-yellow/10 text-ptba-orange  border-ptba-yellow/20',
+
+	[TicketStatus.ClosedRemote]: closedStyle,
+	[TicketStatus.ClosedVisit]: closedStyle,
+	[TicketStatus.ClosedOnsite]: closedStyle,
+	[TicketStatus.Resolved]: closedStyle,
+    }
     const columns: ColumnDef<ITicket, any>[] = useMemo(
 	() => [
 	    columnHelper.accessor('fullNumber', {
 		header: 'Ticket Number',
 		size: 160,
 	    }),
-	    columnHelper.accessor(row => row.asset?.assetTag, {
-		id: 'assetTag',
-		header: 'Asset Tag',
+	    columnHelper.accessor(row => {
+		if (!row?.asset) return '';
+		 return `${row.asset.assetTag} ${row.asset.serialNumber}`;
+	    }, {
+		header: 'Asset Tag / SN',
+		cell: (info) => {
+		    const asset = info.row.original.asset;
+		    return (
+			asset ? <div>
+			    <div className="font-semibold">{asset?.assetTag}</div>
+			    <div className="text-xs text-gray-500">{asset?.serialNumber}</div>
+			</div>: '-'
+		    )
+		}
 	    }),
 	    columnHelper.accessor(row => {
-		if (!row.user) return '';
-		const status = row.user.userNonEmployee ? row.user.userNonEmployee : 'PIC';
-		return `${row.user.name} ${status}`;
+		if (!row?.employee) return '';
+		const status = row.asset?.assetAssigment?.userNonEmployeeName ? row.asset.assetAssigment.userNonEmployeeName : 'PIC';
+		return `${row.employee.name} ${status} ${row.employee.nik}`;
 	    }, {
 		id: 'user',
 		header: 'User',
 		size: 300,
 		cell: (info) => {
-		    const user = info.row.original.user
-		    if (!user) return <span> - </span>
+		    const user = info.row.original.asset?.assetAssigment;
+		    const employee = info.row.original.employee;
+		    if (!employee) return <span> - </span>
 		    return (
 			<div>
-			    <div className="font-semibold">{`${user.name} (${user.userNonEmployee ? user.userNonEmployee : 'PIC'})`}</div>
-			    <div className="text-xs text-gray-500">{`NIK: ${user.nik ? user.nik : '-'}`}</div>
+			    <div className="font-semibold">{`${employee?.name} (${user?.userNonEmployeeName ? user?.userNonEmployeeName : 'PIC'})`}</div>
+			    <div className="text-xs text-gray-500">{`NIK: ${employee?.nik ? employee.nik : '-'}`}</div>
 			</div>
 		    )
 		}
 	    }),
-	    columnHelper.accessor( (row) => row.location.name, {
+	    columnHelper.accessor( (row) => row.location?.name, {
 		header: 'Location'
 	    }),
+	    columnHelper.accessor((row) => row.slaPolicy.name, {
+		header: 'SLA Policy',
+	    }),
 	    columnHelper.accessor(row => row.asset?.category, {
-		id: 'category',
 		header: 'Category',
 		size: 120
 	    }),
@@ -60,13 +86,14 @@ export const TicketTable = ({data, isLoading=false}: TicketTableProps ) =>  {
 		size: 400
 	    }),
 
-	    columnHelper.accessor(row => row.createdBy?.username, {
+	    columnHelper.accessor(row => row.createdBy?.fullName, {
 		header: 'Created By'
 	    }),
 
 	    columnHelper.accessor( 'startAt', {
 		header: 'Start At',
 		cell: (info) => {
+
 		    const rawValue = info.getValue();
 		    if (!rawValue) return '-';
 		    const rawDate = new Date(rawValue);
@@ -98,13 +125,24 @@ export const TicketTable = ({data, isLoading=false}: TicketTableProps ) =>  {
 		}
 	    }),
 
-	    columnHelper.accessor(row => row.engineer?.username, {
+	    columnHelper.accessor(row => row.engineer?.fullName, {
 		header: 'Engineer'
 	    }),
 
 	    columnHelper.accessor('status', {
 		header: 'Status',
 		size: 150,
+		cell: (info) => {
+		    const value = info.getValue()
+		    const currentStyle = statusStyles[value] || 'bg-gray-100 text-gray-800 border-gray-200'
+		    return (
+			<div className="flex items-center">
+			    <span className={`inline-flex items-center px-2.5 py-2 border rounded-lg text-xs font-medium  capitalize ${currentStyle}`}>
+			      {value}
+			    </span>
+			</div>
+		    )
+		}
 	    }),
 
 	    columnHelper.accessor('solution', {
@@ -147,7 +185,7 @@ export const TicketTable = ({data, isLoading=false}: TicketTableProps ) =>  {
 	getPaginationRowModel: getPaginationRowModel(),
     });
 
-// E. Render Halaman
+
     return (<Table table={table} name='All Tickets' isLoading={isLoading} />)
 
 }
