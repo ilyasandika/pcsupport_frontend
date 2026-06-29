@@ -52,9 +52,9 @@ export const EmployeeTable = ({ data, isLoading = false }: EmployeeTableProps) =
 		    );
 		}
 	    }),
-	    columnHelper.accessor('position', {
+	    columnHelper.accessor(row => `${row.position} ${row.department}`, {
 		header: 'Position',
-		size: 250,
+		size: 400,
 		cell: (info) => {
 		    const employee = info.row.original;
 		    return (
@@ -63,37 +63,32 @@ export const EmployeeTable = ({ data, isLoading = false }: EmployeeTableProps) =
 				{employee.position}
 			    </div>
 			    <div className="text-xs text-gray-500">
-				{employee.positionId}
+				{employee.department}
 			    </div>
 			</div>
 		    );
 		}
 	    }),
-	    columnHelper.accessor(row => `${row.directorate} ${row.division} ${row.department}`, {
-		id: 'organization',
-		header: 'Organization Unit',
-		size: 300,
-		cell: (info) => {
-		    const emp = info.row.original;
-		    return (
-			<div className="text-sm">
-			    <div className="font-medium text-gray-700">{emp.department || '-'}</div>
-			    <div className="text-xs text-gray-500">
-				{`${emp.division || '-'} • ${emp.directorate || '-'}`}
-			    </div>
-			</div>
-		    );
-		}
-	    }),
+	    // columnHelper.accessor(row => `${row.directorate} ${row.division} ${row.department}`, {
+		// id: 'organization',
+		// header: 'Organization Unit',
+		// size: 300,
+		// cell: (info) => {
+		//     const emp = info.row.original;
+		//     return (
+		// 	<div className="text-sm">
+		// 	    <div className="font-medium text-gray-700">{emp.department || '-'}</div>
+		// 	    <div className="text-xs text-gray-500">
+		// 		{`${emp.division || '-'} • ${emp.directorate || '-'}`}
+		// 	    </div>
+		// 	</div>
+		//     );
+		// }
+	    // }),
 	    columnHelper.accessor('religion', {
 		header: 'Religion',
-		size: 100,
+		size: 150,
 		cell: (info) => info.getValue() ? info.getValue().toUpperCase() : '-'
-	    }),
-	    columnHelper.accessor(row => `${row.fs || '-'} / ${row.mjl || '-'}`, {
-		id: 'fsMjl',
-		header: 'FS / MJL',
-		size: 120,
 	    }),
 	    columnHelper.accessor('retireDate', {
 		header: 'Retirement Date',
@@ -110,12 +105,14 @@ export const EmployeeTable = ({ data, isLoading = false }: EmployeeTableProps) =
 	    }),
 	    columnHelper.accessor('status', {
 		header: 'Status',
-		size: 100,
+		size: 150,
 		cell: (info) => {
 		    const active = info.getValue();
 		    return (
-			<span className={`text-xs font-medium ${active ? 'text-green-600' : 'text-red-500'}`}>
-                            {active ? '● Active' : '● Inactive'}
+			<span className={`px-2 py-0.5 text-xs font-semibold rounded uppercase ${
+			    active ? 'bg-ptba-green/10 text-ptba-green' : 'bg-ptba-red/10 text-ptba-red'
+			}`}>
+                            {active ? 'active' : 'inactive'}
                         </span>
 		    );
 		}
