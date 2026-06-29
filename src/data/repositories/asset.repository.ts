@@ -1,4 +1,4 @@
-import type {IAsset, IAssetRepository, IAssetSummary} from "../../types/asset.type.ts";
+import type {IDetailAsset, IAssetRepository, IAssetSummary} from "../../types/asset.type.ts";
 import assetSummaryDummy from "../local/asset/asset-summary.data.json"
 import assetDummies from "../local/asset/asset.data.json"
 import {delay} from "../../helper/helper.tsx";
@@ -9,27 +9,28 @@ const assetLocal: IAssetRepository = {
 	await delay();
 	return assetSummaryDummy as IAssetSummary;
     },
-    getAssets: async (): Promise<IAsset[]> => {
+    getAssets: async (): Promise<IDetailAsset[]> => {
 	await delay();
-	return assetDummies as IAsset[]
+	return assetDummies as unknown as IDetailAsset[]
     },
-    getAssetById: async (assetId: number): Promise<IAsset> => {
+    getAssetById: async (assetId: number): Promise<IDetailAsset> => {
 	await delay();
-	return assetDummies.find((asset) => asset.id === assetId) as IAsset
+	return assetDummies.find((asset) => asset.id === assetId) as unknown as IDetailAsset
     }
 }
 
 const assetApi: IAssetRepository = {
     getAssetSummary: async (): Promise<IAssetSummary> => {
-	const data = await axiosInstance.get('assets/count/category')
+	const data = await axiosInstance.get('/asset-categories/count')
 	return data.data
     },
-    getAssets: async (): Promise<IAsset[]> => {
-	return [] as IAsset[]
+    getAssets: async (): Promise<IDetailAsset[]> => {
+	const data = await axiosInstance.get('assets')
+	return data.data
     },
-    getAssetById: async (assetId: number): Promise<IAsset> => {
+    getAssetById: async (assetId: number): Promise<IDetailAsset> => {
 	console.log(assetId)
-	return {} as IAsset
+	return {} as IDetailAsset
     }
 }
 

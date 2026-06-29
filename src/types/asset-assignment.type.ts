@@ -1,10 +1,10 @@
-import type {IAsset} from "./asset.type.ts";
+import type {IDetailAsset} from "./asset.type.ts";
 import type {IEmployee} from "./employee.type.ts";
 
 export interface IAssetAssignment {
     id: number;
     assetId: number;
-    asset?: IAsset
+    asset?: IDetailAsset
     picEmployeeId: number;
     picEmployee?: IEmployee
     userNonEmployeeName?: string;

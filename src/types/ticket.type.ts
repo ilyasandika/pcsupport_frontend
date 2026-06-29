@@ -1,4 +1,5 @@
 import type {IChartData} from "./common.type.ts";
+import type {IAsset} from "./asset.type.ts";
 
 export const TicketStatus = {
   Open : 'open',
@@ -41,17 +42,7 @@ export interface ITicket {
   solvedAt?: string;
   remarks?: string;
   createdAt: string;
-  asset?: {
-    serialNumber: string;
-    assetTag: string;
-    hostname: string;
-    category: 'nb' | 'mws' | 'ws' | 'pc';
-    assetAssigment: {
-      name: string;
-      nik: string;
-      userNonEmployeeName?: string;
-    };
-  };
+  asset?: IAsset
   engineer?: {
     fullName: string;
     role: 'admin' | 'engineer' | 'user' | string;
@@ -72,8 +63,8 @@ export interface ITicket {
     resolutionTimeSeconds: number;
     isBusinessHourOnly: boolean;
   };
-
   location: {
+    id: number;
     name: string;
   };
 }

@@ -29,6 +29,8 @@ export const TicketTable = ({data, isLoading=false}: TicketTableProps ) =>  {
 	[TicketStatus.ClosedOnsite]: closedStyle,
 	[TicketStatus.Resolved]: closedStyle,
     }
+
+    console.log(data )
     const columns: ColumnDef<ITicket, any>[] = useMemo(
 	() => [
 	    columnHelper.accessor('fullNumber', {
@@ -76,9 +78,17 @@ export const TicketTable = ({data, isLoading=false}: TicketTableProps ) =>  {
 	    columnHelper.accessor((row) => row.slaPolicy.name, {
 		header: 'SLA Policy',
 	    }),
-	    columnHelper.accessor(row => row.asset?.category, {
+	    columnHelper.accessor(row => row.asset?.category.name, {
 		header: 'Category',
-		size: 120
+		size: 120,
+		cell: (info) => {
+		    const value = info.getValue()
+		    return (
+			<div className={value ? 'uppercase' : ''}>
+			    {value ? value : 'Non Asset'}
+			</div>
+		    )
+		}
 	    }),
 
 	    columnHelper.accessor('problem', {

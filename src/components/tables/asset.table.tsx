@@ -8,16 +8,16 @@ import {
 import {useMemo, useState} from "react";
 import Table from "./table.tsx";
 import {ActionButtons} from "./action-button.tsx";
-import type {IAsset} from "../../types/asset.type.ts";
+import type {IDetailAsset} from "../../types/asset.type.ts";
 
 interface AssetTableProps {
-    data: IAsset[]
+    data: IDetailAsset[]
     isLoading?: boolean
 }
 
 export const AssetTable = ({data, isLoading = false}: AssetTableProps) =>  {
-    const columnHelper = createColumnHelper<IAsset>();
-    const columns: ColumnDef<IAsset, any>[] = useMemo(
+    const columnHelper = createColumnHelper<IDetailAsset>();
+    const columns: ColumnDef<IDetailAsset, any>[] = useMemo(
 	() => [
 	    columnHelper.accessor('assetTag', {
 		header: 'Asset Tag',
@@ -41,29 +41,29 @@ export const AssetTable = ({data, isLoading = false}: AssetTableProps) =>  {
 		size: 150,
 	    }),
 	    columnHelper.accessor(row => {
-		if (!row.user) return '';
-		const status = row.user.userNonEmployee ? row.user.userNonEmployee : 'PIC';
-		return `${row.user.name} ${status}`;
+		if (!row.assetAssignment) return '';
+		const status = row.assetAssignment.userNonEmployee ? row.assetAssignment.userNonEmployee : 'PIC';
+		return `${row.assetAssignment.employee.name} ${status}`;
 	    }, {
 		id: 'user',
 		header: 'User / PIC',
 		size: 250,
 		cell: (info) => {
-		    const user = info.row.original.user;
+		    const user = info.row.original.assetAssignment;
 		    if (!user) return <span className="text-gray-400">-</span>;
 		    return (
 			<div>
 			    <div className="font-semibold">
-				{`${user.name} (${user.userNonEmployee ? user.userNonEmployee : 'PIC'})`}
+				{`${user.employee.name} (${user.userNonEmployee ? user.userNonEmployee : 'PIC'})`}
 			    </div>
 			    <div className="text-xs text-gray-500">
-				{`NIK: ${user.nik ? user.nik : '-'}`}
+				{`NIK: ${user.employee.name ? user.employee.nik : '-'}`}
 			    </div>
 			</div>
 		    );
 		}
 	    }),
-	    columnHelper.accessor('category', {
+	    columnHelper.accessor(row => row.category.name, {
 		header: 'Category',
 		size: 100,
 		cell: (info) => info.getValue()?.toUpperCase()
@@ -143,7 +143,7 @@ export const AssetTable = ({data, isLoading = false}: AssetTableProps) =>  {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
 
-    const table = useReactTable<IAsset>({
+    const table = useReactTable<IDetailAsset>({
 	data,
 	columns,
 	state: {

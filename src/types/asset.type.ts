@@ -5,38 +5,31 @@ export interface IAssetSummary {
     ws: number;
 }
 
-export interface IAssetRepository {
-    getAssetSummary: () => Promise<IAssetSummary>
-    getAssets: () => Promise<IAsset[]>
-    getAssetById: (assetId: number) => Promise<IAsset>
+export interface IAssetSupport {
+    id: number,
+    name: string,
+    type: TAssetSupport;
 }
 
+export type TAssetSupport = 'lcd' | 'charger' | 'keyboard' | 'mouse' | 'wifi dongle';
 
-export interface IAsset {
+export interface IAssetRepository {
+    getAssetSummary: () => Promise<IAssetSummary>
+    getAssets: () => Promise<IDetailAsset[]>
+    getAssetById: (assetId: number) => Promise<IDetailAsset>
+}
+
+export interface IDetailAsset {
     id: number;
     serialNumber: number;
     assetTag: string;
     hostname: string;
-    user?: {
-        employeeId: number,
-        nik: string,
-        name: string,
-        userNonEmployee?: string,
-    }
-    category: 'nb' | 'mws' | 'ws' | 'pc';
-    brand: string;
-    model?: string;
-    workLocation: {
+    category: {
         id: number;
         name: string;
     }
-    project: {
-        name: string;
-        vendor: {
-            id: number;
-            name: string;
-        }
-    }
+    brand: string;
+    model?: string;
     warrantyDate?: string;
     purchaseDate?: string;
     storageType?: string;
@@ -44,6 +37,53 @@ export interface IAsset {
     memoryType?: string;
     memoryCapacityByte?: string;
     processor?: string;
-    createdAt: string;
-    updatedAt: string;
+    assetAssignment?: {
+        employee: {
+            id: number,
+            name: string,
+            nik: string,
+            position: string;
+            department: string;
+        }
+        assignedAt: string;
+        userNonEmployee?: string,
+    }
+
+    workLocation: {
+        id: number;
+        name: string;
+    }
+    supports: IAssetSupport[]
+    project: {
+        name: string;
+        vendor: {
+            id: number;
+            name: string;
+        }
+    }
+    // createdAt: string;
+    // updatedAt: string;
+}
+
+export interface IAsset {
+    serialNumber: string;
+    assetTag: string;
+    hostname: string;
+    category: {
+        id?: number
+        name: string;
+    }
+    assetAssigment: IAssetAssignment
+}
+
+export interface IAssetAssignment {
+    employee: {
+        id: number,
+        name: string,
+        nik: string,
+        position: string;
+        department: string;
+    }
+    assignedAt: string;
+    userNonEmployeeName?: string,
 }
