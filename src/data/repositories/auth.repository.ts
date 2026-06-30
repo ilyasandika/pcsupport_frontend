@@ -1,6 +1,6 @@
 import {delay} from "../../helper/helper.tsx";
 import type {IAuth, IAuthRepository} from "../../types/auth.type.ts";
-import axiosInstance from "../api/interceptors.ts";
+import api from "../api/interceptors.ts";
 
 
 const authLocal: IAuthRepository = {
@@ -8,24 +8,23 @@ const authLocal: IAuthRepository = {
 	await delay();
 	console.log('masukLocal')
 	return {} as IAuth;
+    },
+    logout: async () => {
+	await delay();
     }
 }
 
 
 const authApi: IAuthRepository = {
     login: async (username: string, password: string): Promise<IAuth> => {
-	await axiosInstance.post('/auth/login', {
+	const res = await api.post('/auth/login', {
 	    username,
 	    password,
-	}).then(res => {
-	    localStorage.setItem('token', res.data.token)
-	    localStorage.setItem('user', res.data.user)
-	    localStorage.setItem('role', res.data.role)
-	    localStorage.setItem('username', res.data.username)
-	    localStorage.setItem('fullName', res.data.fullName)
 	})
-
-	return {} as IAuth;
+	return res.data;
+    },
+    logout: async () => {
+	return await api.post('/auth/logout')
     }
 }
 

@@ -4,10 +4,10 @@ import {InputField} from "../../../components/form/input-fields.tsx";
 import {useTheme} from "../../../context/ThemeContext.tsx";
 import {Blob} from "../../../components/blob.tsx";
 import {Check, Moon, Sun} from "lucide-react";
-import {AuthRepository} from "../../../data/repositories/auth.repository.ts";
 import type {IErrorResponse, IErrors} from "../../../types/api.type.ts";
 import {findFieldError} from "../../../helper/helper.tsx";
 import {useNavigate} from "react-router";
+import {useAuth} from "../../../context/AuthContext.tsx";
 
 export const LoginPage = () => {
     const [password, setPassword] = useState("");
@@ -19,14 +19,15 @@ export const LoginPage = () => {
 
     const {toggleTheme, theme} = useTheme();
     const navigate = useNavigate();
+    const {login} = useAuth()
 
 
     const handleSubmit = async (e: React.SubmitEvent) => {
 	e.preventDefault();
 	setLoading(true);
 	setErrors([]);
-	// setTimeout(() => setLoading(false), 1800);
-	await AuthRepository.login(username, password)
+
+	await login(username, password)
 	    .then(() => navigate('/'))
 	    .catch((err: IErrorResponse) => {
 		setErrors(err.errors);
