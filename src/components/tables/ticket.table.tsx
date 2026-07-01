@@ -8,7 +8,9 @@ import {
 import {useMemo, useState} from "react";
 import Table from "./table.tsx";
 import {ActionButtons} from "./action-button.tsx";
-import {type ITicket, TicketStatus} from "../../types/ticket.type.ts";
+import {type ITicket} from "../../types/ticket.type.ts";
+import {useNavigate} from "react-router";
+import {getStatusBadgeStyle} from "../../helper/helper.tsx";
 
 interface TicketTableProps {
     data: ITicket[]
@@ -17,25 +19,39 @@ interface TicketTableProps {
 
 export const TicketTable = ({data, isLoading=false}: TicketTableProps ) =>  {
     const columnHelper = createColumnHelper<ITicket>();
-
-    const closedStyle = 'bg-ptba-primary/10 text-ptba-primary border-ptba-primary/20'
-    const statusStyles = {
-	[TicketStatus.Open]: 'bg-ptba-green/10 text-ptba-green border-ptba-green/20',
-	[TicketStatus.Pending]: 'bg-ptba-yellow/10 text-ptba-yellow  border-ptba-yellow/20',
-	[TicketStatus.InProgress]: 'bg-ptba-yellow/10 text-ptba-orange  border-ptba-yellow/20',
-
-	[TicketStatus.ClosedRemote]: closedStyle,
-	[TicketStatus.ClosedVisit]: closedStyle,
-	[TicketStatus.ClosedOnsite]: closedStyle,
-	[TicketStatus.Resolved]: closedStyle,
-    }
-
-    console.log(data )
+    const navigate = useNavigate()
     const columns: ColumnDef<ITicket, any>[] = useMemo(
 	() => [
+	    columnHelper.accessor('status', {
+		header: 'Status',
+		size: 150,
+		cell: (info) => {
+		    const value = info.getValue()
+		    const currentStyle = getStatusBadgeStyle(value) || 'bg-gray-100 text-gray-800 border-gray-200'
+		    return (
+			<div className="flex items-center">
+			    <span className={`inline-flex items-center px-2.5 py-2 border rounded-lg text-xs font-medium  capitalize ${currentStyle}`}>
+			      {value}
+			    </span>
+			</div>
+		    )
+		}
+	    }),
 	    columnHelper.accessor('fullNumber', {
 		header: 'Ticket Number',
 		size: 160,
+	    }),
+	    columnHelper.accessor(row => row.asset?.category.name, {
+		header: 'Category',
+		size: 120,
+		cell: (info) => {
+		    const value = info.getValue()
+		    return (
+			<div className={value ? 'uppercase' : ''}>
+			    {value ? value : 'Non Asset'}
+			</div>
+		    )
+		}
 	    }),
 	    columnHelper.accessor(row => {
 		if (!row?.asset) return '';
@@ -78,18 +94,7 @@ export const TicketTable = ({data, isLoading=false}: TicketTableProps ) =>  {
 	    columnHelper.accessor((row) => row.slaPolicy.name, {
 		header: 'SLA Policy',
 	    }),
-	    columnHelper.accessor(row => row.asset?.category.name, {
-		header: 'Category',
-		size: 120,
-		cell: (info) => {
-		    const value = info.getValue()
-		    return (
-			<div className={value ? 'uppercase' : ''}>
-			    {value ? value : 'Non Asset'}
-			</div>
-		    )
-		}
-	    }),
+
 
 	    columnHelper.accessor('problem', {
 		header: 'Problem',
@@ -139,38 +144,29 @@ export const TicketTable = ({data, isLoading=false}: TicketTableProps ) =>  {
 		header: 'Engineer'
 	    }),
 
-	    columnHelper.accessor('status', {
-		header: 'Status',
-		size: 150,
-		cell: (info) => {
-		    const value = info.getValue()
-		    const currentStyle = statusStyles[value] || 'bg-gray-100 text-gray-800 border-gray-200'
-		    return (
-			<div className="flex items-center">
-			    <span className={`inline-flex items-center px-2.5 py-2 border rounded-lg text-xs font-medium  capitalize ${currentStyle}`}>
-			      {value}
-			    </span>
-			</div>
-		    )
-		}
-	    }),
+
 
 	    columnHelper.accessor('solution', {
 		header: 'Solution',
 		size: 400,
 	    }),
 
-	    // Contoh display column untuk tombol aksi (tidak ng-link ke data)
 	    columnHelper.display({
 		id: 'actions',
 		header: 'actions',
-		cell: () => (
-		   <ActionButtons
-		       edit={{onClick: (()=> console.log('edit'))}}
-		       document={{onClick: (()=> console.log('document'))}}
-		       remove={{onClick: (()=> console.log('remove'))}}
-		   />
-		),
+		cell: (info) => {
+		    const row = info.row.original;
+		    return (
+		       <ActionButtons
+			   detail={{ onClick: (()=> navigate(`${row.id}`)) }}
+			   edit={{onClick: (()=> console.log('edit'))}}
+			   document={{onClick: (()=> console.log('document'))}}
+			   remove={{onClick: (()=> console.log('remove'))}}
+		       />
+		   )
+		}
+
+
 	    }),
 	],
 	[]

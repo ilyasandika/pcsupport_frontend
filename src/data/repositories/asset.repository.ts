@@ -2,7 +2,7 @@ import type {IDetailAsset, IAssetRepository, IAssetSummary} from "../../types/as
 import assetSummaryDummy from "../local/asset/asset-summary.data.json"
 import assetDummies from "../local/asset/asset.data.json"
 import {delay} from "../../helper/helper.tsx";
-import axiosInstance from "../api/interceptors.ts";
+import api from "../api/interceptors.ts";
 
 const assetLocal: IAssetRepository = {
     getAssetSummary: async (): Promise<IAssetSummary> => {
@@ -21,11 +21,11 @@ const assetLocal: IAssetRepository = {
 
 const assetApi: IAssetRepository = {
     getAssetSummary: async (): Promise<IAssetSummary> => {
-	const data = await axiosInstance.get('/asset-categories/count')
+	const data = await api.get('/asset-categories/count')
 	return data.data
     },
     getAssets: async (): Promise<IDetailAsset[]> => {
-	const data = await axiosInstance.get('assets')
+	const data = await api.get('assets')
 	return data.data
     },
     getAssetById: async (assetId: number): Promise<IDetailAsset> => {

@@ -50,6 +50,8 @@ export interface ITicket {
   employee?: {
     name: string;
     nik: string;
+    position: string;
+    department: string;
   };
   createdBy: {
     fullName: string;
@@ -73,4 +75,5 @@ export interface ITicketRepository {
   getTicketSummary: () => Promise<ITicketSummary>
   getTicketTrend: (range?: 'week' | 'month' | 'year') => Promise<IChartData[]>
   getTicketsByEmployeeId: (employeeId: number) => Promise<ITicket[]>
+  getTicketById: (id: number) => Promise<ITicket>
 }

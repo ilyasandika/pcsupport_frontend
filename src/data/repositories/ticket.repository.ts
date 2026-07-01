@@ -4,7 +4,8 @@ import ticketSummaryDummy from '../local/ticket/ticket-summary.data.json'
 import type {IChartData} from "../../types/common.type.ts";
 import ticketTren from "../local/ticket/ticket-tren.data.json"
 import {delay} from "../../helper/helper.tsx";
-import axiosInstance from "../api/interceptors.ts";
+import api from "../api/interceptors.ts";
+import type {IResponse} from "../../types/api.type.ts";
 
 const ticketLocal: ITicketRepository = {
     getAllTickets: async (): Promise<ITicket[]> => {
@@ -25,17 +26,22 @@ const ticketLocal: ITicketRepository = {
 	    if (!ticket.user) return false;
 	    return ticket.user.employeeId === employeeId;
 	}) as unknown as ITicket[];
+    },
+    getTicketById: async (id: number): Promise<ITicket> => {
+	console.log(id)
+	await delay();
+	return {} as ITicket;
     }
 }
 
 const ticketApi: ITicketRepository = {
     getAllTickets: async (): Promise<ITicket[]> => {
-	const res = await axiosInstance.get('/tickets')
+	const res = await api.get('/tickets')
 	console.log(res.data)
 	return res.data;
     },
     getTicketSummary: async (): Promise<ITicketSummary> => {
-	const res = await axiosInstance.get('tickets/count/status')
+	const res = await api.get('tickets/count/status')
 	const data: ITicketStatusResponse = res.data;
 	return {
 	    total: data.total,
@@ -46,7 +52,7 @@ const ticketApi: ITicketRepository = {
     },
 
     getTicketTrend: async (range: 'week' | 'month' | 'year' = "month"): Promise<IChartData[]> => {
-	const data = await axiosInstance.get('tickets/trend/time', {
+	const data = await api.get('tickets/trend/time', {
 	    params: {
 		range
 	    }
@@ -57,6 +63,11 @@ const ticketApi: ITicketRepository = {
     getTicketsByEmployeeId: async (employeeId: number): Promise<ITicket[]> => {
 	console.log(employeeId)
 	return [] as ITicket[];
+    },
+
+    getTicketById: async (id: number): Promise<ITicket> => {
+	const res: IResponse<ITicket> = await api.get(`/tickets/${id}`)
+	return res.data;
     }
 }
 

@@ -1,7 +1,7 @@
 import type {IUser, IUserRepository} from "../../types/user.type.ts";
 import userDummy from "../local/user/user.data.json"
 import {delay} from "../../helper/helper.tsx";
-import axiosInstance from "../api/interceptors.ts";
+import api from "../api/interceptors.ts";
 
 
 const userLocal: IUserRepository = {
@@ -14,7 +14,7 @@ const userLocal: IUserRepository = {
 
 const userApi: IUserRepository = {
     getUsers: async (): Promise<IUser[]> => {
-	const user = await axiosInstance.get('users')
+	const user = await api.get('users')
 	return user.data
     }
 }

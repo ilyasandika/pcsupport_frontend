@@ -5,7 +5,7 @@ import {AssetAssignmentRepository} from "./asset-assignment.repository.ts";
 import {TicketRepository} from "./ticket.repository.ts";
 import type {IAssetAssignment} from "../../types/asset-assignment.type.ts";
 import type {ITicket} from "../../types/ticket.type.ts";
-import axiosInstance from "../api/interceptors.ts";
+import api from "../api/interceptors.ts";
 
 const employeeLocal: IEmployeeRepository = {
     getEmployees: async (): Promise<IEmployee[]> => {
@@ -28,7 +28,7 @@ const employeeLocal: IEmployeeRepository = {
 
 const employeeApi: IEmployeeRepository = {
     getEmployees: async (): Promise<IEmployee[]> => {
-	const res = await axiosInstance.get('employees')
+	const res = await api.get('employees')
 	console.log(res.data)
 	return res.data
     },
