@@ -1,18 +1,3 @@
-export interface IAssetSummary {
-    nb: number;
-    mws: number;
-    pc: number;
-    ws: number;
-}
-
-export interface IAssetSupport {
-    id: number,
-    name: string,
-    type: TAssetSupport;
-}
-
-export type TAssetSupport = 'lcd' | 'charger' | 'keyboard' | 'mouse' | 'wifi dongle';
-
 export interface IAssetRepository {
     getAssetSummary: () => Promise<IAssetSummary>
     getAssets: () => Promise<IDetailAsset[]>
@@ -37,18 +22,7 @@ export interface IDetailAsset {
     memoryType?: string;
     memoryCapacityByte?: string;
     processor?: string;
-    assetAssignment?: {
-        employee: {
-            id: number,
-            name: string,
-            nik: string,
-            position: string;
-            department: string;
-        }
-        assignedAt: string;
-        userNonEmployee?: string,
-    }
-
+    assetAssignments?: IAssetAssignment[];
     workLocation: {
         id: number;
         name: string;
@@ -61,11 +35,11 @@ export interface IDetailAsset {
             name: string;
         }
     }
-    // createdAt: string;
-    // updatedAt: string;
+    createdAt: string;
 }
 
 export interface IAsset {
+    id: number;
     serialNumber: string;
     assetTag: string;
     hostname: string;
@@ -73,7 +47,7 @@ export interface IAsset {
         id?: number
         name: string;
     }
-    assetAssigment: IAssetAssignment
+    assetAssignment: IAssetAssignment
 }
 
 export interface IAssetAssignment {
@@ -86,4 +60,17 @@ export interface IAssetAssignment {
     }
     assignedAt: string;
     userNonEmployeeName?: string,
+}
+
+export interface IAssetSummary {
+    nb: number;
+    mws: number;
+    pc: number;
+    ws: number;
+}
+
+export interface IAssetSupport {
+    id: number,
+    name: string,
+    type: string;
 }

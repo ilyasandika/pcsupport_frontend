@@ -48,6 +48,7 @@ export interface ITicket {
     role: 'admin' | 'engineer' | 'user' | string;
   };
   employee?: {
+    id: number;
     name: string;
     nik: string;
     position: string;

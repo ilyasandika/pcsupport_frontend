@@ -70,15 +70,16 @@ export const TicketTable = ({data, isLoading=false}: TicketTableProps ) =>  {
 	    }),
 	    columnHelper.accessor(row => {
 		if (!row?.employee) return '';
-		const status = row.asset?.assetAssigment?.userNonEmployeeName ? row.asset.assetAssigment.userNonEmployeeName : 'PIC';
+		const status = row.asset?.assetAssignment?.userNonEmployeeName ? row.asset.assetAssignment.userNonEmployeeName : 'PIC';
 		return `${row.employee.name} ${status} ${row.employee.nik}`;
 	    }, {
 		id: 'user',
 		header: 'User',
 		size: 300,
 		cell: (info) => {
-		    const user = info.row.original.asset?.assetAssigment;
+		    const user = info.row.original.asset?.assetAssignment;
 		    const employee = info.row.original.employee;
+
 		    if (!employee) return <span> - </span>
 		    return (
 			<div>

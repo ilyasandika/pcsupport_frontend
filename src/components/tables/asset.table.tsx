@@ -41,23 +41,23 @@ export const AssetTable = ({data, isLoading = false}: AssetTableProps) =>  {
 		size: 150,
 	    }),
 	    columnHelper.accessor(row => {
-		if (!row.assetAssignment) return '';
-		const status = row.assetAssignment.userNonEmployee ? row.assetAssignment.userNonEmployee : 'PIC';
-		return `${row.assetAssignment.employee.name} ${status}`;
+		if (!row.assetAssignments) return '';
+		const status = row.assetAssignments[0].userNonEmployeeName ? row.assetAssignments[0].userNonEmployeeName : 'PIC';
+		return `${row.assetAssignments[0].employee.name} ${status}`;
 	    }, {
 		id: 'user',
 		header: 'User / PIC',
 		size: 250,
 		cell: (info) => {
-		    const user = info.row.original.assetAssignment;
-		    if (!user) return <span className="text-gray-400">-</span>;
+		    const users = info.row.original.assetAssignments;
+		    if (!users) return <span className="text-gray-400">-</span>;
 		    return (
 			<div>
 			    <div className="font-semibold">
-				{`${user.employee.name} (${user.userNonEmployee ? user.userNonEmployee : 'PIC'})`}
+				{`${users[0].employee.name} (${users[0].userNonEmployeeName ? users[0].userNonEmployeeName : 'PIC'})`}
 			    </div>
 			    <div className="text-xs text-gray-500">
-				{`NIK: ${user.employee.name ? user.employee.nik : '-'}`}
+				{`NIK: ${users[0].employee.name ? users[0].employee.nik : '-'}`}
 			    </div>
 			</div>
 		    );
@@ -96,40 +96,14 @@ export const AssetTable = ({data, isLoading = false}: AssetTableProps) =>  {
 		    );
 		}
 	    }),
-
-	    columnHelper.accessor('purchaseDate', {
-		header: 'Purchase Date',
-		size: 150,
-		cell: (info) => {
-		    const rawValue = info.getValue();
-		    if (!rawValue) return '-';
-		    return new Date(rawValue).toLocaleDateString('id-ID', {
-			day: 'numeric',
-			month: 'long',
-			year: 'numeric'
-		    });
-		}
-	    }),
-	    columnHelper.accessor('warrantyDate', {
-		header: 'Warranty Expired',
-		size: 150,
-		cell: (info) => {
-		    const rawValue = info.getValue();
-		    if (!rawValue) return '-';
-		    return new Date(rawValue).toLocaleDateString('id-ID', {
-			day: 'numeric',
-			month: 'long',
-			year: 'numeric'
-		    });
-		}
-	    }),
 	    // Display column untuk tombol aksi
 	    columnHelper.display({
 		id: 'actions',
 		header: 'Actions',
-		size: 120,
+
 		cell: () => (
 		    <ActionButtons
+			detail={{ onClick: () => console.log('detail') }}
 			edit={{ onClick: () => console.log('edit') }}
 			document={{ onClick: () => console.log('document') }}
 			remove={{ onClick: () => console.log('remove') }}
