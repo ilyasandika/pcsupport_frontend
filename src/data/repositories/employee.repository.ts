@@ -33,8 +33,8 @@ const employeeApi: IEmployeeRepository = {
 	return res.data
     },
     getEmployeeDetail: async (employeeId: number): Promise<IEmployee> => {
-	console.log(employeeId)
-	return {} as IEmployee;
+	const res = await api.get(`/employees/${employeeId}`)
+	return res.data
     }
 };
 

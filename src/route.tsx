@@ -3,7 +3,7 @@ import {Layout} from "./Layout.tsx";
 import {DashboardPage} from "./features/dashboard/pages/dashboard.page.tsx";
 import {TicketPage} from "./features/ticket/pages/ticket.page.tsx";
 import {AssetPage} from "./features/asset/pages/asset.page.tsx";
-import {assetLoader} from "./features/asset/loader/asset.loader.ts";
+import {assetDetailLoader, assetLoader} from "./features/asset/loader/asset.loader.ts";
 import {ticketDetailLoader, ticketLoader} from "./features/ticket/loader/ticket.loader.ts";
 import {UserPage} from "./features/user/pages/user.page.tsx";
 import {userLoader} from "./features/user/loader/user.loader.tsx";
@@ -14,6 +14,7 @@ import {EmployeeDetailPage} from "./features/employee/pages/employee-detail.page
 import {employeeDetailLoader} from "./features/employee/loader/employee-detail.loader.tsx";
 import {LoginPage} from "./features/auth/pages/login.page.tsx";
 import {TicketDetailPage} from "./features/ticket/pages/ticket-detail.page.tsx";
+import {AssetDetailPage} from "./features/asset/pages/asset-detail.page.tsx";
 
 export const router = createBrowserRouter([
     {
@@ -42,8 +43,18 @@ export const router = createBrowserRouter([
 	    },
 	    {
 		path: 'assets',
-		element: <AssetPage/>,
-		loader: assetLoader
+		children: [
+		    {
+			index: true,
+			element: <AssetPage/>,
+			loader: assetLoader
+		    },
+		    {
+			path: ':id',
+			element: <AssetDetailPage/>,
+			loader: (args) => assetDetailLoader(args),
+		    }
+		]
 	    },
 	    {
 		path: 'users',

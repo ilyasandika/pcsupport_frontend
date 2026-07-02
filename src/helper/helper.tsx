@@ -52,3 +52,33 @@ export const getSlaStyleByDuration = (seconds: number) => {
 	accentText: "text-blue-400"
     };
 };
+
+export const byteToStringMb = (bytes: number): string => {
+    const mb = bytes / (1024 * 1024);
+    return `${mb.toFixed(2)} MB`;
+};
+
+
+export const fmtDate = (d: string) =>
+    d
+	? new Date(d).toLocaleDateString("id-ID", {
+	    day: "numeric",
+	    month: "short",
+	    year: "numeric",
+	})
+	: "—";
+
+
+
+export const monthsDaysBetween = (startStr: string, endStr: string) => {
+    const start = new Date(startStr);
+    const end = endStr ? new Date(endStr) : new Date();
+    let months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+    let days = end.getDate() - start.getDate();
+    if (days < 0) {
+	months -= 1;
+	days += new Date(end.getFullYear(), end.getMonth(), 0).getDate();
+    }
+    if (months < 0) { months = 0; days = 0; }
+    return { months, days };
+}

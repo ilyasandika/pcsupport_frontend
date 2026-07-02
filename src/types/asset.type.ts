@@ -1,3 +1,5 @@
+import type {ITicketForAsset} from "./ticket.type.ts";
+
 export interface IAssetRepository {
     getAssetSummary: () => Promise<IAssetSummary>
     getAssets: () => Promise<IDetailAsset[]>
@@ -20,7 +22,7 @@ export interface IDetailAsset {
     storageType?: string;
     storageCapacityByte?: number;
     memoryType?: string;
-    memoryCapacityByte?: string;
+    memoryCapacityByte?: number;
     processor?: string;
     assetAssignments?: IAssetAssignment[];
     workLocation: {
@@ -35,6 +37,7 @@ export interface IDetailAsset {
             name: string;
         }
     }
+    tickets :ITicketForAsset[];
     createdAt: string;
 }
 
@@ -59,6 +62,8 @@ export interface IAssetAssignment {
         department: string;
     }
     assignedAt: string;
+    returnedAt?: string;
+    remarks?: string;
     userNonEmployeeName?: string,
 }
 

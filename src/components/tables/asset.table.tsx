@@ -9,6 +9,7 @@ import {useMemo, useState} from "react";
 import Table from "./table.tsx";
 import {ActionButtons} from "./action-button.tsx";
 import type {IDetailAsset} from "../../types/asset.type.ts";
+import {useNavigate} from "react-router";
 
 interface AssetTableProps {
     data: IDetailAsset[]
@@ -17,6 +18,7 @@ interface AssetTableProps {
 
 export const AssetTable = ({data, isLoading = false}: AssetTableProps) =>  {
     const columnHelper = createColumnHelper<IDetailAsset>();
+    const navigate = useNavigate();
     const columns: ColumnDef<IDetailAsset, any>[] = useMemo(
 	() => [
 	    columnHelper.accessor('assetTag', {
@@ -101,9 +103,9 @@ export const AssetTable = ({data, isLoading = false}: AssetTableProps) =>  {
 		id: 'actions',
 		header: 'Actions',
 
-		cell: () => (
+		cell: (info) => (
 		    <ActionButtons
-			detail={{ onClick: () => console.log('detail') }}
+			detail={{ onClick: () => navigate(`${info.row.original.id}`) }}
 			edit={{ onClick: () => console.log('edit') }}
 			document={{ onClick: () => console.log('document') }}
 			remove={{ onClick: () => console.log('remove') }}

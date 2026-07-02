@@ -1,5 +1,5 @@
 import type {IAssetAssignment} from "./asset-assignment.type.ts";
-import type {ITicket} from "./ticket.type.ts";
+import type {ITicket, ITicketForAsset} from "./ticket.type.ts";
 
 export interface IEmployee {
     id: number;
@@ -18,7 +18,7 @@ export interface IEmployee {
     status?: boolean;
     retireDate?: string | null | undefined;
     assetAssignments?: IAssetAssignment[],
-    tickets?: ITicket[],
+    tickets?: ITicketForAsset[],
     createdAt: string;
     updatedAt: string;
 }

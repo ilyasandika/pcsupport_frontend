@@ -71,6 +71,13 @@ export interface ITicket {
     name: string;
   };
 }
+
+export type ITicketForAsset = Omit<ITicket,  'employee' | 'slaPolicy' |
+    'asset' |
+    'location' |
+    'remarks' |
+    'createdBy'>;
+
 export interface ITicketRepository {
   getAllTickets: () => Promise<ITicket[]>
   getTicketSummary: () => Promise<ITicketSummary>

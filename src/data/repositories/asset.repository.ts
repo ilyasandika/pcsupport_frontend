@@ -29,8 +29,9 @@ const assetApi: IAssetRepository = {
 	return data.data
     },
     getAssetById: async (assetId: number): Promise<IDetailAsset> => {
-	console.log(assetId)
-	return {} as IDetailAsset
+	const data = await api.get(`/assets/${assetId}`)
+	console.log(data.data)
+	return data.data
     }
 }
 
