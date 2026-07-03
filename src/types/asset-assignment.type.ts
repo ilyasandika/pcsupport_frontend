@@ -1,23 +1,24 @@
 import type {IDetailAsset} from "./asset.type.ts";
 import type {IEmployee} from "./employee.type.ts";
 
-export interface IAssetAssignment {
+export interface IDetailAssetAssignment {
     id: number;
     assetId: number;
-    asset?: IDetailAsset
-    picEmployeeId: number;
-    picEmployee?: IEmployee
+    asset: IDetailAsset
+    employee: IEmployee
     userNonEmployeeName?: string;
     assignedAt: string;
     returnedAt?: string;
     status: string;
     remarks?: string;
     createdAt: string;
-    updatedAt: string;
-    isLegacyData: boolean;
 }
 
+export type IAssetAssignmentNoAsset = Omit<IDetailAssetAssignment, 'asset'>;
+export type IAssetAssignmentNoEmployee = Omit<IDetailAssetAssignment, 'employee'>;
+
+
 export interface IAssetAssignmentRepository {
-    getAssetAssignmentsByAssetId: (assetId: number) => Promise<IAssetAssignment[]>;
-    getAssetAssignmentsByEmployeeId: (employeeId: number) => Promise<IAssetAssignment[]>;
+    getAssetAssignmentsByAssetId: (assetId: number) => Promise<IDetailAssetAssignment[]>;
+    getAssetAssignmentsByEmployeeId: (employeeId: number) => Promise<IDetailAssetAssignment[]>;
 }

@@ -1,4 +1,5 @@
 import type {ITicketForAsset} from "./ticket.type.ts";
+import type { IDetailAssetAssignment} from "./asset-assignment.type.ts";
 
 export interface IAssetRepository {
     getAssetSummary: () => Promise<IAssetSummary>
@@ -24,7 +25,7 @@ export interface IDetailAsset {
     memoryType?: string;
     memoryCapacityByte?: number;
     processor?: string;
-    assetAssignments?: IAssetAssignment[];
+    assetAssignments?: IDetailAssetAssignment[];
     workLocation: {
         id: number;
         name: string;
@@ -50,21 +51,7 @@ export interface IAsset {
         id?: number
         name: string;
     }
-    assetAssignment: IAssetAssignment
-}
-
-export interface IAssetAssignment {
-    employee: {
-        id: number,
-        name: string,
-        nik: string,
-        position: string;
-        department: string;
-    }
-    assignedAt: string;
-    returnedAt?: string;
-    remarks?: string;
-    userNonEmployeeName?: string,
+    assetAssignment: IDetailAssetAssignment[];
 }
 
 export interface IAssetSummary {

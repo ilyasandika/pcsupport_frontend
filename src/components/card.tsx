@@ -19,3 +19,4 @@ export const Card = ({ title, Icon, iconSize =13,  children}: ICardProps) => {
 	</div>
     );
 }
+

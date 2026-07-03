@@ -13,7 +13,6 @@ api.interceptors.response.use(
     (response) => response.data,
     (error) => {
 	if (error.response && error.response.status === 401 && window.location.pathname !== '/login') {
-	    console.warn('Token kadaluwarsa atau tidak valid, mengalihkan ke login...');
 	    window.location.href = '/login';
 	}
 	return Promise.reject(error.response.data as IErrorResponse);

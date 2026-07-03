@@ -1,5 +1,5 @@
-import type {IAssetAssignment} from "./asset-assignment.type.ts";
-import type {ITicket, ITicketForAsset} from "./ticket.type.ts";
+import type {IDetailAssetAssignment} from "./asset-assignment.type.ts";
+import type { ITicketForAsset} from "./ticket.type.ts";
 
 export interface IEmployee {
     id: number;
@@ -17,11 +17,13 @@ export interface IEmployee {
     department: string;
     status?: boolean;
     retireDate?: string | null | undefined;
-    assetAssignments?: IAssetAssignment[],
+    assetAssignments?: IDetailAssetAssignment[],
     tickets?: ITicketForAsset[],
     createdAt: string;
     updatedAt: string;
 }
+
+
 
 export interface IEmployeeRepository {
     getEmployees: () => Promise<IEmployee[]>

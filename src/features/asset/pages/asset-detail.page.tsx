@@ -1,4 +1,4 @@
-import {useState, type MouseEventHandler} from "react";
+import {useState, } from "react";
 import {
     Laptop,
     Barcode,
@@ -8,16 +8,17 @@ import {
     User,
     Wrench,
     AlertTriangle,
-    LaptopIcon, type LucideIcon,
+    LaptopIcon,
 } from "lucide-react";
 import {Card} from "../../../components/card.tsx";
-import {CardRow} from "../../../components/tables/card-row.tsx";
+import {CardRow} from "../../../components/card-row.tsx";
 import {useLoaderData} from "react-router";
 import type {IDetailAsset} from "../../../types/asset.type.ts";
 import {byteToStringMb, fmtDate} from "../../../helper/helper.tsx";
 import {BackButton} from "../../../components/back-button.tsx";
 import {TicketTimeline} from "../../ticket/components/ticket-timeline.tsx";
-import {UserTimeline} from "../../employee/components/employee-timeline.tsx";
+import {AssetAssignmentTimelineEmployee} from "../../employee/components/employee-timeline.tsx";
+import {TabButton} from "../../../components/tab-button.tsx";
 
 // ---------- helpers ----------
 
@@ -139,47 +140,12 @@ export const AssetDetailPage = () => {
 			</div>
 
 			<div className="pt-6">
-			    {tab === "user" ? <UserTimeline assetAssignments={asset.assetAssignments} /> : <TicketTimeline tickets={asset.tickets} />}
+			    {tab === "user" ? <AssetAssignmentTimelineEmployee assetAssignments={asset.assetAssignments} /> : <TicketTimeline tickets={asset.tickets} />}
 			</div>
 		    </div>
 		</div>
 	    </div>
 	</div>
-    );
-}
-
-// ---------- small building blocks ----------
-
-
-
-interface ITabButtonProps  {
-    active: boolean;
-    onClick: MouseEventHandler<HTMLButtonElement>;
-    Icon: LucideIcon;
-    label: string;
-    count: number;
-
-
-}
-const TabButton = ({ active, onClick, Icon, label, count }: ITabButtonProps) => {
-    return (
-	<button
-	    onClick={onClick}
-	    className={`relative flex items-center gap-2 pb-3 text-sm font-semibold transition-colors ${
-		active ? "text-ptba-text" : "text-slate-400 hover:text-slate-600"
-	    }`}
-	>
-	    <Icon size={15} />
-	    {label}
-	    <span
-		className={`rounded-full px-2 py-0.5  text-[11px] ${
-		    active ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-500"
-		}`}
-	    >
-		{count}
-	    </span>
-	    {active && <span className="absolute -bottom-px left-0 right-0 h-0.5 bg-slate-900" />}
-	</button>
     );
 }
 
