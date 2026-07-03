@@ -9,7 +9,6 @@ import {useMemo, useState} from "react";
 import Table from "./table.tsx";
 import {ActionButtons} from "./action-button.tsx";
 import {type ITicket} from "../../types/ticket.type.ts";
-import {useNavigate} from "react-router";
 import {getStatusBadgeStyle} from "../../helper/helper.tsx";
 
 interface TicketTableProps {
@@ -19,7 +18,6 @@ interface TicketTableProps {
 
 export const TicketTable = ({data, isLoading=false}: TicketTableProps ) =>  {
     const columnHelper = createColumnHelper<ITicket>();
-    const navigate = useNavigate()
     const columns: ColumnDef<ITicket, any>[] = useMemo(
 	() => [
 	    columnHelper.accessor('status', {
@@ -156,14 +154,13 @@ export const TicketTable = ({data, isLoading=false}: TicketTableProps ) =>  {
 		id: 'actions',
 		header: 'actions',
 		cell: (info) => {
-		    const row = info.row.original;
 		    return (
-		       <ActionButtons
-			   detail={{ onClick: (()=> navigate(`${row.id}`)) }}
-			   edit={{onClick: (()=> console.log('edit'))}}
-			   document={{onClick: (()=> console.log('document'))}}
-			   remove={{onClick: (()=> console.log('remove'))}}
-		       />
+			<ActionButtons
+			    detail={{  to: `${info.row.original.id}` }}
+			    edit={{ to: `${'#'}` }}
+			    document={{  to: `${'#'}` }}
+			    remove={{  to: `${'#'}` }}
+			/>
 		   )
 		}
 

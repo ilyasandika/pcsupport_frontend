@@ -89,9 +89,10 @@ export const UserTable = ({ data, isLoading = false }: UserTableProps) => {
 		size: 150,
 		cell: (info) => (
 		    <ActionButtons
-			edit={{ onClick: () => console.log('edit user id:', info.row.original.id) }}
-			document={{ onClick: () => console.log('view document user id:', info.row.original.id) }}
-			remove={{ onClick: () => console.log('remove user id:', info.row.original.id) }}
+			detail={{  to: `${info.row.original.id}` }}
+			edit={{ to: `${'#'}` }}
+			document={{  to: `${'#'}` }}
+			remove={{  to: `${'#'}` }}
 		    />
 		),
 	    }),

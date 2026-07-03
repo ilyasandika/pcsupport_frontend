@@ -9,7 +9,6 @@ import { useMemo, useState } from "react";
 import Table from "./table.tsx";
 import { ActionButtons } from "./action-button.tsx";
 import type { IEmployee } from "../../types/employee.type.ts";
-import {useNavigate} from "react-router";
 
 interface EmployeeTableProps {
     data: IEmployee[]
@@ -18,7 +17,6 @@ interface EmployeeTableProps {
 
 export const EmployeeTable = ({ data, isLoading = false }: EmployeeTableProps) => {
     const columnHelper = createColumnHelper<IEmployee>();
-    const navigate = useNavigate();
     const columns: ColumnDef<IEmployee, any>[] = useMemo(
 	() => [
 	    columnHelper.accessor('name', {
@@ -124,12 +122,10 @@ export const EmployeeTable = ({ data, isLoading = false }: EmployeeTableProps) =
 		size: 120,
 		cell: (info) => (
 		    <ActionButtons
-			detail={{
-			    onClick: () => navigate(`${info.row.original.id}`)
-			}}
-			edit={{ onClick: () => console.log('edit employee') }}
-			document={{ onClick: () => console.log('document employee') }}
-			remove={{ onClick: () => console.log('remove employee') }}
+			detail={{  to: `${info.row.original.id}` }}
+			edit={{ to: `${'#'}` }}
+			document={{  to: `${'#'}` }}
+			remove={{  to: `${'#'}` }}
 		    />
 		),
 	    }),
