@@ -17,7 +17,7 @@ export const EmployeeDetailPage = () => {
     console.log(employee)
 
     return (
-	<div className="w-full space-y-6 p-1">
+	<div className="w-full space-y-6">
 	    <BackButton/>
 	    <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
 		<div className="flex items-center gap-4">

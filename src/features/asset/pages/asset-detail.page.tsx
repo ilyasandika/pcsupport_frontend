@@ -30,7 +30,7 @@ export const AssetDetailPage = () => {
     const openTickets = asset.tickets?.filter((t) => t.status == "open" || t.status == "in progress") || [];
 
     return (
-	<div className="min-h-screen bg-slate-50 p-6 font-sans text-ptba-text">
+	<div className="min-h-screen bg-slate-50 font-sans text-ptba-text">
 	    <div className="max-w-7xl mx-auto space-y-6">
 		<BackButton />
 
