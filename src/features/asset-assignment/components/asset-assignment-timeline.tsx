@@ -3,8 +3,10 @@ import {TimelineWrap} from "../../../components/timeline-wrap.tsx";
 import {fmtDate, monthsDaysBetween} from "../../../helper/helper.tsx";
 import {Clock} from "lucide-react";
 import type {IDetailAssetAssignment} from "../../../types/asset-assignment.type.ts";
+import {Link, useNavigate} from "react-router";
 
 export const  AssetAssignmentTimelineEmployee = ({assetAssignments} : {assetAssignments: IDetailAssetAssignment[] | undefined}) => {
+    const navigate = useNavigate();
     return (
 	assetAssignments ?
 	    <TimelineWrap>
@@ -21,7 +23,7 @@ export const  AssetAssignmentTimelineEmployee = ({assetAssignments} : {assetAssi
 			    <div className="flex items-baseline justify-between gap-2">
 				<div className="flex gap-1 flex-col">
 				    <div className="flex gap-2">
-					<span className="font-semibold text-ptba-text">{u.employee.name}</span>
+					<span className="font-semibold text-ptba-text cursor-pointer" onClick={()=> navigate(`/employees/${u.employee.id}`)}>{u.employee.name}</span>
 					<span className="rounded-md border border-slate-200 bg-white px-2 py-0.5  text-[11px] text-slate-500">
 				    NIK {u.employee.nik}
 				</span>
@@ -74,7 +76,6 @@ export const  AssetAssignmentTimelineEmployee = ({assetAssignments} : {assetAssi
 
 
 export const  AssetAssignmentTimelineAsset = ({assetAssignments} : {assetAssignments: IDetailAssetAssignment[] | undefined}) => {
-    console.log(assetAssignments)
     return (
 	assetAssignments ?
 	    <TimelineWrap>
@@ -91,7 +92,7 @@ export const  AssetAssignmentTimelineAsset = ({assetAssignments} : {assetAssignm
 			    <div className="flex items-baseline justify-between gap-2">
 				<div className="flex gap-1 flex-col">
 				    <div className="flex gap-2">
-					<span className="font-semibold text-ptba-text">{`${u.asset.brand || "ab"} ${u.asset.model || "cd"}`}</span>
+					<Link to={`/assets/${u.asset.id}`} className="font-semibold text-ptba-text cursor-pointer">{`${u.asset.brand || "ab"} ${u.asset.model || "cd"}`}</Link>
 					<span className="rounded-md border border-slate-200 bg-white px-2 py-0.5  text-[11px] text-slate-500">
 					    Tag {u.asset.assetTag}
 					</span><span className="rounded-md border border-slate-200 bg-white px-2 py-0.5  text-[11px] text-slate-500">
