@@ -1,5 +1,5 @@
 import type {ITicketForAsset} from "../../../types/ticket.type.ts";
-import {useNavigate} from "react-router";
+import {Link, useNavigate} from "react-router";
 import {fmtDate, getStatusBadgeStyle} from "../../../helper/helper.tsx";
 import {TimelineWrap} from "../../../components/timeline-wrap.tsx";
 
@@ -23,6 +23,7 @@ const statusStyles = {
 
 export const TicketTimeline = ({tickets } : {tickets: ITicketForAsset[] | undefined}) => {
     const navigate = useNavigate();
+    console.log(tickets)
     return (
 	tickets ?
 	    <TimelineWrap>
@@ -46,7 +47,7 @@ export const TicketTimeline = ({tickets } : {tickets: ITicketForAsset[] | undefi
 				    Engineer: {t.engineer?.fullName ?? "No Engineer"}
 				</span>
 				</div>
-				<p className="text-sm leading-relaxed text-slate-600">{t.problem}</p>
+				<Link to={`/tickets/${t.id}`} className="text-sm leading-relaxed text-slate-600 cursor-pointer">{t.problem}</Link>
 			    </div>
 			</div>
 		    );

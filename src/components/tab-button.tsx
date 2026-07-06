@@ -16,7 +16,7 @@ export const TabButton = ({ active, onClick, Icon, label, count }: ITabButtonPro
     return (
 	<button
 	    onClick={onClick}
-	    className={`relative flex items-center gap-2 pb-3 text-sm font-semibold transition-colors ${
+	    className={`relative flex items-center gap-2 pb-3 text-sm font-semibold transition-colors cursor-pointer ${
 		active ? "text-ptba-text" : "text-slate-400 hover:text-slate-600"
 	    }`}
 	>

@@ -17,7 +17,7 @@ import type {IDetailAsset} from "../../../types/asset.type.ts";
 import {byteToStringMb, fmtDate} from "../../../helper/helper.tsx";
 import {BackButton} from "../../../components/back-button.tsx";
 import {TicketTimeline} from "../../ticket/components/ticket-timeline.tsx";
-import {AssetAssignmentTimelineEmployee} from "../../employee/components/employee-timeline.tsx";
+import {AssetAssignmentTimelineEmployee} from "../../asset-assignment/components/asset-assignment-timeline.tsx";
 import {TabButton} from "../../../components/tab-button.tsx";
 
 // ---------- helpers ----------

@@ -9,7 +9,7 @@ export const Layout = () => {
     const isNavigating = navigation.state === 'loading';
 
     return (
-	<div className="min-h-screen bg-gray-50 flex">
+	<div className="min-h-screen bg-ptba-primary/5 flex">
 	    <Sidebar />
 	    <div className="flex-1 flex flex-col min-h-screen w-full lg:w-auto lg:ml-60">
 		<Header />

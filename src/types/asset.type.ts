@@ -51,7 +51,7 @@ export interface IAsset {
         id?: number
         name: string;
     }
-    assetAssignment: IDetailAssetAssignment[];
+    assetAssignment: IDetailAssetAssignment;
 }
 
 export interface IAssetSummary {

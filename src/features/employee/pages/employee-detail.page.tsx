@@ -7,14 +7,14 @@ import {useLoaderData } from "react-router";
 import type {IEmployee} from "../../../types/employee.type.ts";
 import {BackButton} from "../../../components/back-button.tsx";
 import {TabButton} from "../../../components/tab-button.tsx";
-import {AssetAssignmentTimelineAsset} from "../components/employee-timeline.tsx";
+import {AssetAssignmentTimelineAsset} from "../../asset-assignment/components/asset-assignment-timeline.tsx";
 import {Card} from "../../../components/card.tsx";
 import {CardItem} from "../../../components/card-item.tsx";
+import {TicketTimeline} from "../../ticket/components/ticket-timeline.tsx";
 
 export const EmployeeDetailPage = () => {
     const [tab, setTab] = useState<'assets' | 'tickets'>('assets');
     const employee = useLoaderData<IEmployee>()
-    console.log(employee)
 
     return (
 	<div className="w-full space-y-6">
@@ -86,8 +86,7 @@ export const EmployeeDetailPage = () => {
 		    <div className="pt-6">
 			{tab === "assets" ? <AssetAssignmentTimelineAsset assetAssignments={employee.assetAssignments} />
 			    :
-			    // <TicketTimeline tickets={employee.tickets}/>
-				'-'
+			    <TicketTimeline tickets={employee.tickets}/>
 			}
 		    </div>
 		</div>

@@ -17,8 +17,6 @@ export const DashboardPage = () => {
     console.log(assetSummary)
     return (
 	<div className="flex-1 space-y-6 lg:space-y-8 overflow-auto">
-	    {/*hero*/}
-
 	    <Card className="bg-ptba-primary">
 		<CardHeader>
 		    <CardTitle className="text-white text-xl font-bold sm:text-2xl">Tickets Overview</CardTitle>

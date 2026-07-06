@@ -1,3 +1,5 @@
+import type {ITicketForAsset} from "./ticket.type.ts";
+
 export interface IUser {
     id: number;
     username: string;
@@ -5,6 +7,7 @@ export interface IUser {
     email: string;
     role: string;
     active: boolean;
+    tickets: ITicketForAsset[]
     createdAt: string;
     updatedAt: string;
 }
@@ -12,5 +15,6 @@ export interface IUser {
 
 export interface IUserRepository {
     getUsers: () => Promise<IUser[]>
+    getUserById: (id: number) => Promise<IUser>
 
 }

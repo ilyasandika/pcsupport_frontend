@@ -8,6 +8,11 @@ const userLocal: IUserRepository = {
     getUsers: async (): Promise<IUser[]> => {
 	await delay();
 	return userDummy as unknown as IUser[];
+    },
+    getUserById: async (id: number): Promise<IUser> => {
+	console.log(id)
+	await delay();
+	return {} as IUser;
     }
 }
 
@@ -16,7 +21,12 @@ const userApi: IUserRepository = {
     getUsers: async (): Promise<IUser[]> => {
 	const user = await api.get('users')
 	return user.data
+    },
+    getUserById: async (id: number): Promise<IUser> => {
+	const res = await api.get(`users/${id}`)
+	return res.data
     }
+
 }
 
 

@@ -6,7 +6,7 @@ import {AssetPage} from "./features/asset/pages/asset.page.tsx";
 import {assetDetailLoader, assetLoader} from "./features/asset/loader/asset.loader.ts";
 import {ticketDetailLoader, ticketLoader} from "./features/ticket/loader/ticket.loader.ts";
 import {UserPage} from "./features/user/pages/user.page.tsx";
-import {userLoader} from "./features/user/loader/user.loader.tsx";
+import {userDetailLoader, userLoader} from "./features/user/loader/user.loader.tsx";
 import {dashboardLoader} from "./features/dashboard/loader/dashboard.loader.tsx";
 import {EmployeePage} from "./features/employee/pages/employee.page.tsx";
 import {employeeLoader} from "./features/employee/loader/employee.loader.tsx";
@@ -15,6 +15,7 @@ import {employeeDetailLoader} from "./features/employee/loader/employee-detail.l
 import {LoginPage} from "./features/auth/pages/login.page.tsx";
 import {TicketDetailPage} from "./features/ticket/pages/ticket-detail.page.tsx";
 import {AssetDetailPage} from "./features/asset/pages/asset-detail.page.tsx";
+import {UserDetailPage} from "./features/user/pages/user-detail.page.tsx";
 
 export const router = createBrowserRouter([
     {
@@ -58,8 +59,18 @@ export const router = createBrowserRouter([
 	    },
 	    {
 		path: 'users',
-		element: <UserPage/>,
-		loader: userLoader,
+		children: [
+		    {
+			index: true,
+			element: <UserPage/>,
+			loader: userLoader,
+		    },
+		    {
+			path: ':id',
+			element: <UserDetailPage/>,
+			loader: (args) => userDetailLoader(args),
+		    }
+		]
 	    },
 	    {
 		path: 'employees',
