@@ -82,3 +82,23 @@ export const monthsDaysBetween = (startStr: string, endStr: string) => {
     if (months < 0) { months = 0; days = 0; }
     return { months, days };
 }
+
+export type TimeHMS = {
+    hours: number;
+    minutes: number;
+    seconds: number;
+};
+
+export const secondsToHMS = (totalSeconds: number): TimeHMS => {
+    const validSeconds = Math.max(0, Math.floor(totalSeconds));
+
+    const hours = Math.floor(validSeconds / 3600);
+    const minutes = Math.floor((validSeconds % 3600) / 60);
+    const seconds = validSeconds % 60;
+
+    return {
+	hours,
+	minutes,
+	seconds,
+    };
+}
