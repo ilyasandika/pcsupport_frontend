@@ -1,46 +1,56 @@
 import { type Table, flexRender } from '@tanstack/react-table';
 import { ChevronLeft, ChevronRight, FunnelPlus, Plus, Search } from "lucide-react";
 import { useState } from "react";
+import {Button} from "@/components/ui/button.tsx";
+import {Link} from "react-router";
+import {Card} from "@/components/ui/card.tsx";
 
 interface DataTableProps<TData> {
     table: Table<TData>;
     isLoading?: boolean;
     name: string;
+    create?: ActionLinkProps;
+    edit?: ActionLinkProps;
+    export?: ActionButtonProps;
+    import?: ActionButtonProps;
 }
 
-export default function Table<TData>({ table, isLoading = false, name }: DataTableProps<TData>) {
+interface ActionLinkProps {
+    label: string;
+    to: string;
+}
+
+interface ActionButtonProps {
+    label: string;
+    action: () => void;
+}
+
+export default function Table<TData>({ table, isLoading = false, name, create}: DataTableProps<TData>) {
     const [activeFilter, setActiveFilter] = useState<boolean>(false);
 
     return (
 	<div className="w-full space-y-4">
-	    {/* TOOLBAR ATAS */}
 	    <div className="flex justify-between">
                <span className="text-xl text-ptba-text font-bold">
                    {name}
                </span>
 		<div className="flex items-center px-1 gap-4">
-		    <button
+		    <Button variant={'outline'}
 			onClick={() => setActiveFilter(!activeFilter)}
-			className={`flex items-center gap-2 p-2 text-xs font-medium rounded-lg border transition-all shadow-sm cursor-pointer
-                        ${activeFilter
-			    ? 'bg-blue-50 text-ptba-primary border-blue-200 hover:bg-blue-100'
-			    : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
-			}`}
 		    >
 			<FunnelPlus className="w-4 h-4" />
-		    </button>
-
-		    <button
-			onClick={() => {}} // Ganti dengan fungsi handler-mu (misal buka modal)
-			className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-white bg-ptba-primary border border-ptba-primary rounded-lg shadow-sm transition-all cursor-pointer"
-		    >
-			<Plus className="w-4 h-4" />
-			<span>Create New Ticket</span>
-		    </button>
+		    </Button>
+		    {create &&
+                        <Button asChild>
+                            <Link to={create.to}>
+				<Plus className="w-4 h-4" data-icon="inline-start"/> {create.label}
+			    </Link>
+                        </Button>
+		    }
 		</div>
 	    </div>
 
-	    <div className="overflow-x-auto border border-gray-200 rounded-xl bg-white shadow-sm
+	    <div className="overflow-x-auto border border-gray-200 rounded-md bg-white
                 [&::-webkit-scrollbar]:h-1.5
                 [&::-webkit-scrollbar-track]:bg-gray-50
                 [&::-webkit-scrollbar-track]:rounded-b-xl
@@ -136,6 +146,7 @@ export default function Table<TData>({ table, isLoading = false, name }: DataTab
 		    </tbody>
 		</table>
 	    </div>
+
 
 	    {/* KONTROL PAGINATION */}
 	    <div className="flex items-center justify-between px-4 py-3 bg-white border border-gray-200 rounded-xl shadow-sm">
