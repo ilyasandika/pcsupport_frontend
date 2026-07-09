@@ -1,8 +1,7 @@
 import type {IDetailAssetAssignment} from "./asset-assignment.type.ts";
 import type { ITicketForAsset} from "./ticket.type.ts";
 
-export interface IEmployee {
-    id: number;
+export interface IDetailEmployee {
     nik: string;
     name: string;
     contractType: string;
@@ -23,9 +22,11 @@ export interface IEmployee {
     updatedAt: string;
 }
 
+export type IEmployee = Pick<IDetailEmployee, 'nik' | 'name' | 'position' | 'department'>;
 
 
 export interface IEmployeeRepository {
-    getEmployees: () => Promise<IEmployee[]>
-    getEmployeeDetail: (employeeId: number) => Promise<IEmployee>
+    getEmployees: () => Promise<IDetailEmployee[]>
+    getEmployeeListForDropdown: () => Promise<IEmployee[]>
+    getEmployeeDetail: (nik: string) => Promise<IDetailEmployee>
 }
