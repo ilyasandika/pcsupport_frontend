@@ -26,7 +26,7 @@ export interface IDetailAsset {
     memoryCapacityByte?: number;
     processor?: string;
     assetAssignments?: IDetailAssetAssignment[];
-    assetAssigment?: IDetailAssetAssignment;
+    assetAssignment?: IDetailAssetAssignment;
     workLocation: {
         id: number;
         name: string;
@@ -43,7 +43,7 @@ export interface IDetailAsset {
     createdAt: string;
 }
 
-export type IAsset = Pick<IDetailAsset, 'serialNumber' | 'assetTag' | 'hostname' | 'brand' | 'model' | 'category' | 'assetAssigment'>;
+export type IAsset = Pick<IDetailAsset, 'serialNumber' | 'assetTag' | 'hostname' | 'brand' | 'model' | 'category' | 'assetAssignment'>;
 
 export interface IAssetSummary {
     nb: number;
