@@ -1,5 +1,10 @@
 import type {IChartData} from "./common.type.ts";
 import type {IAsset} from "./asset.type.ts";
+import type {ICreateTicketDto} from "@/features/ticket/dto/create-ticket.dto.ts";
+import type {IEmployee} from "@/types/employee.type.ts";
+import type {IUser} from "@/types/user.type.ts";
+import type {ISlaPolicy} from "@/types/sla.type.ts";
+import type {IWorkLocation} from "@/types/work-location.types.ts";
 
 export const TicketStatus = {
   Open : 'open',
@@ -31,7 +36,6 @@ export interface ITicketSummary {
 
 export type TicketStatusType = typeof TicketStatus[keyof typeof TicketStatus];
 
-
 export interface ITicket {
   id: number;
   fullNumber: string;
@@ -43,34 +47,13 @@ export interface ITicket {
   remarks?: string;
   createdAt: string;
   asset?: IAsset
-  engineer?: {
-    fullName: string;
-    role: 'admin' | 'engineer' | 'user' | string;
-  };
-  employee?: {
-    id: number;
-    name: string;
-    nik: string;
-    position: string;
-    department: string;
-  };
-  createdBy: {
-    fullName: string;
-    role: 'admin' | 'engineer' | 'user' | string;
-  };
-  slaPolicy: {
-    id: number;
-    name: string;
-    description: string;
-    responseTimeSeconds: number;
-    resolutionTimeSeconds: number;
-    isBusinessHourOnly: boolean;
-  };
-  location: {
-    id: number;
-    name: string;
-  };
+  engineer?: IUser
+  employee?: IEmployee
+  createdBy: IUser
+  slaPolicy: ISlaPolicy
+  location: IWorkLocation
 }
+
 
 export type ITicketForAsset = Omit<ITicket,  'employee' | 'slaPolicy' |
     'asset' |
@@ -84,4 +67,6 @@ export interface ITicketRepository {
   getTicketTrend: (range?: 'week' | 'month' | 'year') => Promise<IChartData[]>
   getTicketsByEmployeeId: (employeeId: number) => Promise<ITicket[]>
   getTicketById: (id: number) => Promise<ITicket>
+
+  createTicket: (ticket: ICreateTicketDto) => any
 }
