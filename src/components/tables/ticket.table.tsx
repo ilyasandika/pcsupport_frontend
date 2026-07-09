@@ -6,9 +6,9 @@ import {
     useReactTable
 } from "@tanstack/react-table";
 import {useMemo, useState} from "react";
-import Table from "./table.tsx";
+import DataTable from "./data-table.tsx";
 import {ActionButtons} from "./action-button.tsx";
-import {type ITicket} from "../../types/ticket.type.ts";
+import {type ITicket} from "@/types/ticket.type.ts";
 import {getStatusBadgeStyle} from "../../helper/helper.tsx";
 
 interface TicketTableProps {
@@ -190,6 +190,15 @@ export const TicketTable = ({data, isLoading=false}: TicketTableProps ) =>  {
     });
 
 
-    return (<Table table={table} name='All Tickets' isLoading={isLoading} />)
+    return (
+	<DataTable table={table}
+		   name='All Tickets'
+		   isLoading={isLoading}
+		   create={{
+		   label: 'Create new ticket',
+		   to: '/tickets/create'
+	       }}
+    	/>
+    )
 
 }
