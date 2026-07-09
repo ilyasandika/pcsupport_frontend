@@ -14,7 +14,7 @@ export const  AssetAssignmentTimelineEmployee = ({assetAssignments} : {assetAssi
 		    const isCurrent = !u.returnedAt;
 		    const { months, days } = monthsDaysBetween(u.assignedAt, u.returnedAt || new Date().toDateString())
 		    return (
-			<div key={u.employee.id} className="relative">
+			<div key={u.employee.nik} className="relative">
 			<span
 			    className={`absolute -left-6 top-1 h-3 w-3 rounded-full border-2 bg-white ${
 				isCurrent ? "border-emerald-500" : "border-slate-300"
@@ -23,7 +23,7 @@ export const  AssetAssignmentTimelineEmployee = ({assetAssignments} : {assetAssi
 			    <div className="flex items-baseline justify-between gap-2">
 				<div className="flex gap-1 flex-col">
 				    <div className="flex gap-2">
-					<span className="font-semibold text-ptba-text cursor-pointer" onClick={()=> navigate(`/employees/${u.employee.id}`)}>{u.employee.name}</span>
+					<span className="font-semibold text-ptba-text cursor-pointer" onClick={()=> navigate(`/employees/${u.employee.nik}`)}>{u.employee.name}</span>
 					<span className="rounded-md border border-slate-200 bg-white px-2 py-0.5  text-[11px] text-slate-500">
 				    NIK {u.employee.nik}
 				</span>
@@ -83,7 +83,7 @@ export const  AssetAssignmentTimelineAsset = ({assetAssignments} : {assetAssignm
 		    const isCurrent = !u.returnedAt;
 		    const { months, days } = monthsDaysBetween(u.assignedAt, u.returnedAt || new Date().toDateString())
 		    return (
-			<div key={u.asset.id} className="relative">
+			<div key={u.asset.serialNumber} className="relative">
 			<span
 			    className={`absolute -left-6 top-1 h-3 w-3 rounded-full border-2 bg-white ${
 				isCurrent ? "border-emerald-500" : "border-slate-300"
@@ -92,7 +92,7 @@ export const  AssetAssignmentTimelineAsset = ({assetAssignments} : {assetAssignm
 			    <div className="flex items-baseline justify-between gap-2">
 				<div className="flex gap-1 flex-col">
 				    <div className="flex gap-2">
-					<Link to={`/assets/${u.asset.id}`} className="font-semibold text-ptba-text cursor-pointer">{`${u.asset.brand || "ab"} ${u.asset.model || "cd"}`}</Link>
+					<Link to={`/assets/${u.asset.serialNumber}`} className="font-semibold text-ptba-text cursor-pointer">{`${u.asset.brand || "ab"} ${u.asset.model || "cd"}`}</Link>
 					<span className="rounded-md border border-slate-200 bg-white px-2 py-0.5  text-[11px] text-slate-500">
 					    Tag {u.asset.assetTag}
 					</span><span className="rounded-md border border-slate-200 bg-white px-2 py-0.5  text-[11px] text-slate-500">
