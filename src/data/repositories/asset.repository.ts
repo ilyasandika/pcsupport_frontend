@@ -1,4 +1,4 @@
-import type {IDetailAsset, IAssetRepository, IAssetSummary} from "../../types/asset.type.ts";
+import type {IDetailAsset, IAssetRepository, IAssetSummary, IAsset} from "@/types/asset.type.ts";
 import assetSummaryDummy from "../local/asset/asset-summary.data.json"
 import assetDummies from "../local/asset/asset.data.json"
 import {delay} from "../../helper/helper.tsx";
@@ -13,9 +13,13 @@ const assetLocal: IAssetRepository = {
 	await delay();
 	return assetDummies as unknown as IDetailAsset[]
     },
-    getAssetById: async (assetId: number): Promise<IDetailAsset> => {
+    getAssetBySn: async (serialNumber: string): Promise<IDetailAsset> => {
 	await delay();
-	return assetDummies.find((asset) => asset.id === assetId) as unknown as IDetailAsset
+	// @ts-ignore
+	return assetDummies.find((asset) => asset.serialNumber === serialNumber) as unknown as IDetailAsset
+    },
+    getAssetListForDropdown: async (): Promise<IAsset[]> => {
+	return []
     }
 }
 
@@ -28,9 +32,12 @@ const assetApi: IAssetRepository = {
 	const data = await api.get('assets')
 	return data.data
     },
-    getAssetById: async (assetId: number): Promise<IDetailAsset> => {
-	const data = await api.get(`/assets/${assetId}`)
-	console.log(data.data)
+    getAssetBySn: async (serialNumber: string): Promise<IDetailAsset> => {
+	const data = await api.get(`/assets/${serialNumber}`)
+	return data.data
+    },
+    getAssetListForDropdown: async (): Promise<IAsset[]> => {
+	const data = await api.get('assets/list')
 	return data.data
     }
 }

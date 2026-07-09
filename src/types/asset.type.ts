@@ -4,12 +4,12 @@ import type { IDetailAssetAssignment} from "./asset-assignment.type.ts";
 export interface IAssetRepository {
     getAssetSummary: () => Promise<IAssetSummary>
     getAssets: () => Promise<IDetailAsset[]>
-    getAssetById: (assetId: number) => Promise<IDetailAsset>
+    getAssetBySn: (serialNumber: string) => Promise<IDetailAsset>
+    getAssetListForDropdown: () => Promise<IAsset[]>
 }
 
 export interface IDetailAsset {
-    id: number;
-    serialNumber: number;
+    serialNumber: string;
     assetTag: string;
     hostname: string;
     category: {
@@ -26,6 +26,7 @@ export interface IDetailAsset {
     memoryCapacityByte?: number;
     processor?: string;
     assetAssignments?: IDetailAssetAssignment[];
+    assetAssigment?: IDetailAssetAssignment;
     workLocation: {
         id: number;
         name: string;
@@ -42,17 +43,7 @@ export interface IDetailAsset {
     createdAt: string;
 }
 
-export interface IAsset {
-    id: number;
-    serialNumber: string;
-    assetTag: string;
-    hostname: string;
-    category: {
-        id?: number
-        name: string;
-    }
-    assetAssignment: IDetailAssetAssignment;
-}
+export type IAsset = Pick<IDetailAsset, 'serialNumber' | 'assetTag' | 'hostname' | 'brand' | 'model' | 'category' | 'assetAssigment'>;
 
 export interface IAssetSummary {
     nb: number;
