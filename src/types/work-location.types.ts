@@ -7,6 +7,8 @@ export interface IDetailWorkLocation {
     latitude: number;
 }
 
+export type IWorkLocation = Pick<IDetailWorkLocation, 'id' | 'name'>;
+
 export interface IWorkLocationRepository {
     getLocations: () => Promise<IDetailWorkLocation[]>
 }
