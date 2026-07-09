@@ -1,6 +1,7 @@
 import type {ITicketForAsset} from "./ticket.type.ts";
+import type {IWorkLocation} from "@/types/work-location.types.ts";
 
-export interface IUser {
+export interface IDetailUser {
     id: number;
     username: string;
     fullName: string;
@@ -8,13 +9,17 @@ export interface IUser {
     role: string;
     active: boolean;
     tickets: ITicketForAsset[]
+    workLocation: IWorkLocation
     createdAt: string;
     updatedAt: string;
 }
 
+export type IUser = Pick<IDetailUser, 'id' | 'username' | 'fullName' | 'role'>;
+
 
 export interface IUserRepository {
-    getUsers: () => Promise<IUser[]>
-    getUserById: (id: number) => Promise<IUser>
+    getUsers: () => Promise<IDetailUser[]>
+    getUserById: (id: number) => Promise<IDetailUser>
+    getEngineers: () => Promise<IDetailUser[]>
 
 }
