@@ -6,18 +6,18 @@ import {
     useReactTable
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
-import Table from "./table.tsx";
+import DataTable from "./data-table.tsx";
 import { ActionButtons } from "./action-button.tsx";
-import type { IEmployee } from "../../types/employee.type.ts";
+import type { IDetailEmployee } from "../../types/employee.type.ts";
 
 interface EmployeeTableProps {
-    data: IEmployee[]
+    data: IDetailEmployee[]
     isLoading?: boolean
 }
 
 export const EmployeeTable = ({ data, isLoading = false }: EmployeeTableProps) => {
-    const columnHelper = createColumnHelper<IEmployee>();
-    const columns: ColumnDef<IEmployee, any>[] = useMemo(
+    const columnHelper = createColumnHelper<IDetailEmployee>();
+    const columns: ColumnDef<IDetailEmployee, any>[] = useMemo(
 	() => [
 	    columnHelper.accessor('name', {
 		header: 'Name / NIK',
@@ -122,7 +122,7 @@ export const EmployeeTable = ({ data, isLoading = false }: EmployeeTableProps) =
 		size: 120,
 		cell: (info) => (
 		    <ActionButtons
-			detail={{  to: `${info.row.original.id}` }}
+			detail={{  to: `${info.row.original.nik}` }}
 			edit={{ to: `${'#'}` }}
 			document={{  to: `${'#'}` }}
 			remove={{  to: `${'#'}` }}
@@ -136,7 +136,7 @@ export const EmployeeTable = ({ data, isLoading = false }: EmployeeTableProps) =
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
 
-    const table = useReactTable<IEmployee>({
+    const table = useReactTable<IDetailEmployee>({
 	data,
 	columns,
 	state: {
@@ -152,5 +152,5 @@ export const EmployeeTable = ({ data, isLoading = false }: EmployeeTableProps) =
 	getPaginationRowModel: getPaginationRowModel(),
     });
 
-    return (<Table table={table} name='All Employees' isLoading={isLoading} />)
+    return (<DataTable table={table} name='All Employees' isLoading={isLoading} />)
 }
