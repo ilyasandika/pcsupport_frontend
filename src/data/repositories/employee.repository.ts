@@ -8,7 +8,7 @@ const employeeLocal: IEmployeeRepository = {
 	await delay();
 	return employeeDummy as unknown as IDetailEmployee[];
     },
-    getEmployeeDetail: async (nik: string): Promise<IDetailEmployee> => {
+    getEmployeeByNik: async (nik: string): Promise<IDetailEmployee> => {
 	await delay();
 	const employee = employeeDummy.find(emp => emp.nik === nik);
 	// const assetHistories: IDetailAssetAssignment[] = await AssetAssignmentRepository.getAssetAssignmentsByEmployeeId(employeeId);
@@ -31,7 +31,7 @@ const employeeApi: IEmployeeRepository = {
 	console.log(res.data)
 	return res.data
     },
-    getEmployeeDetail: async (nik: string): Promise<IDetailEmployee> => {
+    getEmployeeByNik: async (nik: string): Promise<IDetailEmployee> => {
 	const res = await api.get(`/employees/${nik}`)
 	return res.data
     },

@@ -1,7 +1,7 @@
 import type {LoaderFunctionArgs} from "react-router";
-import {EmployeeRepository} from "../../../data/repositories/employee.repository.ts";
+import {EmployeeRepository} from "@/data/repositories/employee.repository.ts";
 
 export const employeeDetailLoader = async ({params}: LoaderFunctionArgs) => {
-    const {id} = params as unknown as {id: number}
-    return await EmployeeRepository.getEmployeeDetail(id)
+    const {id} = params as unknown as {id: string}
+    return await EmployeeRepository.getEmployeeByNik(id)
 }

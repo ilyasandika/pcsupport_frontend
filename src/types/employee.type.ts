@@ -28,5 +28,5 @@ export type IEmployee = Pick<IDetailEmployee, 'nik' | 'name' | 'position' | 'dep
 export interface IEmployeeRepository {
     getEmployees: () => Promise<IDetailEmployee[]>
     getEmployeeListForDropdown: () => Promise<IEmployee[]>
-    getEmployeeDetail: (nik: string) => Promise<IDetailEmployee>
+    getEmployeeByNik: (nik: string) => Promise<IDetailEmployee>
 }
