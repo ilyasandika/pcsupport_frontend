@@ -6,9 +6,9 @@ import {
     useReactTable
 } from "@tanstack/react-table";
 import {useMemo, useState} from "react";
-import Table from "./table.tsx";
+import DataTable from "./data-table.tsx";
 import {ActionButtons} from "./action-button.tsx";
-import type {IDetailAsset} from "../../types/asset.type.ts";
+import type {IDetailAsset} from "@/types/asset.type.ts";
 
 interface AssetTableProps {
     data: IDetailAsset[]
@@ -17,6 +17,7 @@ interface AssetTableProps {
 
 export const AssetTable = ({data, isLoading = false}: AssetTableProps) =>  {
     const columnHelper = createColumnHelper<IDetailAsset>();
+    console.log(data)
     const columns: ColumnDef<IDetailAsset, any>[] = useMemo(
 	() => [
 	    columnHelper.accessor('assetTag', {
@@ -41,7 +42,7 @@ export const AssetTable = ({data, isLoading = false}: AssetTableProps) =>  {
 		size: 150,
 	    }),
 	    columnHelper.accessor(row => {
-		if (!row.assetAssignments) return '';
+		if (!row.assetAssignments?.length) return '';
 		const status = row.assetAssignments[0].userNonEmployeeName ? row.assetAssignments[0].userNonEmployeeName : 'PIC';
 		return `${row.assetAssignments[0].employee.name} ${status}`;
 	    }, {
@@ -50,14 +51,18 @@ export const AssetTable = ({data, isLoading = false}: AssetTableProps) =>  {
 		size: 250,
 		cell: (info) => {
 		    const users = info.row.original.assetAssignments;
-		    if (!users) return <span className="text-gray-400">-</span>;
+		    if (!users || users.length === 0) return <span className="text-gray-400">-</span>;
+		    const lastUser = users[0];
+		    const employeeName = lastUser.employee?.name || '-';
+		    const employeeNik = lastUser.employee?.nik || '-';
+		    const nonEmployeeName = lastUser.userNonEmployeeName || 'PIC';
 		    return (
 			<div>
 			    <div className="font-semibold">
-				{`${users[0].employee.name} (${users[0].userNonEmployeeName ? users[0].userNonEmployeeName : 'PIC'})`}
+				{`${employeeName} (${nonEmployeeName})`}
 			    </div>
 			    <div className="text-xs text-gray-500">
-				{`NIK: ${users[0].employee.name ? users[0].employee.nik : '-'}`}
+				{`NIK: ${employeeNik}`}
 			    </div>
 			</div>
 		    );
@@ -103,7 +108,7 @@ export const AssetTable = ({data, isLoading = false}: AssetTableProps) =>  {
 
 		cell: (info) => (
 		    <ActionButtons
-			detail={{  to: `${info.row.original.id}` }}
+			detail={{  to: `${info.row.original.serialNumber}` }}
 			edit={{ to: `${'#'}` }}
 			document={{  to: `${'#'}` }}
 			remove={{  to: `${'#'}` }}
@@ -133,6 +138,6 @@ export const AssetTable = ({data, isLoading = false}: AssetTableProps) =>  {
 	getPaginationRowModel: getPaginationRowModel(),
     });
 
-    return (<Table table={table} name='All Assets' isLoading={isLoading}/>)
+    return (<DataTable table={table} name='All Assets' isLoading={isLoading}/>)
 
 }

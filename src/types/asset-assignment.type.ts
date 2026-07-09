@@ -1,11 +1,11 @@
 import type {IDetailAsset} from "./asset.type.ts";
-import type {IEmployee} from "./employee.type.ts";
+import type {IDetailEmployee} from "./employee.type.ts";
 
 export interface IDetailAssetAssignment {
     id: number;
     assetId: number;
     asset: IDetailAsset
-    employee: IEmployee
+    employee: IDetailEmployee
     userNonEmployeeName?: string;
     assignedAt: string;
     returnedAt?: string;
