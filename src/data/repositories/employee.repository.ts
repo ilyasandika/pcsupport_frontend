@@ -1,39 +1,42 @@
-import type { IEmployee, IEmployeeRepository } from "../../types/employee.type.ts";
+import type {IDetailEmployee, IEmployee, IEmployeeRepository} from "@/types/employee.type.ts";
 import employeeDummy from "../local/employee/employee.data.json";
 import { delay } from "../../helper/helper.tsx";
-import {AssetAssignmentRepository} from "./asset-assignment.repository.ts";
-import {TicketRepository} from "./ticket.repository.ts";
-import type {IDetailAssetAssignment} from "../../types/asset-assignment.type.ts";
-import type {ITicket} from "../../types/ticket.type.ts";
 import api from "../api/interceptors.ts";
 
 const employeeLocal: IEmployeeRepository = {
-    getEmployees: async (): Promise<IEmployee[]> => {
+    getEmployees: async (): Promise<IDetailEmployee[]> => {
 	await delay();
-	return employeeDummy as unknown as IEmployee[];
+	return employeeDummy as unknown as IDetailEmployee[];
     },
-    getEmployeeDetail: async (employeeId: number): Promise<IEmployee> => {
+    getEmployeeDetail: async (nik: string): Promise<IDetailEmployee> => {
 	await delay();
-	const employee = employeeDummy.find(emp => emp.id === Number(employeeId));
-	const assetHistories: IDetailAssetAssignment[] = await AssetAssignmentRepository.getAssetAssignmentsByEmployeeId(employeeId);
-	const ticketHistories: ITicket[] = await TicketRepository.getTicketsByEmployeeId(employeeId)
+	const employee = employeeDummy.find(emp => emp.nik === nik);
+	// const assetHistories: IDetailAssetAssignment[] = await AssetAssignmentRepository.getAssetAssignmentsByEmployeeId(employeeId);
+	// const ticketHistories: ITicket[] = await TicketRepository.getTicketsByEmployeeId(nik)
 
 	return {
-	    ...employee ?? {} as IEmployee,
-	    assetAssignments: assetHistories,
-	    tickets: ticketHistories,
+	    ...employee ?? {} as IDetailEmployee,
+	    assetAssignments: [],
+	    tickets: [],
 	}
+    },
+    getEmployeeListForDropdown: async (): Promise<IEmployee[]> => {
+	return []
     }
 };
 
 const employeeApi: IEmployeeRepository = {
-    getEmployees: async (): Promise<IEmployee[]> => {
+    getEmployees: async (): Promise<IDetailEmployee[]> => {
 	const res = await api.get('employees')
 	console.log(res.data)
 	return res.data
     },
-    getEmployeeDetail: async (employeeId: number): Promise<IEmployee> => {
-	const res = await api.get(`/employees/${employeeId}`)
+    getEmployeeDetail: async (nik: string): Promise<IDetailEmployee> => {
+	const res = await api.get(`/employees/${nik}`)
+	return res.data
+    },
+    getEmployeeListForDropdown: async (): Promise<IEmployee[]> => {
+	const res = await api.get('/employees/list');
 	return res.data
     }
 };
