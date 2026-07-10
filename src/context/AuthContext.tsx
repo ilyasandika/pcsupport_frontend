@@ -35,8 +35,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const login = async (username: string, password: string) => {
 	await AuthRepository.login(username, password).then(data => {
 	    setUser(data);
-	}).catch(err => {
-	    return err;
+	    return data
 	})
     };
 
