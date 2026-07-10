@@ -3,15 +3,32 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/inter";
 @theme {
-    --color-ptba-primary: #344689;
-    --color-ptba-yellow: theme('colors.yellow.400');
-    --color-ptba-orange: theme('colors.orange.400');
-    --color-ptba-green: theme('colors.green.400');
-    --color-ptba-red: theme('colors.red.400');
+
+    --color-ptba-text: var(--color-ptba-primary-navy);
+    --color-ptba-foreground: var(--color-ptba-secondary-white);
+
+    /*Primary Theme*/
+    --color-ptba-primary-navy: oklch(28% 0.06 265);
+    --color-ptba-primary-yellow: oklch(84% 0.19 84);
+    --color-ptba-primary-red: oklch(57% 0.23 29);
+
+    /*Secondary Theme*/
+    --color-ptba-secondary-orange: oklch(72% 0.17 63);
+    --color-ptba-secondary-turquoise: oklch(62% 0.10 215);
+    --color-ptba-secondary-white: oklch(100% 0 0);
+
+    /*Tertiary Theme*/
+    --color-ptba-tertiary-green: oklch(56% 0.14 153);
+    --color-ptba-tertiary-light-green: oklch(75% 0.15 135);
+    --color-ptba-tertiary-light-blue: oklch(68% 0.13 238);
+    --color-ptba-tertiary-brown: oklch(48% 0.08 59);
+    --color-ptba-tertiary-cream: oklch(88% 0.03 90);
+
+
     --color-ptba-common: theme('colors.blue.200');
     --color-ptba-gray: theme('colors.gray.400');
 
-    --color-ptba-text: theme('colors.gray.700');
+
     --color-ptba-text-dark: theme('colors.gray.200');
 
     --color-ptba-subtext: theme('colors.gray.500');
@@ -62,6 +79,9 @@
     --color-card: var(--card);
     --color-foreground: var(--foreground);
     --color-background: var(--background);
+    --color-success: var(--success);
+    --color-danger: var(--danger);
+    --color-warning: var(--warning);
     --radius-sm: calc(var(--radius) * 0.6);
     --radius-md: calc(var(--radius) * 0.8);
     --radius-lg: var(--radius);
@@ -78,7 +98,7 @@
     --card-foreground: oklch(0.145 0 0);
     --popover: oklch(1 0 0);
     --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.5 0.134 242.749);
+    --primary: var(--color-ptba-primary-navy);
     --primary-foreground: oklch(0.977 0.013 236.62);
     --secondary: oklch(0.967 0.001 286.375);
     --secondary-foreground: oklch(0.21 0.006 285.885);
@@ -86,7 +106,7 @@
     --muted-foreground: oklch(0.556 0 0);
     --accent: oklch(0.97 0 0);
     --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
+    --destructive: oklch(57% 0.23 29);
     --border: oklch(0.922 0 0);
     --input: oklch(0.922 0 0);
     --ring: oklch(0.708 0 0);
@@ -104,6 +124,9 @@
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
+    --warning: var(--color-ptba-primary-yellow);
+    --success: var(--color-ptba-tertiary-light-green);
+    --danger: var(--color-ptba-primary-red);
 }
 
 .dark {
