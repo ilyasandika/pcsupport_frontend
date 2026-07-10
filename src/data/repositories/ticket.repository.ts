@@ -5,7 +5,8 @@ import type {IChartData} from "../../types/common.type.ts";
 import ticketTren from "../local/ticket/ticket-tren.data.json"
 import {delay} from "../../helper/helper.tsx";
 import api from "../api/interceptors.ts";
-import type {IResponse} from "../../types/api.type.ts";
+import type {ICreateTicketDto} from "@/features/ticket/dto/create-ticket.dto.ts";
+import type {AxiosResponse} from "axios";
 
 const ticketLocal: ITicketRepository = {
     getAllTickets: async (): Promise<ITicket[]> => {
@@ -31,13 +32,18 @@ const ticketLocal: ITicketRepository = {
 	console.log(id)
 	await delay();
 	return {} as ITicket;
+    },
+    createTicket: async (ticket: ICreateTicketDto) => {
+	console.log(ticket)
+    },
+    printTicket: async (id: number) => {
+	return await api.get(`/tickets/${id}/pdf`)
     }
 }
 
 const ticketApi: ITicketRepository = {
     getAllTickets: async (): Promise<ITicket[]> => {
 	const res = await api.get('/tickets')
-	console.log(res.data)
 	return res.data;
     },
     getTicketSummary: async (): Promise<ITicketSummary> => {
@@ -66,8 +72,24 @@ const ticketApi: ITicketRepository = {
     },
 
     getTicketById: async (id: number): Promise<ITicket> => {
-	const res: IResponse<ITicket> = await api.get(`/tickets/${id}`)
-	return res.data;
+	const res = await api.get(`/tickets/${id}`)
+	return res.data.data;
+    },
+
+    createTicket: async (ticket: ICreateTicketDto) => {
+	const res = await api.post('/tickets', ticket)
+	return res.data.data;
+    },
+
+    printTicket: async (id: number) => {
+	const res: AxiosResponse = await api.get(`/tickets/${id}/pdf`, {
+	    responseType: 'blob'
+	})
+
+	const blob = new Blob([res.data], { type: 'application/pdf' });
+	const blobUrl = URL.createObjectURL(blob);
+
+	window.open(blobUrl, '_blank');
     }
 }
 
