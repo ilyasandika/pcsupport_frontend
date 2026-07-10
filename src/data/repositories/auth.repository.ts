@@ -1,5 +1,5 @@
 import {delay} from "../../helper/helper.tsx";
-import type {IAuth, IAuthRepository} from "../../types/auth.type.ts";
+import type {IAuth, IAuthRepository} from "@/types/auth.type.ts";
 import api from "../api/interceptors.ts";
 
 
@@ -30,6 +30,7 @@ const authApi: IAuthRepository = {
 
 
 const createAuthRepository = () => {
+
     const dataMode = import.meta.env.VITE_DATA_MODE || 'local';
     return dataMode === 'api' ? authApi : authLocal;
 };
