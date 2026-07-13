@@ -1,5 +1,6 @@
 import type {IDetailAssetAssignment} from "./asset-assignment.type.ts";
 import type { ITicketForAsset} from "./ticket.type.ts";
+import type {IWorkLocation} from "@/types/work-location.types.ts";
 
 export interface IDetailEmployee {
     nik: string;
@@ -16,13 +17,14 @@ export interface IDetailEmployee {
     department: string;
     status?: boolean;
     retireDate?: string | null | undefined;
+    workLocation: IWorkLocation;
     assetAssignments?: IDetailAssetAssignment[],
     tickets?: ITicketForAsset[],
     createdAt: string;
     updatedAt: string;
 }
 
-export type IEmployee = Pick<IDetailEmployee, 'nik' | 'name' | 'position' | 'department'>;
+export type IEmployee = Pick<IDetailEmployee, 'nik' | 'name' | 'position' | 'department' |'workLocation' >;
 
 
 export interface IEmployeeRepository {
