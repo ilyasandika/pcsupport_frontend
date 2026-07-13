@@ -9,7 +9,7 @@ interface ICardProps {
     children: ReactNode;
 }
 
-export const Card = ({ title, Icon, iconSize =13,  children}: ICardProps) => {
+export const DetailCard = ({ title, Icon, iconSize =13,  children}: ICardProps) => {
     return (
 	<div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs space-y-3">
 	    <h2 className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100 pb-2">
