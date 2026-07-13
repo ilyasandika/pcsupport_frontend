@@ -13,7 +13,6 @@ import {
     UserRoundCog,
     XIcon
 } from "lucide-react";
-
 import {type ChangeEvent, useState} from "react";
 import {Textarea} from "@/components/ui/textarea.tsx";
 import {useLoaderData, useNavigate} from "react-router";import type {IEmployee} from "@/types/employee.type.ts";
@@ -38,7 +37,7 @@ import { Spinner } from "@/components/ui/spinner";
 export const TicketFormPage = () =>{
 
     const {employees, assets, engineers, slaPolicies}: {employees: IEmployee[], assets: IAsset[], engineers: IDetailUser[], slaPolicies: ISlaPolicy[]} = useLoaderData()
-    const {setErrors, getFieldErrors} = useFormErrors()
+    const {setErrors, getFieldErrors, generalErrors} = useFormErrors()
     const navigate = useNavigate()
 
     const [assetList, setAssetList] = useState<IAsset[]>(assets)
@@ -72,15 +71,30 @@ export const TicketFormPage = () =>{
 
     const createTicket = async () => {
 	setLoading(true)
+
+	if (!selectedEmployee) {
+	    setErrors([
+		{
+		    field: "employeeId",
+		    message: ["You must select an Employee"]
+		}
+	    ])
+	    setLoading(false)
+	    return
+	}
+	console.log(selectedAsset, selectedEmployee)
+
 	const ticketData: ICreateTicketDto = {
 	    assetSn: selectedAsset?.serialNumber,
-	    employeeNik: selectedEmployee?.nik,
+	    employeeNik: selectedEmployee.nik,
 	    engineerId: selectedEngineer?.id,
 	    problem: problem,
 	    remarks: remarks,
+	    locationId: selectedEmployee.workLocation.id,
 	    slaPolicyId: selectedSla.id,
-
 	}
+
+
 	await TicketRepository.createTicket(ticketData).then(() => {
 	    navigate("/tickets")
 	}).catch((err: IErrorResponse) => {
@@ -104,6 +118,18 @@ export const TicketFormPage = () =>{
 	   </CardHeader>
 	    <CardContent>
 		<div className="grid grid-cols-1 gap-4">
+		    {
+			generalErrors &&
+                        <Item>
+                            <ItemContent>
+				{
+				    generalErrors.map((error) => (
+					<p className={"text-danger"}>{error}</p>
+				    ))
+				}
+                            </ItemContent>
+                        </Item>
+		    }
 		    <SeparatorWithLabel label={"Employee & Asset"} first/>
 		    <Item variant="muted" className="border border-gray" >
 			<ItemContent className="flex gap-3">
@@ -130,7 +156,6 @@ export const TicketFormPage = () =>{
 
 			    {!withAsset &&
                                 <Item variant="outline" className="bg-white" size="xs">
-
                                     <ItemContent>
                                         <div className="flex gap-2 items-center">
                                             <Info className="w-4 h-4 text-ptba-orange"/>
@@ -253,7 +278,13 @@ export const TicketFormPage = () =>{
 				</ComboboxContent>
 			    </Combobox>
 			</FieldContent>
-			<FieldDescription></FieldDescription>
+			<FieldDescription>
+			    {
+				getFieldErrors?.('employeeId')?.map((error) => (
+				    <span className="text-danger">{error}</span>
+				))
+			    }
+			</FieldDescription>
 		    </Field>
 
 
