@@ -5,16 +5,20 @@ import {RouterProvider} from "react-router";
 import {router} from "./route.tsx";
 import {ThemeProvider} from "./context/ThemeContext.tsx";
 import {AuthProvider} from "./context/AuthContext.tsx";
+import {LoadingProvider} from "@/context/LoadingContext.tsx";
 
 
 
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-      <AuthProvider>
-          <ThemeProvider>
-              <RouterProvider router={router} />
-          </ThemeProvider>
-      </AuthProvider>
+      <LoadingProvider>
+          <AuthProvider>
+              <ThemeProvider>
+                  <RouterProvider router={router} />
+              </ThemeProvider>
+          </AuthProvider>
+      </LoadingProvider>
+
   </StrictMode>,
 )
