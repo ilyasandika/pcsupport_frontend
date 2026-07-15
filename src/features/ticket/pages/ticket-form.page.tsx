@@ -1,61 +1,73 @@
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card.tsx";
-import {Field, FieldContent, FieldDescription, FieldError, FieldLabel, FieldTitle} from "@/components/ui/field.tsx";
+import {Field, FieldContent, FieldDescription, FieldLabel, FieldTitle} from "@/components/ui/field.tsx";
 import {InputGroupAddon} from "@/components/ui/input-group.tsx";
 import {
     Asterisk,
     FileText,
     Info,
-    Laptop,
-    type LucideIcon,
+    Laptop, LaptopMinimalCheck,
     MonitorCog,
     TicketIcon,
     User,
     UserRoundCog,
     XIcon
 } from "lucide-react";
-import {type ChangeEvent, useState} from "react";
-import {Textarea} from "@/components/ui/textarea.tsx";
+import {useState} from "react";
 import {useLoaderData, useNavigate} from "react-router";import type {IEmployee} from "@/types/employee.type.ts";
 import {Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxList, ComboboxItem} from "@/components/ui/combobox.tsx";
 import type {IAsset} from "@/types/asset.type.ts";
 import {Item, ItemContent, ItemDescription,  ItemTitle} from "@/components/ui/item.tsx";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import type {IDetailUser} from "@/types/user.type.ts";
+import type {IDetailUser, IUser} from "@/types/user.type.ts";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group.tsx";
 import type {ISlaPolicy} from "@/types/sla.type.ts";
-import {capitalizeWords, secondsToHMS} from "@/helper/helper.tsx";
+import {isTicketSolved, secondsToHMS} from "@/helper/helper.tsx";
 import { Button } from "@/components/ui/button";
 import {TicketRepository} from "@/data/repositories/ticket.repository.ts";
-import type {ICreateTicketDto} from "@/features/ticket/dto/create-ticket.dto.ts";
+import type {ICreateTicketDto, IUpdateTicketDto} from "@/features/ticket/dto/ticket.dto.ts";
 import {useFormErrors} from "@/hooks/useErrors.tsx";
 import type {IErrorResponse} from "@/types/api.type.ts";
 import { Spinner } from "@/components/ui/spinner";
+import type {ITicket} from "@/types/ticket.type.ts";
+import {Select, SelectContent, SelectGroup, SelectLabel, SelectTrigger, SelectValue, SelectItem} from "@/components/ui/select";
+import {useAuth} from "@/context/AuthContext.tsx";
+import {TextAreaField} from "@/components/textarea-field.tsx";
+import {SeparatorWithLabel} from "@/components/separator-with-label.tsx";
 
-
+interface ITicketFormLoader {
+    employees: IEmployee[],
+    assets: IAsset[],
+    engineers: IDetailUser[],
+    slaPolicies: ISlaPolicy[]
+    ticket?: ITicket
+}
 
 export const TicketFormPage = () =>{
-
-    const {employees, assets, engineers, slaPolicies}: {employees: IEmployee[], assets: IAsset[], engineers: IDetailUser[], slaPolicies: ISlaPolicy[]} = useLoaderData()
+    const {employees, assets, engineers, slaPolicies, ticket}: ITicketFormLoader  = useLoaderData()
     const {setErrors, getFieldErrors, generalErrors} = useFormErrors()
+    const {isAdmin, isHelpdesk, isEngineer, user} = useAuth()
+
+    const [initialValue, _] = useState<ITicket | null>(ticket || null)
+
+    const isUpdate = !!initialValue;
     const navigate = useNavigate()
 
     const [assetList, setAssetList] = useState<IAsset[]>(assets)
 
-    const [problem, setProblem] = useState<string>("")
-    const [remarks, setRemarks] = useState<string>("")
+    const [problem, setProblem] = useState<string>(initialValue?.problem || "")
+    const [remarks, setRemarks] = useState<string>(initialValue?.remarks || "")
+    const [solution, setSolution] = useState<string>(initialValue?.solution || "")
 
+    const [selectedStatus, setSelectedStatus] = useState<string>(initialValue?.status || "open")
+    const [selectedEmployee, setSelectedEmployee] = useState<IEmployee | null>(initialValue?.employee || null)
+    const [selectedAsset, setSelectedAsset] = useState<IAsset | null>(initialValue?.asset || null)
+    const [selectedEngineer, setSelectedEngineer] = useState<IUser | null>(initialValue?.engineer || null)
+    const [selectedSla, setSelectedSla] = useState<ISlaPolicy>(initialValue?.slaPolicy || slaPolicies[0])
 
-    const [selectedEmployee, setSelectedEmployee] = useState<IEmployee | null>(null)
-    // const [disabledEmployee, setDisabledEmployee] = useState<boolean>(false)
-
-    const [selectedAsset, setSelectedAsset] = useState<IAsset | null>(null)
     const [disabledAsset, setDisabledAsset] = useState<boolean>(false)
-    const [withAsset, setWithAsset] = useState<boolean>(false)
 
-    const [selectedEngineer, setSelectedEngineer] = useState<IDetailUser | null>(null)
-
-    const [selectedSla, setSelectedSla] = useState<ISlaPolicy>(slaPolicies[0])
+    const [withAsset, setWithAsset] = useState<boolean>(initialValue?.asset ? true : false)
 
     const [loading, setLoading] = useState<boolean>(false)
 
@@ -69,7 +81,20 @@ export const TicketFormPage = () =>{
 	return employee || null
     }
 
-    const createTicket = async () => {
+    const progressTicketStatus = [
+	{label: 'Open', value: 'open'},
+	{label: 'Pending', value: 'pending'},
+	{label: 'In Progress', value: 'in progress'},
+    ]
+
+    const closedTicketStatus = [
+	{label: 'Closed Remote', value: 'closed remote'},
+	{label: 'Closed Visit', value: 'closed visit'},
+	{label: 'Closed Onsite', value: 'closed onsite'},
+	{label: 'Resolved', value: 'resolved'},
+    ]
+
+    const saveTicket = async () => {
 	setLoading(true)
 
 	if (!selectedEmployee) {
@@ -82,27 +107,52 @@ export const TicketFormPage = () =>{
 	    setLoading(false)
 	    return
 	}
-	console.log(selectedAsset, selectedEmployee)
+	if (initialValue) {
+	    const ticketData: IUpdateTicketDto = {
+		status: selectedStatus,
+		assetSn: selectedAsset?.serialNumber,
+		employeeNik: selectedEmployee.nik,
+		engineerId: isAdmin() ? selectedEngineer?.id : user?.sub,
+		solution: solution,
+		problem: problem,
+		remarks: remarks,
+		locationId: selectedEmployee.workLocation.id,
+		slaPolicyId: selectedSla.id,
+		solvedAt: !isTicketSolved(selectedStatus) ? null : initialValue.solvedAt,
+	    }
 
-	const ticketData: ICreateTicketDto = {
-	    assetSn: selectedAsset?.serialNumber,
-	    employeeNik: selectedEmployee.nik,
-	    engineerId: selectedEngineer?.id,
-	    problem: problem,
-	    remarks: remarks,
-	    locationId: selectedEmployee.workLocation.id,
-	    slaPolicyId: selectedSla.id,
+	    await TicketRepository.updateTicket(initialValue.id, ticketData).then(() => {
+		setLoading(true)
+		navigate("/tickets")
+	    }).catch((err: IErrorResponse) => {
+		console.log(err)
+		setErrors(err.errors)
+	    }).finally(() => {
+		setLoading(false)
+	    })
+	} else {
+	    const ticketData: ICreateTicketDto = {
+		assetSn: selectedAsset?.serialNumber,
+		employeeNik: selectedEmployee.nik,
+		engineerId: isAdmin() ? selectedEngineer?.id : user?.sub,
+		problem: problem,
+		remarks: remarks,
+		locationId: selectedEmployee.workLocation.id,
+		slaPolicyId: selectedSla.id,
+	    }
+
+	    await TicketRepository.createTicket(ticketData).then(() => {
+		navigate("/tickets")
+	    }).catch((err: IErrorResponse) => {
+		console.log(err)
+		setErrors(err.errors)
+	    }).finally(() => {
+		setLoading(false)
+	    })
 	}
 
 
-	await TicketRepository.createTicket(ticketData).then(() => {
-	    navigate("/tickets")
-	}).catch((err: IErrorResponse) => {
-	    console.log(err)
-	    setErrors(err.errors)
-	}).finally(() => {
-	    setLoading(false)
-	})
+
     }
 
     return (
@@ -111,7 +161,7 @@ export const TicketFormPage = () =>{
 		<div className="p-4 bg-primary flex gap-4 items-center">
 		    <TicketIcon className="w-8 h-8 text-white"/>
 		   <div>
-		       <CardTitle className="text-primary-foreground font-bold text-lg">Create New Ticket</CardTitle>
+		       <CardTitle className="text-primary-foreground font-bold text-lg">{initialValue ? "Update" : "Create New"} Ticket</CardTitle>
 		       <CardDescription className="text-secondary text-sm">Reporting Ticket Form PC Support</CardDescription>
 		   </div>
 	       </div>
@@ -131,6 +181,7 @@ export const TicketFormPage = () =>{
                         </Item>
 		    }
 		    <SeparatorWithLabel label={"Employee & Asset"} first/>
+		    {/*asset combobox*/}
 		    <Item variant="muted" className="border border-gray" >
 			<ItemContent className="flex gap-3">
 			    <div className="flex items-center justify-between">
@@ -221,6 +272,7 @@ export const TicketFormPage = () =>{
 			</ItemContent>
 		    </Item>
 
+		    {/*employee combobox*/}
 		    <Field>
 			<FieldLabel>
 			    <User className="w-4 h-4" />
@@ -238,17 +290,16 @@ export const TicketFormPage = () =>{
 			    >
 				<ComboboxInput placeholder="">
 				    {/*<InputGroupAddon align="inline-start">*/}
-					{/*<User className="w-4 h-4" />*/}
+				    {/*<User className="w-4 h-4" />*/}
 				    {/*</InputGroupAddon>*/}
 				    {selectedEmployee &&
-				    <InputGroupAddon align="inline-end" className="cursor-pointer" onClick={()=> {
-					setSelectedEmployee(null)
-					setSelectedAsset(null)
-					setAssetList(assets)
-					setDisabledAsset(false)
-				    }}>
-					<XIcon className="w-4 h-4" />
-				    </InputGroupAddon>
+					<InputGroupAddon align="inline-end" className="cursor-pointer" onClick={()=> {
+					    setSelectedEmployee(null)
+					    setSelectedAsset(null)
+					    setAssetList(assets)
+					}}>
+					    <XIcon className="w-4 h-4" />
+					</InputGroupAddon>
 				    }
 				</ComboboxInput>
 				<ComboboxContent>
@@ -260,7 +311,6 @@ export const TicketFormPage = () =>{
 						setSelectedEmployee(employee)
 						setSelectedAsset(null)
 						setAssetList(asset)
-						setWithAsset(true)
 					    }}>
 						<Item size="xs" className="p-0">
 						    <ItemContent>
@@ -289,257 +339,201 @@ export const TicketFormPage = () =>{
 
 
 
-		    <SeparatorWithLabel label={"Engineer Information"}/>
+		    {/*engineer combobox*/}
+		    {
+			(isAdmin() || isHelpdesk())&&
+                        <>
+                            <SeparatorWithLabel label={"Engineer Information"}/>
+                            <Field>
+                                <FieldLabel>
+                                    <UserRoundCog className="w-4 h-4" />
+                                    <div className="flex items-start gap-0.5">
+                                        Engineer
+                                        <Asterisk className="text-ptba-primary-red w-3 h-3"/>
+                                    </div>
+                                </FieldLabel>
+                                <FieldContent>
+                                    <Combobox items={engineers}
+                                              itemToStringValue={(eng: IUser) => `${eng.fullName}`}
+                                              itemToStringLabel={(eng: IUser) => `${eng.fullName}`}
+                                              value={selectedEngineer}
+                                              autoHighlight
+                                    >
+                                        <ComboboxInput placeholder="">
+					    {selectedEngineer &&
+                                                <InputGroupAddon align="inline-end" className="cursor-pointer" onClick={()=> {
+						    setSelectedEngineer(null)
 
-		    <Field>
-			<FieldLabel>
-			    <UserRoundCog className="w-4 h-4" />
-			    <div className="flex items-start gap-0.5">
-				Engineer
-				<Asterisk className="text-ptba-primary-red w-3 h-3"/>
-			    </div>
-			</FieldLabel>
-			<FieldContent>
-			    <Combobox items={engineers}
-				      itemToStringValue={(eng: IDetailUser) => `${eng.fullName}`}
-				      itemToStringLabel={(eng: IDetailUser) => `${eng.fullName}`}
-				      value={selectedEngineer}
-				      autoHighlight
-			    >
-				<ComboboxInput placeholder="">
-				    {/*<InputGroupAddon align="inline-start">*/}
-				    {/*<User className="w-4 h-4" />*/}
-				    {/*</InputGroupAddon>*/}
-				    {selectedEngineer &&
-                                        <InputGroupAddon align="inline-end" className="cursor-pointer" onClick={()=> {
-					    setSelectedEngineer(null)
+						}}>
+                                                    <XIcon className="w-4 h-4" />
+                                                </InputGroupAddon>
+					    }
+                                        </ComboboxInput>
+                                        <ComboboxContent>
+                                            <ComboboxEmpty>No employees found.</ComboboxEmpty>
+                                            <ComboboxList>
+						{(engineer: IDetailUser) => (
+						    <ComboboxItem key={engineer.id} value={`${engineer.fullName}`} onClick={()=> {
+							setSelectedEngineer(engineer)
+						    }}>
+							<Item size="xs" className="p-0">
+							    <ItemContent>
+								<ItemTitle>
+								    {engineer.fullName}
+								</ItemTitle>
+								<ItemDescription>
+								    {engineer.role} | {engineer.workLocation.name}
+								</ItemDescription>
+							    </ItemContent>
+							</Item>
+						    </ComboboxItem>
+						)}
+                                            </ComboboxList>
+                                        </ComboboxContent>
+                                    </Combobox>
+                                </FieldContent>
+                                <FieldDescription></FieldDescription>
+                            </Field>
+			</>
+		    }
 
-					}}>
-                                            <XIcon className="w-4 h-4" />
-                                        </InputGroupAddon>
-				    }
-				</ComboboxInput>
-				<ComboboxContent>
-				    <ComboboxEmpty>No employees found.</ComboboxEmpty>
-				    <ComboboxList>
-					{(engineer: IDetailUser) => (
-					    <ComboboxItem key={engineer.id} value={`${engineer.fullName}`} onClick={()=> {
-						setSelectedEngineer(engineer)
-					    }}>
-						<Item size="xs" className="p-0">
-						    <ItemContent>
-							<ItemTitle>
-							    {engineer.fullName}
-							</ItemTitle>
-							<ItemDescription>
-							    {engineer.role} | {engineer.workLocation.name}
-							</ItemDescription>
-						    </ItemContent>
-						</Item>
-					    </ComboboxItem>
-					)}
-				    </ComboboxList>
-				</ComboboxContent>
-			    </Combobox>
-			</FieldContent>
-			<FieldDescription></FieldDescription>
-		    </Field>
+		    {
+			(isAdmin() || isHelpdesk())&&
+			<>
+                            <SeparatorWithLabel label={"SLA Policy Information"}/>
+                            <RadioGroup className="grid grid-cols-2 sm:grid-cols-3 gap-4" defaultValue={`${selectedSla.id}`}>
+				{
+				    (slaPolicies.length) && slaPolicies.map((sla) => {
+					const responseTime = secondsToHMS(sla.responseTimeSeconds)
+					const resolutionTime = secondsToHMS(sla.resolutionTimeSeconds)
 
-		    <SeparatorWithLabel label={"SLA Policy Information"}/>
-		    <RadioGroup className="grid grid-cols-2 sm:grid-cols-3 gap-4" defaultValue={`${selectedSla.id}`}>
-			{
-			    (slaPolicies.length) && slaPolicies.map((sla) => {
-				const responseTime = secondsToHMS(sla.responseTimeSeconds)
-			    	const resolutionTime = secondsToHMS(sla.resolutionTimeSeconds)
-
-				return (
-				    <FieldLabel htmlFor={`${sla.id}`}>
-					<Field orientation="horizontal">
-					    <RadioGroupItem value={`${sla.id}`} id={`${sla.id}`} onClick={()=>{
-						setSelectedSla(sla)
-					    }}/>
-					    <FieldContent>
-						<FieldTitle className="line-clamp-1"><span>{sla.name}</span></FieldTitle>
-						<FieldDescription className="line-clamp-2">
-						    {sla.description}
-						</FieldDescription>
-						    <ItemContent className="flex flex-row gap-4 sm:gap-8 border rounded-sm p-2">
-							<div className="">
-							    <div className="text-xs text-gray-400">
-								Response Time
+					return (
+					    <FieldLabel htmlFor={`${sla.id}`}>
+						<Field orientation="horizontal">
+						    <RadioGroupItem value={`${sla.id}`} id={`${sla.id}`} onClick={()=>{
+							setSelectedSla(sla)
+						    }}/>
+						    <FieldContent>
+							<FieldTitle className="line-clamp-1"><span>{sla.name}</span></FieldTitle>
+							<FieldDescription className="line-clamp-2">
+							    {sla.description}
+							</FieldDescription>
+							<ItemContent className="flex flex-row gap-4 sm:gap-8 border rounded-sm p-2">
+							    <div className="">
+								<div className="text-xs text-gray-400">
+								    Response Time
+								</div>
+								<div className="">
+								    {`${responseTime.hours}h ${responseTime.minutes}m`}
+								</div>
 							    </div>
 							    <div className="">
-								{`${responseTime.hours}h ${responseTime.minutes}m`}
+								<div className="text-xs text-gray-400">
+								    Resolution Time
+								</div>
+								<div className="text-">
+								    {`${resolutionTime.hours}h ${resolutionTime.minutes}m`}
+								</div>
 							    </div>
-							</div>
-							<div className="">
-							    <div className="text-xs text-gray-400">
-								Resolution Time
-							    </div>
-							    <div className="text-">
-								{`${resolutionTime.hours}h ${resolutionTime.minutes}m`}
-							    </div>
-							</div>
-						    </ItemContent>
-					    </FieldContent>
-					</Field>
-				    </FieldLabel>
-				)
-			    })
-			}
-		    </RadioGroup>
+							</ItemContent>
+						    </FieldContent>
+						</Field>
+					    </FieldLabel>
+					)
+				    })
+				}
+                            </RadioGroup>
+			</>
+		    }
 
 
 		    <SeparatorWithLabel label={"Case Information"}/>
-		    <TextAreaField
-			label="Problem"
-			required
-			Icon={MonitorCog}
-			value={problem}
-			onChange={(e) => setProblem(e.target.value)}
-			errors={getFieldErrors("problem")}
-		    />
-		    <TextAreaField
-			label="Remarks"
-			Icon={FileText}
-			value={remarks}
-			onChange={(e) => setRemarks(e.target.value)}
-			errors={getFieldErrors("remarks")}
-		    />
+		    <div className="flex flex-wrap gap-4">
+			<TextAreaField
+			    label="Problem"
+			    required
+			    Icon={MonitorCog}
+			    value={problem}
+			    onChange={(e) => setProblem(e.target.value)}
+			    errors={getFieldErrors("problem")}
+			    className="flex-1"
+			/>
+			{
+			    isUpdate &&
+                            <TextAreaField
+                                label="Solution"
+                                Icon={LaptopMinimalCheck}
+                                value={solution}
+                                onChange={(e) => setSolution(e.target.value)}
+                                errors={getFieldErrors("solution")}
+                                className="flex-1"
+                            />
+			}
+			<TextAreaField
+			    label="Remarks"
+			    Icon={FileText}
+			    value={remarks}
+			    onChange={(e) => setRemarks(e.target.value)}
+			    errors={getFieldErrors("remarks")}
+			    className={isUpdate ? "w-full" : "flex-1"}
+
+			/>
+		    </div>
+
+		    {
+			(isUpdate && !isEngineer()) &&
+                        <Field>
+                            <FieldLabel>
+                                <Info className="w-4 h-4" />
+                                Status
+                            </FieldLabel>
+                            <FieldContent>
+                                <Select defaultValue={initialValue?.status || 'open'} onValueChange={(value) => setSelectedStatus(value)}>
+                                    <SelectTrigger className="w-full max-w-48">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectLabel>Progress</SelectLabel>
+					    {
+						progressTicketStatus.map((status) => (
+						    <SelectItem key={status.value} value={status.value}>
+							{status.label}
+						    </SelectItem>
+						))
+					    }
+                                        </SelectGroup>
+                                        <SelectGroup>
+                                            <SelectLabel>Closed</SelectLabel>
+					    {
+						closedTicketStatus.map((status) => (
+						    <SelectItem key={status.value} value={status.value}>
+							{status.label}
+						    </SelectItem>
+						))
+					    }
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            </FieldContent>
+                        </Field>
+		    }
 		</div>
 	    </CardContent>
 	    <CardFooter className="flex justify-end w-full">
 		<Button variant="default"
 			onClick={() => {
 			    setLoading(true)
-			    createTicket()
+			    saveTicket()
 			}}
 			className="cursor-pointer"
 			disabled={loading}
 		>
 		    {loading && <Spinner data-icon="inline-start"/>}
-		    Create Ticket
+		    {initialValue ? "Update" : "Create"} Ticket
 		</Button>
 	    </CardFooter>
 	</Card>
     )
 }
 
-// interface InputWithIconProps {
-//     label: string;
-//     placeholder?: string;
-//     value: string;
-//     onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
-//     description?: string;
-//     disabled?: boolean;
-// }
-//
-// const InputWithChecklist = ({label, placeholder, description, value, onChange, disabled = false}: InputWithIconProps) => {
-//     return (
-// 	<Field>
-// 	    <FieldLabel>{label}</FieldLabel>
-// 	    <InputGroup>
-// 		<InputGroupInput type="text" placeholder={placeholder} value={value} onChange={onChange} disabled={disabled}/>
-// 		<InputGroupAddon align="inline-start">
-// 		    <Check className="w-4 h-4" />
-// 		</InputGroupAddon>
-// 	    </InputGroup>
-// 	    <FieldDescription>{description}</FieldDescription>
-// 	</Field>
-//     )
-// }
-
-
-//
-// interface DropdownProps {
-//     label: string;
-//     description?: string;
-//     items: { label: string; value: string }[];
-//     disabled?: boolean;
-// }
-//
-// const Dropdown = ({label, items, description, disabled=false}: DropdownProps) => {
-//     return (
-// 	<Field>
-// 	    <FieldLabel>{label}</FieldLabel>
-// 	    <Select defaultValue="apple" disabled={disabled}>
-// 		<SelectTrigger className="w-full max-w-48">
-// 		    <SelectValue />
-// 		</SelectTrigger>
-// 		<SelectContent position="popper">
-// 		    <SelectGroup>
-// 			<SelectLabel>Fruits</SelectLabel>
-// 			{items.map((item) => (
-// 			    <SelectItem key={item.value} value={item.value}>
-// 				{item.label}
-// 			    </SelectItem>
-// 			))}
-// 		    </SelectGroup>
-// 		</SelectContent>
-// 	    </Select>
-// 	    <FieldDescription>{description}</FieldDescription>
-// 	</Field>
-//     )
-// }
-
-
-interface TextareaFieldProps {
-    label: string;
-    placeholder?: string;
-    value: string;
-    onChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void;
-    description?: string;
-    errors?: string[];
-    required?: boolean;
-    Icon: LucideIcon
-}
-
-
-const TextAreaField = ({value, onChange, label, description, placeholder, errors, required = false, Icon}: TextareaFieldProps) => {
-    return (
-	<Field>
-	    <FieldLabel htmlFor={label}>
-		<Icon className="w-4 h-4"/>
-		<div className="flex items-start gap-0.5">
-		    {label}
-		    {required && <Asterisk className="text-ptba-primary-red w-3 h-3"/>}
-		</div>
-	    </FieldLabel>
-	    <Textarea id={label} value={value} onChange={onChange} placeholder={placeholder}/>
-	    <FieldDescription>{description}</FieldDescription>
-	    {
-		errors?.length && errors.map((error) => (
-		    <FieldError>
-			{capitalizeWords(error, "only first")}
-		    </FieldError>
-		))
-	    }
-	</Field>
-    )
-}
-
-const SeparatorWithLabel = ({label, first = false}: {label: string, first?: boolean}) => {
-    return (
-	<div className={`flex items-center gap-2 ${!first && "mt-4"}`}>
-	    <span className="text-gray-500 whitespace-nowrap">{label}</span>
-	    <hr className="w-full"/>
-	</div>
-    )
-}
-//
-// const LocationField = ({label, description, onCheckedChange, disabled = false}: {label: string, description: string, onCheckedChange?(checked: boolean): void, disabled?: boolean}) => {
-//     return (
-// 	<FieldLabel>
-// 	    <Field orientation="horizontal">
-// 		<Checkbox id="toggle-checkbox-2" name="toggle-checkbox-2" onCheckedChange={onCheckedChange} disabled={disabled}/>
-// 		<FieldContent>
-// 		    <FieldTitle>{label}</FieldTitle>
-// 		    <FieldDescription>
-// 			{description}
-// 		    </FieldDescription>
-// 		</FieldContent>
-// 	    </Field>
-// 	</FieldLabel>
-//     )
-// }
-//
