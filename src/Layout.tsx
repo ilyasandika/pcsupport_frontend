@@ -12,8 +12,8 @@ export const Layout = () => {
     return (
 	<SidebarProvider>
 		<AppSidebar />
-		<SidebarInset className="p-4 overflow-y-auto bg-secondary">
-		    <SidebarTrigger className="mb-3" />
+		<SidebarInset className="p-6 overflow-y-auto bg-secondary">
+		    <SidebarTrigger className="mb-3 block md:hidden" />
 			<main className="">
 			    {isNavigating && <AssetTableSkeleton/>}
 			    {!isNavigating && <Outlet/>}
