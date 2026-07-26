@@ -1,10 +1,10 @@
 import type {IChartData} from "./common.type.ts";
 import type {IAsset} from "./asset.type.ts";
-import type {ICreateTicketDto} from "@/features/ticket/dto/create-ticket.dto.ts";
+import type {ICreateTicketDto, IUpdateTicketDto} from "@/features/ticket/dto/ticket.dto.ts";
 import type {IEmployee} from "@/types/employee.type.ts";
 import type {IUser} from "@/types/user.type.ts";
 import type {ISlaPolicy} from "@/types/sla.type.ts";
-import type {IWorkLocation} from "@/types/work-location.types.ts";
+import type {IWorkLocation} from "@/types/work-location.type.ts";
 
 export const TicketStatus = {
   Open : 'open',
@@ -42,7 +42,7 @@ export interface ITicket {
   problem: string;
   status: TicketStatusType
   solution?: string;
-  startAt: string;
+  startAt?: string;
   solvedAt?: string;
   remarks?: string;
   createdAt: string;
@@ -52,6 +52,7 @@ export interface ITicket {
   createdBy: IUser
   slaPolicy: ISlaPolicy
   location: IWorkLocation
+  filePath?: string;
 }
 
 
@@ -61,6 +62,14 @@ export type ITicketForAsset = Omit<ITicket,  'employee' | 'slaPolicy' |
     'remarks' |
     'createdBy'>;
 
+
+export type IPrintTicketPayload = {
+  phoneNumber?: string;
+  engineerId: number;
+  supervisorId: number;
+  // date: string;
+}
+
 export interface ITicketRepository {
   getAllTickets: () => Promise<ITicket[]>
   getTicketSummary: () => Promise<ITicketSummary>
@@ -69,4 +78,11 @@ export interface ITicketRepository {
   getTicketById: (id: number) => Promise<ITicket>
 
   createTicket: (ticket: ICreateTicketDto) => any
+  generateTicketPdf: (id: number, payload: IPrintTicketPayload) => Promise<void>
+  claimTicket: (id: number) => void
+  updateTicket: (id: number, ticket: IUpdateTicketDto) => any
+  getSolvedTicketPdf: (id: number) => void
+  uploadTicket: (id: number, file: File) => Promise<void>
+
+  hardRemoveTicket: (id: number) => void
 }
