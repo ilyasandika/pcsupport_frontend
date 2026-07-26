@@ -1,28 +1,9 @@
-import type { IDetailAssetAssignment, IAssetAssignmentRepository } from "../../types/asset-assignment.type.ts"; // Sesuaikan path type kamu
-import assetAssignmentDummy from '../local/asset-assignment/asset-assignment.data.json';
-import { delay } from "../../helper/helper.tsx";
-
-const assetAssignmentLocal: IAssetAssignmentRepository = {
-    getAssetAssignmentsByAssetId: async (assetId: number): Promise<IDetailAssetAssignment[]> => {
-	await delay();
-	return assetAssignmentDummy.filter(assignment => {
-	    return assignment.assetId === assetId;
-	}) as unknown as IDetailAssetAssignment[];
-    },
-    getAssetAssignmentsByEmployeeId: async (employeeId: number): Promise<IDetailAssetAssignment[]> => {
-	await delay();
-	return assetAssignmentDummy.reduce<IDetailAssetAssignment[]>((acc, assign) => {
-	    if (assign.picEmployeeId === employeeId) {
-		const assetDetail = assetAssignmentDummy.find(ast => ast.id === assign.assetId);
-		acc.push({
-		    ...assign,
-		    asset: assetDetail
-		} as unknown as IDetailAssetAssignment);
-	    }
-	    return acc;
-	}, []);
-    }
-};
+import type {
+    IDetailAssetAssignment,
+    IAssetAssignmentRepository,
+    IReturnAssetAssignmentPayload, ICreateAssetAssignmentPayload, IGenerateAssetAssignmentPayload
+} from "@/types/asset-assignment.type.ts";
+import api from "@/data/api/interceptors.ts";
 
 const assetAssignmentApi: IAssetAssignmentRepository = {
     getAssetAssignmentsByAssetId: async (assetId: number): Promise<IDetailAssetAssignment[]> => {
@@ -32,12 +13,73 @@ const assetAssignmentApi: IAssetAssignmentRepository = {
     getAssetAssignmentsByEmployeeId: async (employeeId: number): Promise<IDetailAssetAssignment[]> => {
 	console.log("Fetch API Assignment by Employee ID:", employeeId);
 	return [] as IDetailAssetAssignment[];
-    }
+    },
+    create: async (payload: ICreateAssetAssignmentPayload): Promise<IDetailAssetAssignment> => {
+	const res = await api.post('/asset-assignments', payload);
+	return res.data;
+    },
+    returnAssignment: async (
+	id: number | string,
+	payload: IReturnAssetAssignmentPayload,
+    ): Promise<IDetailAssetAssignment> => {
+	const res = await api.patch(`/asset-assignments/${id}/return`, payload);
+	return res.data;
+    },
+    generateDocument: async (
+	id: number | string,
+	payload: IGenerateAssetAssignmentPayload,
+	type: 'assign' | 'return',
+    ) => {
+	console.log(id, payload)
+	const endpoint = type === 'assign'
+	    ? `/asset-assignments/${id}/assign/pdf`
+	    : `/asset-assignments/${id}/return/pdf`;
+	const res = await api.post(endpoint, payload, {
+	    responseType: 'blob',
+	});
+	const blob = new Blob([res.data], { type: 'application/pdf' });
+	const blobUrl = URL.createObjectURL(blob);
+	window.open(blobUrl, '_blank');
+    },
+    uploadDocument: async (
+	id: number | string,
+	file: File,
+	type: 'assign' | 'return',
+    ) => {
+	const formData = new FormData();
+	formData.append('file', file);
+	const endpoint = type === 'assign'
+	    ? `/asset-assignments/${id}/upload`
+	    : `/asset-assignments/${id}/return/upload`;
+	const res = await api.post(endpoint, formData, {
+	    headers: {
+		'Content-Type': 'multipart/form-data',
+	    },
+	});
+	return res.data;
+    },
+    viewDocument: async (
+	id: number | string,
+	type: 'assign' | 'return',
+    ) => {
+	try {
+	    const endpoint = type === 'assign'
+		? `/asset-assignments/${id}/pdf`
+		: `/asset-assignments/${id}/return/pdf`;
+	    const res = await api.get(endpoint, {
+		responseType: 'blob'
+	    });
+	    const blob = new Blob([res.data], { type: 'application/pdf' });
+	    const blobUrl = URL.createObjectURL(blob);
+	    window.open(blobUrl, '_blank');
+	} catch (error) {
+	    console.error('Error fetching PDF:', error);
+	}
+    },
 };
 
 export const createAssetAssignmentRepository = () => {
-    const dataMode = import.meta.env.VITE_DATA_MODE || 'local';
-    return dataMode === 'api' ? assetAssignmentApi : assetAssignmentLocal;
+    return assetAssignmentApi
 };
 
 export const AssetAssignmentRepository = createAssetAssignmentRepository();
