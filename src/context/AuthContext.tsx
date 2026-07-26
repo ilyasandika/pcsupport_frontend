@@ -2,10 +2,14 @@ import {createContext, useContext, useState, useEffect, type ReactNode} from 're
 import api from "../data/api/interceptors.ts";
 import {AuthRepository} from "../data/repositories/auth.repository.ts";
 import type {IAuth} from "../types/auth.type.ts";
+import {useLoading} from "@/context/LoadingContext.tsx";
 
 interface AuthContextType {
     user: IAuth | null;
     isLoading: boolean;
+    isAdmin: () => boolean;
+    isHelpdesk: () => boolean;
+    isEngineer: () => boolean;
     login: (username: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
 }
@@ -15,7 +19,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<IAuth | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const {isLoading, setIsLoading} = useLoading();
 
     useEffect(() => {
 	checkAuth();
@@ -23,6 +27,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const checkAuth = async () => {
 	try {
+	    setIsLoading(true);
 	    const res = await api.get('/auth/me');
 	    setUser(res.data);
 	} catch (err) {
@@ -32,6 +37,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	}
     };
 
+
     const login = async (username: string, password: string) => {
 	await AuthRepository.login(username, password).then(data => {
 	    setUser(data);
@@ -39,13 +45,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	})
     };
 
+    const isAdmin = () => {
+	return user?.role === 'admin';
+    }
+
+    const isHelpdesk = () => {
+	return user?.role === 'helpdesk';
+    }
+
+    const isEngineer = () => {
+	return user?.role === 'engineer';
+    }
+
     const logout = async () => {
 	AuthRepository.logout();
 	setUser(null);
     };
 
+    if (isLoading) {
+	return;
+    }
+
     return (
-	<AuthContext.Provider value={{ user, isLoading, login, logout }}>
+	<AuthContext.Provider value={{ user, isLoading, login, logout, isAdmin, isHelpdesk, isEngineer}}>
 	    {children}
 	</AuthContext.Provider>
     );
