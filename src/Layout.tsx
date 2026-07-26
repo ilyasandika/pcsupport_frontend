@@ -1,6 +1,7 @@
-import {Sidebar} from "./components/sidebar.tsx";
-import {Header} from "./components/header.tsx";
 import {Outlet, useNavigation} from "react-router";
+import {SidebarInset, SidebarProvider} from "@/components/ui/sidebar.tsx";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import {AppSidebar} from "@/components/app-sidebar.tsx";
 
 
 export const Layout = () => {
@@ -9,16 +10,16 @@ export const Layout = () => {
     const isNavigating = navigation.state === 'loading';
 
     return (
-	<div className="min-h-screen bg-ptba-primary/5 flex">
-	    <Sidebar />
-	    <div className="flex-1 flex flex-col min-h-screen w-full lg:w-auto lg:ml-60">
-		<Header />
-		<main className="p-8 w-full max-w-screen-sm md:max-w-screen-md lg:max-w-4xl xl:max-w-280 2xl:max-w-300 3xl:max-w-380 mx-auto">
-		    {isNavigating && <AssetTableSkeleton/>}
-		    {!isNavigating && <Outlet/>}
-		</main>
-	    </div>
-	</div>
+	<SidebarProvider>
+		<AppSidebar />
+		<SidebarInset className="p-4 overflow-y-auto bg-secondary">
+		    <SidebarTrigger className="mb-3" />
+			<main className="">
+			    {isNavigating && <AssetTableSkeleton/>}
+			    {!isNavigating && <Outlet/>}
+			</main>
+		</SidebarInset>
+	</SidebarProvider>
     )
 }
 
