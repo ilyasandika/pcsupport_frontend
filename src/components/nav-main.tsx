@@ -59,9 +59,9 @@ export function NavMain({
                   >
                     <SidebarMenuItem className={""}>
                       <CollapsibleTrigger asChild>
-                        <SidebarMenuButton tooltip={item.title} isActive={isItemActive || isChildActive}>
+                        <SidebarMenuButton tooltip={item.title} isActive={isItemActive || isChildActive} className="text-sm flex gap-3">
                           {item.icon}
-                          <span>{item.title}</span>
+                          <span className="text-xs">{item.title}</span>
                           <ChevronRightIcon className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                         </SidebarMenuButton>
                       </CollapsibleTrigger>
@@ -69,12 +69,11 @@ export function NavMain({
                         <SidebarMenuSub>
                           {visibleSubItems.map((subItem) => {
                             const isSubItemActive = location.pathname === subItem.url
-
                             return (
                                 <SidebarMenuSubItem key={subItem.title}>
                                   <SidebarMenuSubButton asChild isActive={isSubItemActive}>
                                     <NavLink to={subItem.url}>
-                                      <span>{subItem.title}</span>
+                                      <span className="text-xs">{subItem.title}</span>
                                     </NavLink>
                                   </SidebarMenuSubButton>
                                 </SidebarMenuSubItem>
@@ -90,9 +89,9 @@ export function NavMain({
             return (
                 <SidebarMenuItem key={item.title} className="">
                   <SidebarMenuButton asChild tooltip={item.title} isActive={isItemActive} className="py-2.5 h-auto">
-                    <NavLink to={item.url}>
+                    <NavLink to={item.url} className="text-sm flex gap-3">
                       {item.icon}
-                      <span>{item.title}</span>
+                      <span className="text-xs">{item.title}</span>
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
