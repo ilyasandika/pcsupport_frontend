@@ -61,7 +61,7 @@ export function NavMain({
                       <CollapsibleTrigger asChild>
                         <SidebarMenuButton tooltip={item.title} isActive={isItemActive || isChildActive} className="text-sm flex gap-3">
                           {item.icon}
-                          <span className="text-xs">{item.title}</span>
+                          <span className="text-sm">{item.title}</span>
                           <ChevronRightIcon className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                         </SidebarMenuButton>
                       </CollapsibleTrigger>
@@ -73,7 +73,7 @@ export function NavMain({
                                 <SidebarMenuSubItem key={subItem.title}>
                                   <SidebarMenuSubButton asChild isActive={isSubItemActive}>
                                     <NavLink to={subItem.url}>
-                                      <span className="text-xs">{subItem.title}</span>
+                                      <span className="text-sm">{subItem.title}</span>
                                     </NavLink>
                                   </SidebarMenuSubButton>
                                 </SidebarMenuSubItem>
@@ -91,7 +91,7 @@ export function NavMain({
                   <SidebarMenuButton asChild tooltip={item.title} isActive={isItemActive} className="py-2.5 h-auto">
                     <NavLink to={item.url} className="text-sm flex gap-3">
                       {item.icon}
-                      <span className="text-xs">{item.title}</span>
+                      <span className="text-sm">{item.title}</span>
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
