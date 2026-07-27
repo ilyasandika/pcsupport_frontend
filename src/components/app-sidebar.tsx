@@ -34,17 +34,16 @@ export const AppSidebar = ({ ...props }: ComponentProps<typeof Sidebar>) => {
   }
 
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="items-center justify-center p-4">
+    <Sidebar collapsible="icon" {...props} >
+      <SidebarHeader className="items-center justify-center p-4 my-4">
 
         <div className="flex items-center justify-center group-data-[collapsible=icon]:hidden">
-          <BukitAsamFull size={32}/>
+          <BukitAsamFull size={28}/>
         </div>
 
         <div className="hidden group-data-[collapsible=icon]:flex">
             <BukitAsamMinimize size={24} />
         </div>
-
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
