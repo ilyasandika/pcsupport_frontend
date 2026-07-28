@@ -1,43 +1,59 @@
 import type {LucideIcon} from "lucide-react";
-import {capitalizeWords} from "../../../helper/helper.tsx";
+import {Card, CardAction, CardContent, CardHeader, CardTitle} from "@/components/ui/card.tsx";
+import {cn} from "@/lib/utils.ts";
+import type {ReactNode} from "react";
 
 interface ticketCardProps {
     label: string,
     value: number,
     status: 'progress' | 'open' | 'closed' |'total',
     Icon: LucideIcon
+    description?: string | ReactNode;
 }
 
-export const TicketCard = ({label, value, status, Icon}: ticketCardProps) => {
+export const TicketCard = ({label, value, status, Icon, description}: ticketCardProps) => {
     const statusStyle = {
 	total : {
-	    text: 'text-ptba-common',
-	    bg: 'bg-ptba-common/20'
+	    text: 'text-ptba-foreground',
+	    bg: 'bg-ptba-primary-navy/20'
 	},
 	progress: {
-	    text: 'text-ptba-orange',
-	    bg: 'bg-ptba-orange/20'
+	    text: 'text-ptba-secondary-orange',
+	    bg: 'bg-ptba-secondary-orange/20'
 	},
 	open: {
-	    text: 'text-ptba-yellow',
-	    bg: 'bg-ptba-yellow/20'
+	    text: 'text-ptba-primary-yellow',
+	    bg: 'bg-ptba-primary-yellow/20'
 	},
 	closed: {
-	    text: 'text-ptba-green',
-	    bg: 'bg-ptba-green/20'
+	    text: 'text-ptba-tertiary-green',
+	    bg: 'bg-ptba-tertiary-green/20'
 	},
     }
 
     const currentStyle = statusStyle[status];
 
     return (
-	<div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-white/20">
-	    <div className="flex items-center justify-between mb-3">
-		<Icon className={`w-6 h-6 sm:w-8 sm:h-8 ${currentStyle.text}`} />
-		<span className={`text-xs font-medium ${currentStyle.bg} px-2 sm:px-3 py-1 rounded-full`}>{capitalizeWords(status)}</span>
-	    </div>
-	    <div className="text-xl sm:text-3xl font-bold mb-1">{value}</div>
-	    <div className="text-blue-100 text-xs sm:text-sm">{label}</div>
-	</div>
+	<Card id={label} className="gap-0">
+	    <CardHeader className="flex items-center justify-between">
+		<CardTitle className="text-sm font-medium">
+		    {label}
+		</CardTitle>
+		<CardAction className={cn(currentStyle.bg, "rounded-lg p-2")}>
+		    <Icon className={cn(currentStyle.text, "h-4 w-4")}/>
+		</CardAction>
+	    </CardHeader>
+	    <CardContent className="">
+		<div className="text-xl text-ptba-primary-navy sm:text-3xl font-bold mb-1">{value}</div>
+		{
+		    typeof description === "string" && <div className=" text-xs text-ptba-primary-navy  sm:text-sm">{description}</div>
+		}
+		{
+		    typeof description === "object" && description
+		}
+	    </CardContent>
+	</Card>
+
+
     )
 }
