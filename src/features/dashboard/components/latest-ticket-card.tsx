@@ -135,10 +135,10 @@ export const  LatestTicketCard = ({data, className}: LatestTicketCardProps) => {
 		<CardTitle>
 		    Latest Ticket
 		</CardTitle>
-		<button className="flex items-center gap-1 text-sm font-medium text-teal-600 hover:text-teal-700">
+		<Link to={"/tickets"} className="flex items-center gap-1 text-sm font-medium text-teal-600 hover:text-teal-700">
 		    See more
 		    <ArrowRight className="h-3.5 w-3.5" />
-		</button>
+		</Link>
 	    </CardHeader>
 	    <CardContent className="p-0">
 		<TicketDataTable table={table}/>
