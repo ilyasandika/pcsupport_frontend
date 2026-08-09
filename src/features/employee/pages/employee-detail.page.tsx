@@ -4,17 +4,17 @@ import {
     Laptop, Wrench, Building
 } from "lucide-react";
 import {useLoaderData } from "react-router";
-import type {IEmployee} from "../../../types/employee.type.ts";
-import {BackButton} from "../../../components/back-button.tsx";
-import {TabButton} from "../../../components/tab-button.tsx";
+import type {IDetailEmployee} from "@/types/employee.type.ts";
+import {BackButton} from "@/components/back-button.tsx";
+import {TabButton} from "@/components/tab-button.tsx";
 import {AssetAssignmentTimelineAsset} from "../../asset-assignment/components/asset-assignment-timeline.tsx";
-import {Card} from "../../../components/card.tsx";
-import {CardItem} from "../../../components/card-item.tsx";
+import {DetailCard} from "@/components/detail-card.tsx";
+import {DetailCardItem} from "@/components/detail-card.tsx";
 import {TicketTimeline} from "../../ticket/components/ticket-timeline.tsx";
 
 export const EmployeeDetailPage = () => {
     const [tab, setTab] = useState<'assets' | 'tickets'>('assets');
-    const employee = useLoaderData<IEmployee>()
+    const employee = useLoaderData<IDetailEmployee>()
 
     return (
 	<div className="w-full space-y-6">
@@ -47,12 +47,12 @@ export const EmployeeDetailPage = () => {
 	    </div>
 
 	    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-		<Card title="Employee Information" Icon={User}>
+		<DetailCard title="Employee Information" Icon={User}>
 		    <div className="space-y-4">
-			<CardItem title="Position" Icon={Briefcase} value={employee.position}/>
-			<CardItem title="Department" Icon={Building} value={employee.department}/>
-			<CardItem title="Work Location" Icon={MapPin} value={"Jakarta TODO"}/>
-			<CardItem
+			<DetailCardItem title="Position" Icon={Briefcase} value={employee.position}/>
+			<DetailCardItem title="Department" Icon={Building} value={employee.department}/>
+			<DetailCardItem title="Work Location" Icon={MapPin} value={"Jakarta TODO"}/>
+			<DetailCardItem
 			    title="Retire Date"
 			    Icon={Calendar}
 			    value={employee.retireDate
@@ -62,7 +62,7 @@ export const EmployeeDetailPage = () => {
 			/>
 
 		    </div>
-		</Card>
+		</DetailCard>
 
 		{/* KANAN: TAB HISTORI ASET DAN TIKET */}
 		<div className="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-xs p-6">
