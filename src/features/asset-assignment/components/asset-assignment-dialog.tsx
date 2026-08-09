@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {
     Dialog,
     DialogContent,
@@ -9,17 +9,12 @@ import {
  DialogTrigger} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
 import {InputText} from "@/components/input-text.tsx";
-import {
-    Field,
-    FieldLabel,
-    FieldContent,
-    FieldDescription,
-} from "@/components/ui/field";
-import {Asterisk, CalendarDays, MessageSquare, User} from "lucide-react";
+
+import { CalendarDays,  MessageSquare, Phone, User, UserRoundPlus} from "lucide-react";
 import {AssetAssignmentRepository} from "@/data/repositories/asset-assignment.repository.ts";
 import {EmployeeRepository} from "@/data/repositories/employee.repository.ts";
 import type {IEmployee} from "@/types/employee.type.ts";
-import {useFormErrors} from "@/hooks/useErrors.tsx";
+import {useFormErrors} from "@/hooks/use-errors.tsx";
 import {useNotificationDialog} from "@/context/NotificationDialogContext.tsx";
 import {CheckboxBasic} from "@/components/checkbox-basic.tsx";
 import {EntityCombobox} from "@/components/entity-combobox.tsx";
@@ -29,25 +24,33 @@ import {UserRepository} from "@/data/repositories/user.repository.ts";
 import {capitalizeWords, getLocalDatetime} from "@/helper/helper.tsx";
 import type {ICreateAssetAssignmentPayload} from "@/types/asset-assignment.type.ts";
 import type {IErrorResponse} from "@/types/api.type.ts";
+import {useAuth} from "@/context/AuthContext.tsx";
+import {FieldInputWrapper} from "@/components/field-input-wrapper.tsx";
+import { Switch } from "@/components/ui/switch";
+import {Label} from "@/components/ui/label.tsx";
+
 
 interface CreateAssetAssignDialog {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     assetTag: string;
-    onSuccess?: () => void;
 }
 
-export const CreateAssetAssignDialog = ({open, onOpenChange, assetTag, onSuccess}: CreateAssetAssignDialog) => {
+export const CreateAssetAssignDialog = ({open, onOpenChange, assetTag}: CreateAssetAssignDialog) => {
     const {showNotification} = useNotificationDialog()
     const {setErrors, getFieldErrors} = useFormErrors()
+    const {user} = useAuth()
 
     const [isBackup, setIsBackup] = useState<boolean>(false)
     const [selectedEmployee, setSelectedEmployee] = useState<IEmployee | null>(null)
-    const [selectedEngineer, setSelectedEngineer] = useState<IUser | null>(null)
+    const [selectedEngineer, setSelectedEngineer] = useState<IUser | null>()
 
     const [userNonEmployeeName, setUserNonEmployeeName] = useState("")
+    const [openNonPic, setOpenNonPic] = useState<boolean>(false)
     const [assignedAt, setAssignedAt] = useState(getLocalDatetime())
+    const [contact, setContact] = useState<string | undefined>()
     const [remarks, setRemarks] = useState("")
+
 
     const { data: engineers = [] } = useQuery({
 	queryKey: ["engineers"],
@@ -60,6 +63,12 @@ export const CreateAssetAssignDialog = ({open, onOpenChange, assetTag, onSuccess
 	queryFn: EmployeeRepository.getEmployeeListForDropdown,
 	enabled: open,
     })
+
+    useEffect(() => {
+	const selectedEng = engineers.find((val) => val.id === user?.sub)
+	setSelectedEngineer(selectedEng || null)
+    }, [engineers])
+
 
     const resetForm = () => {
 	setSelectedEmployee(null)
@@ -77,7 +86,7 @@ export const CreateAssetAssignDialog = ({open, onOpenChange, assetTag, onSuccess
 		variant: "success",
 		title: "Asset successfully assigned",
 		description: "New assignment has been created.",
-		onClose: () => onSuccess?.(),
+		onClose: () => window.location.reload(),
 	    })
 	},
 	onError: (err: IErrorResponse) => {
@@ -104,9 +113,11 @@ export const CreateAssetAssignDialog = ({open, onOpenChange, assetTag, onSuccess
 	    assetTag,
 	    picEmployeeNik: selectedEmployee?.nik,
 	    userNonEmployeeName: userNonEmployeeName || undefined,
-	    assignedAt,
+	    assignedAt: new Date(assignedAt).toISOString(),
 	    assignById: selectedEngineer?.id,
 	    isBackup,
+	    contact : contact || undefined,
+	    remarks: remarks || undefined,
 	})
     }
 
@@ -122,15 +133,8 @@ export const CreateAssetAssignDialog = ({open, onOpenChange, assetTag, onSuccess
 		</DialogHeader>
 
 		<div className="flex flex-col gap-4 py-2">
-		    <Field>
-			<FieldLabel>
-			    <User className="w-4 h-4"/>
-			    <div className="flex items-start gap-0.5">
-				Employee
-				<Asterisk className="text-ptba-primary-red w-3 h-3"/>
-			    </div>
-			</FieldLabel>
-			<FieldContent>
+		    <FieldInputWrapper Icon={User} label={"Employee"} errors={getFieldErrors("picEmployeeNik")}>
+			<div className="space-y-2">
 			    <EntityCombobox<IEmployee>
 				items={employees}
 				value={selectedEmployee}
@@ -146,41 +150,40 @@ export const CreateAssetAssignDialog = ({open, onOpenChange, assetTag, onSuccess
 				    setSelectedEmployee(null)
 				}}
 			    />
-			</FieldContent>
-			<FieldDescription>
-			    {getFieldErrors("picEmployeeNik")?.map((error) => (
-				<span key={error} className="text-danger">{error}</span>
-			    ))}
-			</FieldDescription>
-		    </Field>
-
-		    <Field>
-			<FieldLabel>
-			    <User className="w-4 h-4"/>
-			    <div className="flex items-start gap-0.5">
-				Engineer
-				<Asterisk className="text-ptba-primary-red w-3 h-3"/>
+			    <div className="flex items-center gap-2">
+				<Switch id="userNonPic" onCheckedChange={setOpenNonPic} checked={openNonPic}/>
+				<Label htmlFor="userNonPic" className="flex items-center gap-1 text-sm">Add Non PIC User?</Label>
 			    </div>
-			</FieldLabel>
-			<FieldContent>
-			    <EntityCombobox<IUser>
-				items={engineers}
-				value={selectedEngineer}
-				getKey={(e) => e.id}
-				getLabel={(e) => e.fullName}
-				getSearchValue={(e) => `${e.fullName} | ${e.role} | ${e.workLocation.name}`}
-				getTitle={(e) => e.fullName}
-				getDescription={(e) => `${capitalizeWords(e.role)} | ${e.workLocation.name}`}
-				onSelect={setSelectedEngineer}
-				onClear={() => setSelectedEngineer(null)}
+			</div>
+		    </FieldInputWrapper>
+
+		    {
+			openNonPic && (
+			    <InputText
+				label="User Non PIC"
+				id="userNonEmployeeName"
+				Icon={UserRoundPlus}
+				value={userNonEmployeeName}
+				onChange={(e) => setUserNonEmployeeName(e.target.value)}
+				errors={getFieldErrors("userNonEmployeeName")}
 			    />
-			</FieldContent>
-			<FieldDescription>
-			    {getFieldErrors("assignById")?.map((error) => (
-				<span key={error} className="text-danger">{error}</span>
-			    ))}
-			</FieldDescription>
-		    </Field>
+			)
+		    }
+
+		    <FieldInputWrapper Icon={User} label={"Engineer"} errors={getFieldErrors("assignById")}>
+			<EntityCombobox<IUser>
+			    items={engineers}
+			    value={selectedEngineer ?? null}
+			    getKey={(e) => e.id}
+			    getLabel={(e) => e.fullName}
+			    getSearchValue={(e) => `${e.fullName} | ${e.role} | ${e.workLocation.name}`}
+			    getTitle={(e) => e.fullName}
+			    getDescription={(e) => `${capitalizeWords(e.role)} | ${e.workLocation.name}`}
+			    onSelect={setSelectedEngineer}
+			    onClear={() => setSelectedEngineer(null)}
+			/>
+		    </FieldInputWrapper>
+
 		    <InputText
 			label="Tanggal Assign"
 			id="assignedAt"
@@ -191,15 +194,25 @@ export const CreateAssetAssignDialog = ({open, onOpenChange, assetTag, onSuccess
 			errors={getFieldErrors("assignedAt")}
 		    />
 		    <InputText
-			label="Catatan (opsional)"
+			label="Contact"
+			id="contact"
+			Icon={Phone}
+			value={contact}
+			onChange={(e) => setContact(e.target.value)}
+			errors={getFieldErrors("contact")}
+		    />
+		    <InputText
+			label="Remarks"
 			id="remarks"
 			Icon={MessageSquare}
 			value={remarks}
 			onChange={(e) => setRemarks(e.target.value)}
 			errors={getFieldErrors("remarks")}
 		    />
-		    <CheckboxBasic value={isBackup} onChange={setIsBackup} label={"Is Asset For Backup?"} />
+		    {
+			false && <CheckboxBasic value={isBackup} onChange={setIsBackup} label={"Is Asset For Backup?"} />
 
+		    }
 		</div>
 
 		<DialogFooter>
