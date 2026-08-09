@@ -1,38 +1,50 @@
-import type {IUser, IUserRepository} from "../../types/user.type.ts";
-import userDummy from "../local/user/user.data.json"
-import {delay} from "../../helper/helper.tsx";
+import type {IDetailUser, IUserRepository, ICreateUserDTO, IUpdateUserDTO} from "@/types/user.type.ts";
 import api from "../api/interceptors.ts";
 
-
-const userLocal: IUserRepository = {
-    getUsers: async (): Promise<IUser[]> => {
-	await delay();
-	return userDummy as unknown as IUser[];
-    },
-    getUserById: async (id: number): Promise<IUser> => {
-	console.log(id)
-	await delay();
-	return {} as IUser;
-    }
-}
-
-
 const userApi: IUserRepository = {
-    getUsers: async (): Promise<IUser[]> => {
+    getUsers: async (): Promise<IDetailUser[]> => {
 	const user = await api.get('users')
 	return user.data
     },
-    getUserById: async (id: number): Promise<IUser> => {
+    getUserById: async (id: number): Promise<IDetailUser> => {
 	const res = await api.get(`users/${id}`)
 	return res.data
+    },
+    getEngineers: async (): Promise<IDetailUser[]> => {
+	const res = await api.get('users/engineers')
+	return res.data
+    },
+    getSupervisors: async (): Promise<IDetailUser[]> => {
+	const res = await api.get('users/supervisors')
+	return res.data
+    },
+    createUser: async (data: ICreateUserDTO): Promise<void> => {
+	const res = await api.post('users', data)
+	return res.data
+    },
+    updateUser: async (id: number, data: IUpdateUserDTO): Promise<void> => {
+	const res = await api.patch(`users/${id}`, data)
+	return res.data
+    },
+    deleteUser: async (id: number): Promise<void> => {
+	const res = await api.delete(`users/${id}`)
+	return res.data
+    },
+    changePassword: async (id: number, oldPassword: string, newPassword: string) => {
+	try {
+	    const res = await api.patch(`users/password/${id}`, {
+		oldPassword,
+		newPassword
+	    })
+	    return res.data
+	} catch (e) {
+	    throw e
+	}
     }
-
 }
 
-
 const createAssetRepository = () => {
-    const dataMode = import.meta.env.VITE_DATA_MODE || 'local';
-    return dataMode === 'api' ? userApi : userLocal;
+    return userApi;
 };
 
 export const UserRepository = createAssetRepository();

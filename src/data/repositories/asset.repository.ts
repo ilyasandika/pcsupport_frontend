@@ -1,51 +1,54 @@
-import type {IDetailAsset, IAssetRepository, IAssetSummary, IAsset} from "@/types/asset.type.ts";
-import assetSummaryDummy from "../local/asset/asset-summary.data.json"
-import assetDummies from "../local/asset/asset.data.json"
-import {delay} from "../../helper/helper.tsx";
+import type {
+    IDetailAsset,
+    IAssetRepository,
+    IAssetSummary,
+    IAsset,
+    IAssetPayload,
+    IAssetFilter
+} from "@/types/asset.type.ts";
 import api from "../api/interceptors.ts";
-
-const assetLocal: IAssetRepository = {
-    getAssetSummary: async (): Promise<IAssetSummary> => {
-	await delay();
-	return assetSummaryDummy as IAssetSummary;
-    },
-    getAssets: async (): Promise<IDetailAsset[]> => {
-	await delay();
-	return assetDummies as unknown as IDetailAsset[]
-    },
-    getAssetBySn: async (serialNumber: string): Promise<IDetailAsset> => {
-	await delay();
-	// @ts-ignore
-	return assetDummies.find((asset) => asset.serialNumber === serialNumber) as unknown as IDetailAsset
-    },
-    getAssetListForDropdown: async (): Promise<IAsset[]> => {
-	return []
-    }
-}
+import type {ISuccessResponse} from "@/types/api.type.ts";
 
 const assetApi: IAssetRepository = {
     getAssetSummary: async (): Promise<IAssetSummary> => {
 	const data = await api.get('/asset-categories/count')
 	return data.data
     },
-    getAssets: async (): Promise<IDetailAsset[]> => {
-	const data = await api.get('assets')
+    getAssets: async (filter?: IAssetFilter): Promise<ISuccessResponse<IAsset[]>> => {
+	console.log(filter)
+	return await api.get('assets',  {
+	    params: filter,
+	    paramsSerializer: {
+		indexes: null
+	    }
+	})
+
+    },
+    getBackupAssets: async(): Promise<IAsset[]> => {
+	const data = await api.get('assets/list/backup')
 	return data.data
     },
-    getAssetBySn: async (serialNumber: string): Promise<IDetailAsset> => {
-	const data = await api.get(`/assets/${serialNumber}`)
+    getAssetBySn: async (assetTag: string): Promise<IDetailAsset> => {
+	const data = await api.get(`/assets/${assetTag}`)
 	return data.data
     },
-    getAssetListForDropdown: async (): Promise<IAsset[]> => {
-	const data = await api.get('assets/list')
+    getActiveAssetList: async (): Promise<IAsset[]> => {
+	const data = await api.get('assets/list/active')
 	return data.data
-    }
+    },
+    createAsset: async (payload: IAssetPayload): Promise<IDetailAsset> => {
+	const res = await api.post('/assets', payload);
+	return res.data;
+    },
+    updateAsset: async (payload: IAssetPayload): Promise<IDetailAsset> => {
+	const res = await api.patch(`/assets/${payload.assetTag}`, payload);
+	return res.data;
+    },
 }
 
 
 const createAssetRepository = () => {
-    const dataMode = import.meta.env.VITE_DATA_MODE || 'local';
-    return dataMode === 'api' ? assetApi : assetLocal;
+    return assetApi
 };
 
 export const AssetRepository = createAssetRepository();
