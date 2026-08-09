@@ -1,59 +1,105 @@
 import type {ITicketForAsset} from "../../../types/ticket.type.ts";
 import {Link, useNavigate} from "react-router";
-import {fmtDate, getStatusBadgeStyle} from "../../../helper/helper.tsx";
+import { fmtDate } from "../../../helper/helper.tsx";
+import { getStatusBadgeStyle } from "@/helper/style-helper.tsx";
 import {TimelineWrap} from "../../../components/timeline-wrap.tsx";
+import {ScrollArea} from "@/components/ui/scroll-area";
+import {Badge} from "@/components/ui/badge";
+import {useState} from "react";
+import {InputGroup, InputGroupAddon, InputGroupInput} from "@/components/ui/input-group";
+import {Search} from "lucide-react";
 
-const statusStyles = {
-    open: {
-	badge: "bg-red-50 text-red-700 border-red-200",
-	dot: "border-red-500 bg-red-50",
-	label: "Terbuka",
-    },
-    "in progress": {
-	badge: "bg-amber-50 text-amber-700 border-amber-200",
-	dot: "border-amber-500 bg-amber-50",
-	label: "Dalam Pengerjaan",
-    },
-    solved: {
-	badge: "bg-emerald-50 text-emerald-700 border-emerald-200",
-	dot: "border-emerald-500 bg-emerald-50",
-	label: "Selesai",
-    },
+const statusDotStyles: Record<string, string> = {
+    open: "border-red-500 bg-red-50",
+    "in progress": "border-amber-500 bg-amber-50",
+    solved: "border-emerald-500 bg-emerald-50",
 };
 
-export const TicketTimeline = ({tickets } : {tickets: ITicketForAsset[] | undefined}) => {
+interface TicketTimelineProps {
+    tickets: ITicketForAsset[] | undefined;
+    /** Max height of the scroll area before it starts scrolling instead of growing forever */
+    maxHeight?: string;
+}
+
+export const TicketTimeline = ({tickets, maxHeight = "420px"}: TicketTimelineProps) => {
     const navigate = useNavigate();
-    console.log(tickets)
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const filteredTickets = tickets?.filter((ticket) => {
+        if (!searchQuery) return true;
+        const query = searchQuery.toLowerCase();
+        return (
+            ticket.fullNumber?.toLowerCase().includes(query) ||
+            ticket.problem?.toLowerCase().includes(query) ||
+            ticket.status?.toLowerCase().includes(query) ||
+            ticket.engineer?.fullName?.toLowerCase().includes(query)
+        );
+    });
+
+    if (!tickets || tickets.length === 0) {
+	return <div className="relative space-y-6 pl-6 text-sm text-slate-400">No ticket yet</div>;
+    }
+
     return (
-	tickets ?
-	    <TimelineWrap>
-		{tickets.map((t) => {
+	<div className="flex flex-col gap-3">
+	    <InputGroup className="mb-4">
+		<InputGroupInput
+		    placeholder="Search by ticket number, problem, status, engineer..."
+		    value={searchQuery}
+		    onChange={(e) => setSearchQuery(e.target.value)}
+		/>
+		<InputGroupAddon>
+		    <Search/>
+		</InputGroupAddon>
+	    </InputGroup>
+
+	    <ScrollArea style={{height: maxHeight}} className="pr-4">
+		<TimelineWrap>
+		    {filteredTickets && filteredTickets.length > 0 ? (
+			filteredTickets.map((t) => {
+		    const dotStyle = statusDotStyles[t.status] ?? statusDotStyles.open;
 		    return (
 			<div key={t.id} className="relative">
-			    <span className={`absolute -left-6 top-1 h-3 w-3 rounded-full border-2 ${statusStyles.solved.dot}`} />
+			    <span className={`absolute -left-6 top-1 h-3 w-3 rounded-full border-2 ${dotStyle}`}/>
 			    <div className="flex flex-wrap items-baseline justify-between gap-2">
 				<div>
-				    <p className="font-semibold text-ptba-text cursor-pointer hover:text-ptba-primary" onClick={()=> {navigate(`/tickets/${t.id}`)}}>{t.fullNumber ? `Ticket No. ${t.fullNumber}` : `New Ticket`}</p>
+				    <p
+					className="font-semibold text-ptba-text cursor-pointer hover:text-ptba-primary"
+					onClick={() => navigate(`/tickets/${t.id}`)}
+				    >
+					{t.fullNumber ? `Ticket No. ${t.fullNumber}` : `New Ticket`}
+				    </p>
 				</div>
-				<p className="whitespace-nowrap  text-xs text-slate-400">{fmtDate(t.createdAt)}</p>
+				<p className="whitespace-nowrap text-xs text-slate-400">{fmtDate(t.createdAt)}</p>
 			    </div>
 
 			    <div className="mt-2 rounded-lg border border-slate-100 bg-slate-50 p-3.5">
 				<div className="mb-2 flex flex-wrap items-center gap-2">
-				<span className={`rounded-full border px-2.5 py-0.5  text-[11px] font-semibold uppercase tracking-wider ${getStatusBadgeStyle(t.status)}`}>
-				    {t.status}
-				</span>
-				    <span className="rounded-md border border-slate-200 bg-white px-2 py-0.5  text-[11px] text-slate-500">
-				    Engineer: {t.engineer?.fullName ?? "No Engineer"}
-				</span>
+				    <Badge
+					variant="outline"
+					className={`rounded-full text-[11px] font-semibold uppercase tracking-wider ${getStatusBadgeStyle(t.status)}`}
+				    >
+					{t.status}
+				    </Badge>
+				    <Badge variant="outline" className="text-[11px] font-normal text-slate-500">
+					Engineer: {t.engineer?.fullName ?? "No Engineer"}
+				    </Badge>
 				</div>
-				<Link to={`/tickets/${t.id}`} className="text-sm leading-relaxed text-slate-600 cursor-pointer">{t.problem}</Link>
+				<Link
+				    to={`/tickets/${t.id}`}
+				    className="text-sm leading-relaxed text-slate-600 cursor-pointer hover:underline"
+				>
+				    {t.problem}
+				</Link>
 			    </div>
 			</div>
 		    );
-		})}
-	    </TimelineWrap>
-	    :
-	    <div className="relative space-y-6 pl-6">No ticket yet</div>
+		})
+		    ) : (
+			<div className="relative space-y-6 pl-6 text-sm text-slate-400">No matching results</div>
+		    )}
+		</TimelineWrap>
+	    </ScrollArea>
+	</div>
     );
-}
+};
