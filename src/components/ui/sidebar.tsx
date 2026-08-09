@@ -39,7 +39,6 @@ const MENU_STYLES = {
   // Style ketika menu di-hover (non-aktif)
   hover: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
 
-  // Style ketika menu dalam keadaan aktif (diklik / halaman saat ini)
   active: "data-active:bg-ptba-primary-navy data-active:text-white data-active:font-medium " +
       "data-active:hover:bg-ptba-primary-navy data-active:hover:text-white " +
       "active:bg-red-500 active:text-white active:hover:bg-sidebar-accent active:hover:text-sidebar-accent-foreground",

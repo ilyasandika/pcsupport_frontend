@@ -21,7 +21,7 @@ export interface EntityComboboxProps<T> {
     /** List data yang mau ditampilkan/dicari */
     items: T[]
     /** Item yang sedang terpilih (atau null) */
-    value: T | null
+    value: T | any | null
     /** Ambil key unik untuk React key, mis. (a) => a.serialNumber */
     getKey: (item: T) => string | number
     /**
@@ -30,6 +30,7 @@ export interface EntityComboboxProps<T> {
      */
     getSearchValue: (item: T) => string
     /** Teks yang tampil di ItemTitle (baris atas) */
+    getLabel: (item: T) => string
     getTitle: (item: T) => string
     /** Teks yang tampil di ItemDescription (baris bawah), optional */
     getDescription?: (item: T) => string
@@ -50,6 +51,7 @@ export function EntityCombobox<T>({
 				      getKey,
 				      getSearchValue,
 				      getTitle,
+				      getLabel,
 				      getDescription,
 				      onSelect,
 				      onClear,
@@ -61,11 +63,12 @@ export function EntityCombobox<T>({
     return (
 	<Combobox
 	    items={items}
-	    itemToStringLabel={getSearchValue}
+	    itemToStringLabel={getLabel}
 	    itemToStringValue={getSearchValue}
 	    value={value}
 	    autoHighlight
 	    disabled={disabled}
+	    limit={10}
 	>
 	    <ComboboxInput
 		placeholder={placeholder}

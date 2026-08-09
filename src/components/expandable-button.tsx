@@ -7,6 +7,7 @@ interface IExpandableButtonProps {
     className?: string;
     Icon: LucideIcon;
     value: string
+    size? : "sm" | "default" | "lg";
     disabled?: boolean;
     onClick?: MouseEventHandler<HTMLButtonElement>;
 }
@@ -15,11 +16,12 @@ export const ExpandableButton = (
 	variant = "default",
 	Icon,
 	value,
+	size = "default",
 	disabled = false,
 	onClick,
     }: IExpandableButtonProps) => {
     return (
-	<Button variant={variant} className="cursor-pointer group transition" onClick={onClick} disabled={disabled}>
+	<Button variant={variant} className="cursor-pointer group transition" onClick={onClick} disabled={disabled} size={size}>
 	    <Icon data-icon="inline-start"/>
 	    <span className="max-w-0 opacity-0 overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out group-hover:max-w-37.5 group-hover:opacity-100 group-hover:ml-2">
 		    	{value}

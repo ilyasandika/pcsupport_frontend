@@ -5,9 +5,8 @@ interface LogoProps extends React.SVGProps<SVGSVGElement> {
     colorMode?: 'white' | 'colorful';
 }
 
-export const BukitAsam = ({ size = 50, colorMode = 'colorful',  className, ...props }: LogoProps) => {
+export const BukitAsamFull = ({ size = 50, colorMode = 'colorful',  className, ...props }: LogoProps) => {
     const calculatedWidth = (280 / 50) * size;
-
     return (
 	<svg
 	    version="1.1"
@@ -120,5 +119,53 @@ export const BukitAsam = ({ size = 50, colorMode = 'colorful',  className, ...pr
 		  d="M0,31.6v17.6h49.9V31.1c0,0-2,6.9-11.3,6.9c-7.6,0-8.8-4.7-13.6-4.7s-6,4.4-15.4,4.4C2.7,37.7,0,31.6,0,31.6z"
 	    />
 </svg>
+    );
+};
+
+
+export const BukitAsamMinimize = ({ size = 50, colorMode = 'colorful',  className, ...props }: LogoProps) => {
+    const calculatedWidth = (50 / 50) * size;
+    return (
+	<svg
+	    version="1.1"
+	    id="Layer_1"
+	    xmlns="http://www.w3.org/2000/svg"
+	    xmlnsXlink="http://www.w3.org/1999/xlink"
+	    x="0px"
+	    y="0px"
+	    viewBox="0 0 50 50"
+	    height={size}
+	    width={calculatedWidth}
+	    // style="enable-background:new 0 0 280 50;"
+	    xmlSpace="preserve"
+	    className={className}
+	    {...props}
+	>
+
+	    <style type="text/css">
+		{ colorMode === 'white' ?
+		    `
+		  .st0{fill:#FFFFFF;}
+		  .st1{fill:#FFFFFF;}
+		  .st2{fill:#FFFFFF;}
+		  .st3{fill:#FFFFFF;}
+		  `
+		    :
+		    `
+		  .st0{fill:#354485;}
+		  .st1{fill:#ED1C24;}
+		  .st2{fill:#FFC40D;}
+		  .st3{fill:#CE4147;}
+		  `
+
+		}
+	    </style>
+	    <path className="st2" d="M26.1,6.9c0,0,10.2-7.3,20,2c7.3,7,3.3,25-6.6,25c0,0-1.9,0.4-6.7-1.8c-4.8-2.2-10.3-3.7-17.2,0.5
+	C8.7,37-1.1,32.3,0.1,14.8C0.6,6.5,7.1,0,7.1,0h17.8c0,0-10.2,9.4-10.2,17.1c0,7.8,6,10.9,10.2,10.9c4.3,0,10.8-3.2,10.8-10.9
+	C35.7,9.5,28.7,7,26.1,6.9z"/>
+	    <path className="st3"
+		  d="M0,31.6v17.6h49.9V31.1c0,0-2,6.9-11.3,6.9c-7.6,0-8.8-4.7-13.6-4.7s-6,4.4-15.4,4.4C2.7,37.7,0,31.6,0,31.6z"
+	    />
+	</svg>
     );
 };

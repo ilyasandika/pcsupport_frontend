@@ -26,6 +26,7 @@ export const AppSidebar = ({ ...props }: ComponentProps<typeof Sidebar>) => {
     navMain: [
       {title: "Dashboard",  url: "/", icon: (<LayoutDashboardIcon />), show: true},
       {title: "Tickets",  url: "/tickets", icon: (<TicketIcon />), show: true},
+      // {title: "External Tickets",  url: "/external-tickets", icon: (<TicketIcon />), show: true},
       {title: "Assets",  url: "/assets", icon: (<PackageIcon />), show: isAdmin()},
       {title: "Users",  url: "/users", icon: (<UserRoundCog />), show: isAdmin()},
       {title: "Employees",  url: "/employees", icon: (<Users />), show: isAdmin()},
@@ -34,8 +35,8 @@ export const AppSidebar = ({ ...props }: ComponentProps<typeof Sidebar>) => {
   }
 
   return (
-    <Sidebar collapsible="icon" {...props} >
-      <SidebarHeader className="items-center justify-center p-4 my-4">
+    <Sidebar collapsible="icon" {...props} variant={"floating"} className="bg-secondary" >
+      <SidebarHeader className="items-center justify-center p-4 my-4 ">
 
         <div className="flex items-center justify-center group-data-[collapsible=icon]:hidden">
           <BukitAsamFull size={28}/>
