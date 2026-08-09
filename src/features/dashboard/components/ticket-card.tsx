@@ -6,7 +6,7 @@ import type {ReactNode} from "react";
 interface ticketCardProps {
     label: string,
     value: number,
-    status: 'progress' | 'open' | 'closed' |'total',
+    status: 'progress' | 'open' | 'closed' |'total' | 'cancelled',
     Icon: LucideIcon
     description?: string | ReactNode;
 }
@@ -28,6 +28,10 @@ export const TicketCard = ({label, value, status, Icon, description}: ticketCard
 	closed: {
 	    text: 'text-ptba-tertiary-green',
 	    bg: 'bg-ptba-tertiary-green/20'
+	},
+	cancelled: {
+	    text: 'text-ptba-gray',
+	    bg: 'bg-ptba-gray/20'
 	},
     }
 
