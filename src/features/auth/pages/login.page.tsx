@@ -1,25 +1,24 @@
 import React, {useState} from "react";
-import {BukitAsam} from "../../../components/logo.tsx";
-import {InputField} from "../../../components/form/input-fields.tsx";
-import {useTheme} from "../../../context/ThemeContext.tsx";
-import {Blob} from "../../../components/blob.tsx";
+import {BukitAsamFull} from "@/components/logo.tsx";
+import {InputField} from "@/components/form/input-fields.tsx";
+import {useTheme} from "@/context/ThemeContext.tsx";
+import {Blob} from "@/components/blob.tsx";
 import {Check, Moon, Sun} from "lucide-react";
-import type {IErrorResponse, IErrors} from "../../../types/api.type.ts";
-import {findFieldError} from "../../../helper/helper.tsx";
+import type {IErrorResponse} from "@/types/api.type.ts";
 import {useNavigate} from "react-router";
-import {useAuth} from "../../../context/AuthContext.tsx";
+import {useAuth} from "@/context/AuthContext.tsx";
+import {useFormErrors} from "@/hooks/use-errors.tsx";
 
 export const LoginPage = () => {
     const [password, setPassword] = useState("");
     const [username, setUsername] = useState("");
-    const [errors, setErrors] = useState<IErrors[]>([]);
-    const [generalError, setGeneralError] = useState<string[] | undefined>([]);
     const [rememberMe, setRememberMe] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const {toggleTheme, theme} = useTheme();
     const navigate = useNavigate();
     const {login} = useAuth()
+    const {setErrors, generalErrors, getFieldErrors} = useFormErrors()
 
 
     const handleSubmit = async (e: React.SubmitEvent) => {
@@ -31,7 +30,6 @@ export const LoginPage = () => {
 	    .then(() => navigate('/'))
 	    .catch((err: IErrorResponse) => {
 		setErrors(err.errors);
-		setGeneralError(findFieldError(err.errors, 'general'));
 	    })
 	    .finally(() => {
 		setLoading(false);
@@ -78,12 +76,12 @@ export const LoginPage = () => {
 		    <div className="px-8 pt-10 pb-10">
 			{/* Logo */}
 			<div className="flex items-center gap-2.5 mb-8">
-			    <BukitAsam size={25} colorMode={theme === "dark" ? 'white' : 'colorful'}/>
+			    <BukitAsamFull size={25} colorMode={theme === "dark" ? 'white' : 'colorful'}/>
 			</div>
 
 			{/* Heading */}
-			<div className={`${generalError && generalError.length > 0 ? 'mb-4' : 'mb-8'}`}>
-			    <h1 className={`text-2xl font-semibold mb-1.5 transition-colors duration-500 tracking-[-0.01em] text-ptba-text dark:text-ptba-text-dark`}>
+			<div className={`${generalErrors && generalErrors.length > 0 ? 'mb-4' : 'mb-8'}`}>
+			    <h1 className={`text-2xl font-semibold mb-1.5 transition-colors duration-500 tracking-[-0.01em] text-ptba-text dark:text-ptba-foreground`}>
 				Welcome back
 			    </h1>
 			    <p className={`text-sm transition-colors duration-500 font-light text-ptba-subtext dark:text-ptba-subtext-dark`}>
@@ -91,10 +89,10 @@ export const LoginPage = () => {
 			    </p>
 			</div>
 
-			{(generalError && generalError.length > 0) && (
-			    <div className="my-4 bg-ptba-red py-4 px-2 rounded-lg">
+			{(generalErrors && generalErrors.length > 0) && (
+			    <div className="my-4 bg-ptba-primary-red py-4 px-2 rounded-lg">
 				{
-				    generalError.map((err) => (
+				    generalErrors.map((err) => (
 					<span className="text-xs text-white mt-0.5 ml-2 font-medium block">
 					    {err}
 					</span>
@@ -112,7 +110,7 @@ export const LoginPage = () => {
 				value={username}
 				onChange={(e) => setUsername(e.target.value)}
 				placeholder={"Enter your username"}
-				error = {findFieldError(errors, 'username')}
+				error = {getFieldErrors('username')}
 
 			    />
 			    <InputField
@@ -121,7 +119,7 @@ export const LoginPage = () => {
 				value={password}
 				onChange={(e) => setPassword(e.target.value)}
 				placeholder={"••••••••"}
-				error = {findFieldError(errors, 'password')}
+				error = {getFieldErrors('password')}
 
 			    />
 
@@ -154,7 +152,7 @@ export const LoginPage = () => {
 				className={`w-full py-3 rounded-xl text-sm font-medium mt-1 transition-all duration-200 text-white ${
 				    loading
 					? "bg-[rgba(52,70,137,0.5)] cursor-not-allowed"
-					: "bg-ptba-primary cursor-pointer"
+					: "bg-ptba-primary-navy cursor-pointer"
 				}`}
 			    >
 				{loading ? (
