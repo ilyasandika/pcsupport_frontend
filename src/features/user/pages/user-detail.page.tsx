@@ -4,16 +4,16 @@ import {
    Wrench,  Mail, ShieldUser
 } from "lucide-react";
 import {useLoaderData } from "react-router";
-import {BackButton} from "../../../components/back-button.tsx";
-import {TabButton} from "../../../components/tab-button.tsx";
-import {Card} from "../../../components/card.tsx";
-import {CardItem} from "../../../components/card-item.tsx";
+import {BackButton} from "@/components/back-button.tsx";
+import {TabButton} from "@/components/tab-button.tsx";
+import {DetailCard} from "@/components/detail-card.tsx";
+import {DetailCardItem} from "@/components/detail-card.tsx";
 import {TicketTimeline} from "../../ticket/components/ticket-timeline.tsx";
-import type {IUser} from "../../../types/user.type.ts";
+import type {IDetailUser} from "@/types/user.type.ts";
 
 export const UserDetailPage = () => {
     const [tab, setTab] = useState<'assets' | 'tickets'>('tickets');
-    const user = useLoaderData<IUser>()
+    const user = useLoaderData<IDetailUser>()
 
     return (
 	<div className="w-full space-y-6">
@@ -46,14 +46,14 @@ export const UserDetailPage = () => {
 	    </div>
 
 	    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-		<Card title="Employee Information" Icon={User}>
+		<DetailCard title="Employee Information" Icon={User}>
 		    <div className="space-y-4">
-			<CardItem title="Position" Icon={Mail} value={user.email}/>
-			<CardItem title="Department" Icon={ShieldUser} value={user.role}/>
-			<CardItem title="Work Location" Icon={MapPin} value={"Jakarta TODO"}/>
+			<DetailCardItem title="Position" Icon={Mail} value={user.email}/>
+			<DetailCardItem title="Department" Icon={ShieldUser} value={user.role}/>
+			<DetailCardItem title="Work Location" Icon={MapPin} value={"Jakarta TODO"}/>
 
 		    </div>
-		</Card>
+		</DetailCard>
 
 		<div className="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-xs p-6">
 		    <div className="flex gap-6 border-b border-slate-100">

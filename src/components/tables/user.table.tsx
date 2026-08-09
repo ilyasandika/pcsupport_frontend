@@ -8,18 +8,24 @@ import {
     useReactTable
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
-import Table from "./table.tsx";
+import DataTable from "./data-table.tsx";
 import { ActionButtons } from "./action-button.tsx";
-import type {IUser} from "../../types/user.type.ts";
+import type {IDetailUser} from "../../types/user.type.ts";
+import {UserRepository} from "@/data/repositories/user.repository.ts";
+import {Info} from "lucide-react";
+import {ChangePasswordDialogContent} from "@/features/user/components/change-password-dialog-content.tsx";
 
 interface UserTableProps {
-    data: IUser[];
+    data: IDetailUser[];
     isLoading?: boolean;
 }
 
 export const UserTable = ({ data, isLoading = false }: UserTableProps) => {
-    const columnHelper = createColumnHelper<IUser>();
-    const columns: ColumnDef<IUser, any>[] = useMemo(
+    const columnHelper = createColumnHelper<IDetailUser>();
+    const [openChangePasswordDialog, setOpenChangePasswordDialog] = useState(false);
+    const [selectedId, setSelectedId] = useState<number>()
+
+    const columns: ColumnDef<IDetailUser, any>[] = useMemo(
 	() => [
 	    columnHelper.accessor('username', {
 		header: 'Username',
@@ -67,34 +73,59 @@ export const UserTable = ({ data, isLoading = false }: UserTableProps) => {
 		    );
 		}
 	    }),
-	    columnHelper.accessor('createdAt', {
-		header: 'Created At',
-		size: 200,
-		cell: (info) => {
-		    const rawValue = info.getValue();
-		    if (!rawValue) return '-';
-		    return new Date(rawValue).toLocaleTimeString('en-UK', {
-			day: 'numeric',
-			month: '2-digit',
-			year: 'numeric',
-			hour: '2-digit',
-			minute: '2-digit',
-			timeZone: 'Asia/Jakarta'
-		    });
-		}
-	    }),
+	    // columnHelper.accessor('createdAt', {
+		// header: 'Created At',
+		// size: 200,
+		// cell: (info) => {
+		//     const rawValue = info.getValue();
+		//     if (!rawValue) return '-';
+		//     return new Date(rawValue).toLocaleTimeString('en-UK', {
+		// 	day: 'numeric',
+		// 	month: '2-digit',
+		// 	year: 'numeric',
+		// 	hour: '2-digit',
+		// 	minute: '2-digit',
+		// 	timeZone: 'Asia/Jakarta'
+		//     });
+		// }
+	    // }),
 	    columnHelper.display({
 		id: 'actions',
 		header: 'Actions',
 		size: 150,
-		cell: (info) => (
-		    <ActionButtons
-			detail={{  to: `${info.row.original.id}` }}
-			edit={{ to: `${'#'}` }}
-			document={{  to: `${'#'}` }}
-			remove={{  to: `${'#'}` }}
-		    />
-		),
+		cell: (info) => {
+		    const id = info.row.original.id;
+		    return (
+			<ActionButtons
+			    detail={{
+				to: `${id}`,
+				tooltip: "Detail User"
+			    }}
+			    edit={{
+				to: `${id}/update`,
+				tooltip: "Edit User"
+			    }}
+			    remove={{
+				alert:{
+				    title: 'Remove User',
+				    description: 'Are you sure to remove this user? this action cannot be undone!',
+				    onContinue: () => UserRepository.deleteUser(id),
+				    variant: 'danger',
+				    icon: <Info className={"text-danger w-4 h-4"}/>
+				},
+				tooltip: "Remove User"
+			    }}
+			    keyButton={{
+				onClick: () => {
+				    setOpenChangePasswordDialog(true)
+				    setSelectedId(id)
+				},
+				tooltip: "Change Password"
+			    }}
+
+			/>
+		    )
+		},
 	    }),
 	],
 	[]
@@ -103,7 +134,7 @@ export const UserTable = ({ data, isLoading = false }: UserTableProps) => {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
 
-    const table = useReactTable<IUser>({
+    const table = useReactTable<IDetailUser>({
 	data,
 	columns,
 	state: {
@@ -119,5 +150,20 @@ export const UserTable = ({ data, isLoading = false }: UserTableProps) => {
 	getPaginationRowModel: getPaginationRowModel(),
     });
 
-    return <Table table={table} name='All Users' isLoading={isLoading} />;
+    return (
+	<>
+	    <ChangePasswordDialogContent open={openChangePasswordDialog}
+					 setOpen={setOpenChangePasswordDialog}
+					 id={selectedId}
+	    />
+	    <DataTable table={table}
+		       name='All Users'
+		       isLoading={isLoading}
+		       create={{
+			   label: "create new user",
+			   to: "/users/create",
+		       }}
+	    />
+	</>
+    )
 };
