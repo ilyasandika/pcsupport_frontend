@@ -1,0 +1,19 @@
+# Dependencies
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Build & Dist
+dist
+build
+.next
+out
+
+# Git & OS files
+.git
+.gitignore
+.DS_Store
+
+# Environment variables (Keamanan)
+.env
+.env.local
