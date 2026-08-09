@@ -15,12 +15,18 @@ const getAssetSummary = async () => {
     return data
 }
 
+const getLatestTicket = async () => {
+    const data = await TicketRepository.getDashboardTickets({limit: 10})
+    return data.data
+}
+
 
 export const dashboardLoader = async ()  => {
-    const [ticketSummary, ticketTrend, assetSummary] = await Promise.all([getTicketSummary(), getTicketTrend(), getAssetSummary()])
+    const [ticketSummary, ticketTrend, assetSummary, latestTicket] = await Promise.all([getTicketSummary(), getTicketTrend(), getAssetSummary(), getLatestTicket()])
     return {
 	ticketSummary,
 	ticketTrend,
-	assetSummary
+	assetSummary,
+	latestTicket
     }
 }
