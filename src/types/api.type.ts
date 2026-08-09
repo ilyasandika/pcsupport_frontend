@@ -3,6 +3,15 @@ export interface IErrors {
     message: string[];
 }
 
+export interface PaginationMeta {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+}
+
 interface IBaseResponse {
     success: boolean;
     statusCode: number;
@@ -15,6 +24,7 @@ export interface IErrorResponse extends IBaseResponse {
     errors: IErrors[];
 }
 
-export interface IResponse<T> extends IBaseResponse {
+export interface ISuccessResponse<T> extends IBaseResponse {
     data: T;
+    meta?: PaginationMeta;
 }

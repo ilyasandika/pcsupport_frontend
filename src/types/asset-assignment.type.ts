@@ -1,4 +1,4 @@
-import type {IDetailAsset} from "./asset.type.ts";
+import type {AssetStatusType, IDetailAsset} from "./asset.type.ts";
 import type {IDetailEmployee} from "./employee.type.ts";
 import type {IUser} from "@/types/user.type.ts";
 import type {IPrintTicketPayload} from "@/types/ticket.type.ts";
@@ -11,8 +11,10 @@ export interface IDetailAssetAssignment {
     userNonEmployeeName?: string;
     assignedAt: string;
     returnedAt?: string;
-    status: string;
+    status: AssetStatusType;
     isBackup: boolean;
+    backupForAssetTag?: string;
+    isUnderMaintenance: boolean;
     createdBy: IUser;
     assignBy: IUser;
     assignFilePath?: string;
@@ -33,12 +35,14 @@ export interface ICreateAssetAssignmentPayload {
     remarks?: string
     assignById: number;
     isBackup?: boolean;
+    contact?: string;
     isLegacyData?: boolean;
 }
 
 export interface IReturnAssetAssignmentPayload {
     returnedAt: string;
     remarks?: string;
+    engineerId: number;
 }
 
 export interface IGenerateAssetAssignmentPayload extends IPrintTicketPayload {
