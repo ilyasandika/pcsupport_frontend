@@ -1,50 +1,29 @@
-import type {ITicket, ITicketRepository, ITicketStatusResponse, ITicketSummary} from "../../types/ticket.type.ts";
-import ticketDummy from '../local/ticket/ticket.data.json'
-import ticketSummaryDummy from '../local/ticket/ticket-summary.data.json'
-import type {IChartData} from "../../types/common.type.ts";
-import ticketTren from "../local/ticket/ticket-tren.data.json"
-import {delay} from "../../helper/helper.tsx";
+import type {
+    ICreateTicketPayload,
+    IPrintTicketPayload,
+    ITicket, ITicketFilters,
+    ITicketRepository,
+    ITicketStatusResponse,
+    ITicketSummary, IUpdateTicketPayload
+} from "@/types/ticket.type.ts";
+import type {IChartData} from "@/types/common.type.ts";
 import api from "../api/interceptors.ts";
-import type {ICreateTicketDto} from "@/features/ticket/dto/create-ticket.dto.ts";
 import type {AxiosResponse} from "axios";
-
-const ticketLocal: ITicketRepository = {
-    getAllTickets: async (): Promise<ITicket[]> => {
-	await delay();
-	return ticketDummy as unknown as ITicket[];
-    },
-    getTicketSummary: async (): Promise<ITicketSummary> => {
-	await delay();
-	return ticketSummaryDummy as unknown as ITicketSummary;
-    },
-    getTicketTrend: async (): Promise<IChartData[]> => {
-	await delay();
-	return ticketTren as unknown as IChartData[];
-    },
-    getTicketsByEmployeeId: async (employeeId: number): Promise<ITicket[]> => {
-	await delay();
-	return ticketDummy.filter(ticket => {
-	    if (!ticket.user) return false;
-	    return ticket.user.employeeId === employeeId;
-	}) as unknown as ITicket[];
-    },
-    getTicketById: async (id: number): Promise<ITicket> => {
-	console.log(id)
-	await delay();
-	return {} as ITicket;
-    },
-    createTicket: async (ticket: ICreateTicketDto) => {
-	console.log(ticket)
-    },
-    printTicket: async (id: number) => {
-	return await api.get(`/tickets/${id}/pdf`)
-    }
-}
+import type {ISuccessResponse} from "@/types/api.type.ts";
 
 const ticketApi: ITicketRepository = {
-    getAllTickets: async (): Promise<ITicket[]> => {
-	const res = await api.get('/tickets')
-	return res.data;
+    getAll: async (filter?: ITicketFilters): Promise<ISuccessResponse<ITicket[]>> => {
+	return await api.get('/tickets', {
+	    params: filter,
+	    paramsSerializer: {
+		indexes: null
+	    }
+	})
+    },
+    getDashboardTickets: async (filter?: ITicketFilters): Promise<ISuccessResponse<ITicket[]>> => {
+	return await api.get('/tickets/dashboard', {
+	    params: filter,
+	})
     },
     getTicketSummary: async (): Promise<ITicketSummary> => {
 	const res = await api.get('tickets/count/status')
@@ -53,7 +32,8 @@ const ticketApi: ITicketRepository = {
 	    total: data.total,
 	    open: data.open,
 	    inProgress: data.inProgress,
-	    closed: data.closedOnsite + data.closedRemote + data.closedVisit + data.resolved
+	    closed: data.closedOnsite + data.closedRemote + data.closedVisit + data.resolved,
+	    cancelled: data.cancelled,
 	} as ITicketSummary
     },
 
@@ -73,29 +53,58 @@ const ticketApi: ITicketRepository = {
 
     getTicketById: async (id: number): Promise<ITicket> => {
 	const res = await api.get(`/tickets/${id}`)
-	return res.data.data;
+	return res.data;
     },
 
-    createTicket: async (ticket: ICreateTicketDto) => {
+    createTicket: async (ticket: ICreateTicketPayload) => {
 	const res = await api.post('/tickets', ticket)
-	return res.data.data;
+	return res.data;
     },
 
-    printTicket: async (id: number) => {
-	const res: AxiosResponse = await api.get(`/tickets/${id}/pdf`, {
+    updateTicket: async (id: number, ticket: IUpdateTicketPayload) => {
+	const res = await api.patch(`/tickets/${id}`, ticket)
+	console.log(res)
+	return res.data;
+    },
+
+    generateTicketPdf: async (id: number, payload: IPrintTicketPayload): Promise<void> => {
+	const res: AxiosResponse = await api.post(`/tickets/${id}/pdf`, payload, {
 	    responseType: 'blob'
 	})
+	const blob = new Blob([res.data], { type: 'application/pdf' });
+	const blobUrl = URL.createObjectURL(blob);
+	window.open(blobUrl, '_blank');
+    },
 
+    claimTicket: async (ticketId: number) => {
+	const res = await api.patch(`tickets/claim/${ticketId}`)
+	return res.data
+    },
+
+    getSolvedTicketPdf: async (id: number) => {
+	const res: AxiosResponse = await api.get(`/tickets/${id}/solved/pdf`, {
+	    responseType: 'blob'
+	})
 	const blob = new Blob([res.data], { type: 'application/pdf' });
 	const blobUrl = URL.createObjectURL(blob);
 
 	window.open(blobUrl, '_blank');
+    },
+    hardRemoveTicket: async (id: number) => {
+	const res = await api.delete(`/tickets/${id}/hard`)
+	return res.data;
+    },
+    uploadTicket: async (id: number, file: File) => {
+	const formData = new FormData();
+	formData.append('file', file);
+	const res = await api.post(`tickets/${id}/upload`, formData)
+	return res.data
     }
+
 }
 
 export const createTicketRepository = () => {
-    const dataMode = import.meta.env.VITE_DATA_MODE || 'local';
-    return dataMode === 'api' ? ticketApi : ticketLocal;
+    return ticketApi;
 };
 
 export const TicketRepository = createTicketRepository();
