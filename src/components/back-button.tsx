@@ -1,13 +1,16 @@
-import {useNavigate} from "react-router";
+import { useNavigate } from "react-router";
+import { Button } from "./ui/button";
+import { ArrowLeft } from "lucide-react";
 
 export const BackButton = () => {
-    const navigate = useNavigate();
-    return (
-	<button
-	    onClick={()=> navigate(-1)}
-	    className="text-sm font-medium text-gray-500 hover:text-ptba-primary transition-colors cursor-pointer"
-	>
-	    ← Back
-	</button>
-    )
+	const navigate = useNavigate();
+	return (
+		<Button
+			onClick={() => navigate(-1)}
+			variant={"link"}
+		>
+			<ArrowLeft />
+			Back
+		</Button>
+	)
 }

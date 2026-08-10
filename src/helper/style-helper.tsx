@@ -161,7 +161,7 @@ export interface ISlaStyleHelper {
 export const getSlaStyleByDuration = (seconds: number): ISlaStyleHelper => {
 	const hours = seconds / 3600;
 
-	if (hours <= 4) {
+	if (hours <= 2) {
 		return {
 			header: "bg-ptba-primary-red text-white",
 			accentText: "text-white",

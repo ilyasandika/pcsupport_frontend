@@ -85,7 +85,6 @@ export interface ITicket {
   engineer?: IUser
   employee?: IEmployee
   snapshot?: ITicketSnapshot;
-  userNonEmployeeSnapshot?: string;
   createdBy: IUser
   slaPolicy: ISlaPolicy
   location: IWorkLocation

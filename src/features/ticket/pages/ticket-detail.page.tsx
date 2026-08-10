@@ -1,4 +1,4 @@
-import { getSlaStyleByDuration, getStatusBadgeStyle } from "@/helper/style-helper.tsx";
+import { getProgressStyle, getSlaStyleByDuration, getStatusBadgeStyle } from "@/helper/style-helper.tsx";
 import {
 	calculateSlaMetric,
 	capitalizeWords,
@@ -31,6 +31,7 @@ import { useState } from "react";
 import { GeneratePdfDialog } from "@/features/user/components/generate-pdf-dialog.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { useAuth } from "@/context/AuthContext.tsx";
+import { BackButton } from "@/components/back-button";
 
 export const TicketDetailPage = () => {
 
@@ -78,27 +79,30 @@ export const TicketDetailPage = () => {
 	})
 
 	return (
-		<div className="max-w-7xl mx-auto space-y-6 ">
-			<ButtonGroup aria-label="Button group" className="w-full justify-end">
-				{
-					isTicketSolved(ticket.status) &&
+		<div className="max-w-7xl mx-auto space-y-6">
+			<div className="flex items-center justify-between">
+				<BackButton />
+				<ButtonGroup aria-label="Button group" className="w-full justify-end">
+					{
+						isTicketSolved(ticket.status) &&
 
-					<Button variant="outline" onClick={() => setOpenGeneratePdfDialog(true)}>
-						<Printer /> Generate BAST
-					</Button>
-				}
-				{
-					!isEngineer() &&
-					<Button variant="outline" onClick={() => navigate(`/tickets/${ticket.id}/update`)}>
-						<SquarePen /> Edit Ticket
-					</Button>}
-				{
-					!ticket.engineer &&
-					<Button variant="outline" onClick={() => setClaimDialogOpen(true)}>
-						<FilePlusCorner /> Claim Ticket
-					</Button>
-				}
-			</ButtonGroup>
+						<Button variant="outline" onClick={() => setOpenGeneratePdfDialog(true)}>
+							<Printer /> Generate BAST
+						</Button>
+					}
+					{
+						!isEngineer() &&
+						<Button variant="outline" onClick={() => navigate(`/tickets/${ticket.id}/update`)}>
+							<SquarePen /> Edit Ticket
+						</Button>}
+					{
+						!ticket.engineer &&
+						<Button variant="outline" onClick={() => setClaimDialogOpen(true)}>
+							<FilePlusCorner /> Claim Ticket
+						</Button>
+					}
+				</ButtonGroup>
+			</div>
 
 			<Card className="">
 				<CardContent>
@@ -159,7 +163,7 @@ export const TicketDetailPage = () => {
 										'-'
 									}
 									<p className="text-slate-500 text-xs">Target {responseMetric.target.hours} Hours {responseMetric.target.minutes} Minutes</p>
-									<Progress value={responseMetric.percentage} className={'*:bg-ptba-tertiary-light-green'} />
+									<Progress value={responseMetric.percentage} className={getProgressStyle(responseMetric.percentage)} />
 									<div className="text-xs flex flex-row justify-between text-slate-500">
 										<span>Created: {fmtDate(ticket.createdAt)}</span>
 										<span>Started: {ticket.startAt ? fmtDate(ticket.startAt) : "-"}</span>
@@ -181,7 +185,7 @@ export const TicketDetailPage = () => {
 											"-"
 									}
 									<p className="text-slate-500 text-xs">Target {resolutionMetric?.target.hours} Hours {resolutionMetric?.target.minutes} Minutes</p>
-									<Progress value={resolutionMetric?.percentage || 0} className={'*:bg-ptba-tertiary-light-green'} />
+									<Progress value={resolutionMetric?.percentage || 0} className={getProgressStyle(resolutionMetric?.percentage || 0)} />
 									<div className="text-xs flex flex-row justify-between text-slate-500">
 										<span>Started: {ticket.startAt ? fmtDate(ticket.startAt) : "-"}</span>
 										<span>{ticket.status === "cancelled" ? "Cancelled at:" : "Solved at:"} {ticket.solvedAt ? fmtDate(ticket.solvedAt) : "-"}</span>
@@ -233,36 +237,15 @@ export const TicketDetailPage = () => {
 
 					{/* Requester / Employee Information */}
 					{(() => {
-						const nonEmp = ticket.snapshot?.userNonEmployee || ticket.userNonEmployeeSnapshot;
 						const employee = ticket.employee;
 						const division = ticket.snapshot?.division;
 
 						return (
-							<DetailCard title={employee && nonEmp ? "Employee & User Information" : employee ? "Employee Information" : "User Non-Employee Information"}>
-								{employee && (
-									<>
-										<DetailCardItem title={'NIK'} Icon={UserKey} value={employee.nik ?? '-'} />
-										<DetailCardItem title={'Nama Employee'} Icon={SquareUserRound} value={employee.name ?? '-'} />
-										<DetailCardItem title={'Position'} Icon={BriefcaseBusiness} value={employee.position ?? '-'} />
-										<DetailCardItem title={'Department'} Icon={Building2} value={employee.department ?? '-'} />
-									</>
-								)}
-
-								{nonEmp && (
-									<DetailCardItem
-										title={'User Non-Employee'}
-										Icon={SquareUserRound}
-										value={nonEmp}
-									/>
-								)}
-
-								{!employee && nonEmp && (
-									<>
-										<DetailCardItem title={'Position'} Icon={BriefcaseBusiness} value={ticket.snapshot?.position ?? '-'} />
-										<DetailCardItem title={'Department'} Icon={Building2} value={ticket.snapshot?.department ?? '-'} />
-									</>
-								)}
-
+							<DetailCard title={employee ? "Employee Information" : "User Non-Employee Information"}>
+								<DetailCardItem title={'NIK'} Icon={UserKey} value={employee.nik ?? '-'} />
+								<DetailCardItem title={'Employee Name'} Icon={SquareUserRound} value={employee.name ?? '-'} />
+								<DetailCardItem title={'Position'} Icon={BriefcaseBusiness} value={employee.position ?? '-'} />
+								<DetailCardItem title={'Department'} Icon={Building2} value={employee.department ?? '-'} />
 								{division && <DetailCardItem title={'Division'} Icon={Building2} value={division} />}
 							</DetailCard>
 						);
@@ -289,6 +272,7 @@ export const TicketDetailPage = () => {
 					{
 						ticket.asset &&
 						<DetailCard title={"Asset Information"} >
+							<DetailCardRow value={ticket.snapshot?.userNonEmployee || ticket.employee.name} label={"User"} />
 							<DetailCardRow value={ticket.asset?.hostname ?? '-'} label={"Hostname"} />
 							<DetailCardRow value={ticket.asset?.assetTag ?? '-'} label={"Asset Tag"} />
 							<DetailCardRow value={ticket.asset?.serialNumber ?? '-'} label={"Serial Number"} />
