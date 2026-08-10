@@ -17,6 +17,12 @@ export const TicketStatus = {
   Resolved: 'resolved',
 }
 
+export interface IEngineerCount {
+  engineerId: number | null;
+  engineerName: string;
+  count: number;
+}
+
 export interface ITicketStatusResponse {
   total: number,
   open: number,
@@ -27,6 +33,7 @@ export interface ITicketStatusResponse {
   closedVisit: number,
   closedOnsite: number,
   resolved: number,
+  byEngineer?: Record<string, IEngineerCount[]>;
 }
 
 export interface ITicketSummary {
@@ -35,6 +42,13 @@ export interface ITicketSummary {
   inProgress: number,
   closed: number,
   cancelled: number,
+  byEngineer?: {
+    total: IEngineerCount[];
+    open: IEngineerCount[];
+    inProgress: IEngineerCount[];
+    closed: IEngineerCount[];
+    cancelled: IEngineerCount[];
+  };
 }
 
 

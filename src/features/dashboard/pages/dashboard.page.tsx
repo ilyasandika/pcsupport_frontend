@@ -36,26 +36,31 @@ export const DashboardPage = () => {
 			    value={ticketSummary?.total || 0}
 			    status={'total'}
 			    Icon={AlertCircle}
+			    engineerBreakdown={ticketSummary?.byEngineer?.total}
 		/>
 		<TicketCard label="Open Ticket"
 			    value={ticketSummary?.open || 0}
 			    status={'open'}
 			    Icon={Clock}
+			    engineerBreakdown={ticketSummary?.byEngineer?.open}
 		/>
 		<TicketCard label="Ticket on Progress"
 			    value={ticketSummary?.inProgress || 0}
 			    status={'progress'}
 			    Icon={AlertCircle}
+			    engineerBreakdown={ticketSummary?.byEngineer?.inProgress}
 		/>
 		<TicketCard label="Closed Ticket"
 			    value={ticketSummary?.closed || 0}
 			    status={'closed'}
 			    Icon={CheckCircle2}
+			    engineerBreakdown={ticketSummary?.byEngineer?.closed}
 		/>
 		<TicketCard label="Cancelled Ticket"
 			    value={ticketSummary?.cancelled || 0}
 			    status={'cancelled'}
 			    Icon={TicketSlash}
+			    engineerBreakdown={ticketSummary?.byEngineer?.cancelled}
 		/>
 	    </div>
 	    <div className="flex flex-row gap-6">

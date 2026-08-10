@@ -2,16 +2,19 @@ import type {LucideIcon} from "lucide-react";
 import {Card, CardAction, CardContent, CardHeader, CardTitle} from "@/components/ui/card.tsx";
 import {cn} from "@/lib/utils.ts";
 import type {ReactNode} from "react";
+import type {IEngineerCount} from "@/types/ticket.type.ts";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip.tsx";
 
 interface ticketCardProps {
     label: string,
     value: number,
     status: 'progress' | 'open' | 'closed' |'total' | 'cancelled',
-    Icon: LucideIcon
+    Icon: LucideIcon,
     description?: string | ReactNode;
+    engineerBreakdown?: IEngineerCount[];
 }
 
-export const TicketCard = ({label, value, status, Icon, description}: ticketCardProps) => {
+export const TicketCard = ({label, value, status, Icon, description, engineerBreakdown}: ticketCardProps) => {
     const statusStyle = {
 	total : {
 	    text: 'text-ptba-foreground',
@@ -37,8 +40,8 @@ export const TicketCard = ({label, value, status, Icon, description}: ticketCard
 
     const currentStyle = statusStyle[status];
 
-    return (
-	<Card id={label} className="gap-0">
+    const cardContent = (
+	<Card id={label} className="gap-0 transition-shadow hover:shadow-md cursor-pointer">
 	    <CardHeader className="flex items-center justify-between">
 		<CardTitle className="text-sm font-medium">
 		    {label}
@@ -57,7 +60,37 @@ export const TicketCard = ({label, value, status, Icon, description}: ticketCard
 		}
 	    </CardContent>
 	</Card>
+    );
 
+    if (!engineerBreakdown || engineerBreakdown.length === 0) {
+	return cardContent;
+    }
 
+    return (
+	<TooltipProvider delayDuration={150}>
+	    <Tooltip>
+		<TooltipTrigger asChild>
+		    {cardContent}
+		</TooltipTrigger>
+		<TooltipContent side="bottom" align="start" className="bg-white border border-slate-200 text-slate-900 p-3 shadow-xl max-w-xs w-60 rounded-xl space-y-2">
+		    <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+			<span className="font-semibold text-xs text-ptba-primary-navy">Breakdown Engineer</span>
+			<span className="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-mono">{label}</span>
+		    </div>
+		    <div className="space-y-1 max-h-48 overflow-y-auto pr-1">
+			{engineerBreakdown.map((item, idx) => (
+			    <div key={item.engineerId || `unassigned-${idx}`} className="flex justify-between items-center text-xs py-0.5">
+				<span className="truncate max-w-[140px] text-slate-700 font-medium" title={item.engineerName}>
+				    {item.engineerName}
+				</span>
+				<span className="font-bold text-ptba-primary bg-ptba-primary/10 px-1.5 py-0.5 rounded text-[11px]">
+				    {item.count}
+				</span>
+			    </div>
+			))}
+		    </div>
+		</TooltipContent>
+	    </Tooltip>
+	</TooltipProvider>
     )
 }
