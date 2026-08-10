@@ -14,7 +14,7 @@ import { UserRepository } from "@/data/repositories/user.repository.ts";
 import { useFormErrors } from "@/hooks/use-errors.tsx";
 import type { IErrorResponse } from "@/types/api.type.ts";
 import { UploadFile } from "@/components/upload-file.tsx";
-import { useNotificationDialog } from "@/components/notification-dialog.tsx";
+import { useNotificationDialog } from "@/context/NotificationDialogContext";
 
 interface UploadSignatureDialogProps {
 	open: boolean;
@@ -81,13 +81,13 @@ export const UploadSignatureDialog = ({
 	const handleCancel = () => {
 		setFile(null);
 		fileRef.current = null;
+		clearErrors();
 		onOpenChange(false);
 	};
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent>
-				<DialogTrigger />
 				<DialogHeader>
 					<DialogTitle>Upload Signature</DialogTitle>
 					<DialogDescription>
