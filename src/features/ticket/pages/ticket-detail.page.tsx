@@ -152,9 +152,6 @@ export const TicketDetailPage = () => {
 							<Item className="bg-secondary gap-2">
 								<ItemHeader className="">
 									<ItemTitle className="text-slate-500 font-normal text-xs">Response time</ItemTitle>
-									{/*<Badge className={getBadgeStyleByPercentage(responseMetric.percentage)}>*/}
-									{/*{`${responseMetric.percentage}% from target`}*/}
-									{/*</Badge>*/}
 								</ItemHeader>
 								<ItemContent className="flex flex-col gap-1">
 									{ticket.startAt ?
