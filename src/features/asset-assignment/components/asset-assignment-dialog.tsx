@@ -185,7 +185,7 @@ export const CreateAssetAssignDialog = ({open, onOpenChange, assetTag}: CreateAs
 		    </FieldInputWrapper>
 
 		    <InputText
-			label="Tanggal Assign"
+			label="Assign Date"
 			id="assignedAt"
 			Icon={CalendarDays}
 			type="datetime-local"
@@ -217,10 +217,10 @@ export const CreateAssetAssignDialog = ({open, onOpenChange, assetTag}: CreateAs
 
 		<DialogFooter>
 		    <Button variant="outline" onClick={() => onOpenChange(false)} disabled={createAssignmentMutation.isPending}>
-			Batal
+			Cancel
 		    </Button>
 		    <Button onClick={handleSubmit} disabled={createAssignmentMutation.isPending}>
-			{createAssignmentMutation.isPending ? "Menyimpan..." : "Assign"}
+			{createAssignmentMutation.isPending ? "Saving..." : "Assign"}
 		    </Button>
 		</DialogFooter>
 	    </DialogContent>

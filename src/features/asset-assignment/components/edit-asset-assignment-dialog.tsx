@@ -101,8 +101,8 @@ export const EditAssetAssignmentDialog = ({
 			onOpenChange(false);
 			showNotification({
 				variant: "success",
-				title: "Assignment berhasil diperbarui",
-				description: "Data assignment telah berhasil diubah.",
+				title: "Assignment successfully updated",
+				description: "Assignment details have been saved successfully.",
 				onClose: () => {
 					if (onSuccess) {
 						onSuccess();
@@ -151,7 +151,7 @@ export const EditAssetAssignmentDialog = ({
 				<DialogHeader>
 					<DialogTitle>Edit Assignment</DialogTitle>
 					<DialogDescription>
-						Ubah detail penugasan aset <span className="font-medium">{assignment?.asset?.assetTag || ""}</span>
+						Update assignment details for asset <span className="font-medium">{assignment?.asset?.assetTag || ""}</span>
 					</DialogDescription>
 				</DialogHeader>
 
@@ -204,7 +204,7 @@ export const EditAssetAssignmentDialog = ({
 					</FieldInputWrapper>
 
 					<InputText
-						label="Tanggal Assign"
+						label="Assign Date"
 						id="editAssignedAt"
 						Icon={CalendarDays}
 						type="datetime-local"
@@ -215,7 +215,7 @@ export const EditAssetAssignmentDialog = ({
 
 					{assignment?.returnedAt && (
 						<InputText
-							label="Tanggal Return"
+							label="Return Date"
 							id="editReturnedAt"
 							Icon={CalendarDays}
 							type="datetime-local"
@@ -235,7 +235,7 @@ export const EditAssetAssignmentDialog = ({
 					/>
 
 					<InputText
-						label="Assign Remarks (Catatan Penyerahan)"
+						label="Assign Remarks"
 						id="editAssignRemarks"
 						Icon={MessageSquare}
 						value={assignRemarks}
@@ -245,7 +245,7 @@ export const EditAssetAssignmentDialog = ({
 
 					{assignment?.returnedAt && (
 						<InputText
-							label="Return Remarks (Catatan Penarikan)"
+							label="Return Remarks"
 							id="editReturnRemarks"
 							Icon={MessageSquare}
 							value={returnRemarks}
@@ -257,10 +257,10 @@ export const EditAssetAssignmentDialog = ({
 
 				<DialogFooter>
 					<Button variant="outline" onClick={() => onOpenChange(false)} disabled={updateMutation.isPending}>
-						Batal
+						Cancel
 					</Button>
 					<Button onClick={handleSubmit} disabled={updateMutation.isPending}>
-						{updateMutation.isPending ? "Menyimpan..." : "Simpan Perubahan"}
+						{updateMutation.isPending ? "Saving..." : "Save Changes"}
 					</Button>
 				</DialogFooter>
 			</DialogContent>

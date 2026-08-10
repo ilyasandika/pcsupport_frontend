@@ -53,8 +53,8 @@ export const ReturnAssetDialog = ({open, onOpenChange, assignmentId, onSuccess}:
 	    resetForm()
 	    showNotification({
 		variant: "success",
-		title: "Asset berhasil ditarik",
-		description: "Assignment telah ditutup",
+		title: "Asset successfully returned",
+		description: "Assignment has been closed",
 		onClose: () => window.location.reload(),
 	    })
 	},
@@ -83,7 +83,7 @@ export const ReturnAssetDialog = ({open, onOpenChange, assignmentId, onSuccess}:
 	<AlertDialogContainer open={open} title={"Return Asset"} setOpen={onOpenChange} description={"Marking this asset as returned"} onContinue={()=> handleSubmit(assignmentId)}>
 	    <div className="flex flex-col gap-4 py-2">
 		<InputText
-		    label="Tanggal Tarik"
+		    label="Return Date"
 		    id="returnedAt"
 		    Icon={CalendarDays}
 		    type="datetime-local"
@@ -105,7 +105,7 @@ export const ReturnAssetDialog = ({open, onOpenChange, assignmentId, onSuccess}:
 		    />
 		</FieldInputWrapper>
 		<InputText
-		    label="Catatan (opsional)"
+		    label="Remarks (optional)"
 		    id="remarks"
 		    Icon={MessageSquare}
 		    value={remarks}

@@ -441,7 +441,7 @@ export const AssetAssignmentTimelineAsset = ({ assetAssignments, maxHeight = "42
 										<p className="text-sm leading-relaxed text-slate-600">{u.remarks || "-"}</p>
 										<p className="mt-2 flex items-center gap-1 text-[11px] text-slate-400">
 											<Clock size={11} />
-											Duration: {months} bulan {days} hari {isCurrent ? "(berjalan)" : ""}
+											Duration: {months} months {days} days {isCurrent ? "(continues)" : ""}
 										</p>
 									</div>
 								</div>
