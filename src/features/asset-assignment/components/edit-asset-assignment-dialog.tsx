@@ -88,10 +88,9 @@ export const EditAssetAssignmentDialog = ({
 			setAssignedAt(assignment.assignedAt ? getLocalDatetime(assignment.assignedAt) : "");
 			setReturnedAt(assignment.returnedAt ? getLocalDatetime(assignment.returnedAt) : "");
 			setContact(assignment.contact || "");
-			setAssignRemarks(assignment.assignRemarks || assignment.remarks || "");
+			setAssignRemarks(assignment.assignRemarks || "");
 			setReturnRemarks(assignment.returnRemarks || "");
 			setIsBackup(assignment.isBackup || false);
-			console.log(assignment, employees, engineers)
 		}
 	}, [open, assignment, employees, engineers]);
 
@@ -139,7 +138,6 @@ export const EditAssetAssignmentDialog = ({
 			contact: contact ? contact.trim() : null,
 			assignRemarks: assignRemarks ? assignRemarks.trim() : null,
 			returnRemarks: returnRemarks ? returnRemarks.trim() : null,
-			remarks: assignRemarks ? assignRemarks.trim() : null,
 			isBackup,
 		};
 
@@ -237,7 +235,7 @@ export const EditAssetAssignmentDialog = ({
 					/>
 
 					<InputText
-						label="Catatan Assign / Remarks"
+						label="Assign Remarks (Catatan Penyerahan)"
 						id="editAssignRemarks"
 						Icon={MessageSquare}
 						value={assignRemarks}
@@ -247,7 +245,7 @@ export const EditAssetAssignmentDialog = ({
 
 					{assignment?.returnedAt && (
 						<InputText
-							label="Catatan Return / Return Remarks"
+							label="Return Remarks (Catatan Penarikan)"
 							id="editReturnRemarks"
 							Icon={MessageSquare}
 							value={returnRemarks}

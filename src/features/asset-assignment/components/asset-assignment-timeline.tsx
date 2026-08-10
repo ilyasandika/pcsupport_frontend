@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { UserPlus, Undo2, Clock, FilePlusCorner, FileSearchCorner, FileCog, Search, Pencil } from "lucide-react";
@@ -148,30 +148,32 @@ export const EmployeeTimelineByAsset = ({
 												}`}
 										>
 											<div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-												<div className="flex flex-wrap items-center gap-2">
-													<Badge
-														variant="outline"
-														className={`rounded-full text-[11px] font-semibold uppercase tracking-wider ${isCurrent
-															? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-50"
-															: "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-100"
-															}`}
-													>
-														{isCurrent ? `In Use ${u.isBackup ? "for Backup" : ""}` : `Returned ${u.isBackup ? "from Backup" : ""}`}
-													</Badge>
-													{u.userNonEmployeeName && (
-														<Badge variant="outline" className="text-[11px] font-normal text-slate-500">
-															User: {u.userNonEmployeeName}
+												<ScrollArea className="w-4/6">
+													<div className="flex w-max flex-wrap items-center gap-2">
+														<Badge
+															variant="outline"
+															className={`rounded-full text-[11px] font-semibold uppercase tracking-wider ${isCurrent
+																? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-50"
+																: "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-100"
+																}`}
+														>
+															{isCurrent ? `In Use ${u.isBackup ? "for Backup" : ""}` : `Returned ${u.isBackup ? "from Backup" : ""}`}
 														</Badge>
-													)}
+														{u.userNonEmployeeName && (
+															<Badge variant="outline" className="text-[11px] font-normal text-slate-500">
+																User: {u.userNonEmployeeName}
+															</Badge>
+														)}
 
-													<Badge variant="outline" className={`text-[11px] font-normal ${u.assignFilePath ? 'bg-ptba-tertiary-light-green/30 text-ptba-tertiary-green' : 'bg-ptba-primary-yellow/30 text-ptba-secondary-orange'}`}>
-														{u.assignFilePath ? 'Done BAST Assign' : 'Pending BAST Assign'}
-													</Badge>
-													<Badge variant="outline" className={`text-[11px] font-normal ${u.assignFilePath ? 'bg-ptba-tertiary-light-green/30 text-ptba-tertiary-green' : 'bg-ptba-primary-yellow/30 text-ptba-secondary-orange'}`}>
-														{u.returnFilePath ? 'Done BAST Return' : 'Pending BAST Return'}
-													</Badge>
-
-												</div>
+														<Badge variant="outline" className={`text-[11px] font-normal ${u.assignFilePath ? 'bg-ptba-tertiary-light-green/30 text-ptba-tertiary-green' : 'bg-ptba-primary-yellow/30 text-ptba-secondary-orange'}`}>
+															{u.assignFilePath ? 'Done BAST Assign' : 'Pending BAST Assign'}
+														</Badge>
+														<Badge variant="outline" className={`text-[11px] font-normal ${u.assignFilePath ? 'bg-ptba-tertiary-light-green/30 text-ptba-tertiary-green' : 'bg-ptba-primary-yellow/30 text-ptba-secondary-orange'}`}>
+															{u.returnFilePath ? 'Done BAST Return' : 'Pending BAST Return'}
+														</Badge>
+													</div>
+													<ScrollBar orientation="horizontal" hidden />
+												</ScrollArea>
 												<div className="flex flex-row gap-2 items-center">
 													<DropdownMenu>
 														<DropdownMenuTrigger>
@@ -279,7 +281,10 @@ export const EmployeeTimelineByAsset = ({
 
 												</div>
 											</div>
-											<p className="text-sm leading-relaxed text-slate-600">{u.remarks || '-'}</p>
+											<div className="flex flex-col gap-1">
+												<p className="text-sm leading-relaxed text-slate-600">{`Assigned Remarks: ${u.assignRemarks || '-'}`}</p>
+												<p className="text-sm leading-relaxed text-slate-600">{`Returned Remarks: ${u.returnRemarks || '-'}`}</p>
+											</div>
 											<p className="mt-2 flex items-center gap-1 text-[11px] text-slate-400">
 												<Clock size={11} />
 												Duration: {months} months {days} days {isCurrent ? "(continues)" : ""}
@@ -295,7 +300,8 @@ export const EmployeeTimelineByAsset = ({
 				</ScrollArea>
 			) : (
 				<div className="relative space-y-6 pl-6 text-sm text-slate-400">No user yet</div>
-			)}
+			)
+			}
 
 			<CreateAssetAssignDialog
 				open={assignOpen}
@@ -346,7 +352,7 @@ export const EmployeeTimelineByAsset = ({
 				}}
 			/>
 
-		</div>
+		</div >
 	);
 }
 
