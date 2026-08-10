@@ -51,7 +51,7 @@ export const AssetFormPage = () => {
 	}))
 	const projectList = projects.map(project => ({
 		label: project.name,
-		value: project.id as unknown as string
+		value: project.name
 	}))
 
 	const [serialNumberValue, setSerialNumberValue] = useState("")
@@ -66,7 +66,7 @@ export const AssetFormPage = () => {
 	const [warrantyDate, setWarrantyDate] = useState(new Date().toISOString().slice(0, 10))
 	const [purchaseDate, setPurchaseDate] = useState(new Date().toISOString().slice(0, 10))
 	const [categoryId, setCategoryId] = useState<number>(categories[0].id)
-	const [projectId, setProjectId] = useState<number>(projects[0].id)
+	const [projectName, setProjectName] = useState<string>(projects[0]?.name || "")
 	const [status, setStatus] = useState<AssetStatusType>()
 	const isUpdate = !!id
 
@@ -84,7 +84,7 @@ export const AssetFormPage = () => {
 			setWarrantyDate(asset.warrantyDate ? String(asset.warrantyDate).slice(0, 10) : "")
 			setPurchaseDate(asset.purchaseDate ? String(asset.purchaseDate).slice(0, 10) : "")
 			setCategoryId(asset.category.id)
-			setProjectId(asset.project.id)
+			setProjectName(asset.project.name)
 			setStatus(asset.status)
 		}
 	}, [asset])
@@ -123,7 +123,7 @@ export const AssetFormPage = () => {
 			warrantyDate,
 			purchaseDate,
 			categoryId: Number(categoryId),
-			projectId,
+			projectName,
 			status,
 		})
 	}
@@ -181,16 +181,18 @@ export const AssetFormPage = () => {
 									errors={getFieldErrors("hostname")}
 									required={true}
 								/>
-								<InputText
-									label="Type"
-									id="type"
-									Icon={PackageIcon}
-									value={type}
-									placeholder={"HP Elitebook 630 G10"}
-									onChange={(e) => setType(e.target.value)}
-									errors={getFieldErrors("type")}
-									required={true}
-								/>
+								<div className="col-span-2">
+									<InputText
+										label="Type"
+										id="type"
+										Icon={PackageIcon}
+										value={type}
+										placeholder={"HP Elitebook 630 G10"}
+										onChange={(e) => setType(e.target.value)}
+										errors={getFieldErrors("type")}
+										required={true}
+									/>
+								</div>
 							</div>
 						</CardContent>
 					</Card>
@@ -199,12 +201,12 @@ export const AssetFormPage = () => {
 							<SeparatorWithLabel label="Ownership & Warranty" className="mb-4" />
 							<div className="flex flex-col gap-4">
 								<InputSelect
-									value={projectId as unknown as string}
+									value={projectName}
 									items={projectList}
-									onChange={value => setProjectId(Number(value))}
+									onChange={value => setProjectName(value)}
 									Icon={Building2}
 									label={"Project"}
-									errors={getFieldErrors("projectId")}
+									errors={getFieldErrors("projectName")}
 									required={true}
 								/>
 								<InputText

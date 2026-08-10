@@ -16,7 +16,7 @@ export interface IAssetPayload {
     warrantyDate?: string;
     purchaseDate?: string;
     categoryId: number;
-    projectId: number;
+    projectName: string;
     status?: AssetStatusType;
 }
 
@@ -55,7 +55,6 @@ export interface IDetailAsset {
     workLocation: IWorkLocation;
     supports: IAssetSupport[]
     project: {
-        id: number;
         name: string;
         vendor: {
             id: number;
