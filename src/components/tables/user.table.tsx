@@ -14,6 +14,7 @@ import type {IDetailUser} from "../../types/user.type.ts";
 import {UserRepository} from "@/data/repositories/user.repository.ts";
 import {Info} from "lucide-react";
 import {ChangePasswordDialogContent} from "@/features/user/components/change-password-dialog-content.tsx";
+import {UploadSignatureDialog} from "@/features/user/components/upload-signature-dialog.tsx";
 
 interface UserTableProps {
     data: IDetailUser[];
@@ -23,7 +24,9 @@ interface UserTableProps {
 export const UserTable = ({ data, isLoading = false }: UserTableProps) => {
     const columnHelper = createColumnHelper<IDetailUser>();
     const [openChangePasswordDialog, setOpenChangePasswordDialog] = useState(false);
+    const [openUploadSignatureDialog, setOpenUploadSignatureDialog] = useState(false);
     const [selectedId, setSelectedId] = useState<number>()
+    const [selectedUserForSignature, setSelectedUserForSignature] = useState<{ id: number; fullName: string } | null>(null);
 
     const columns: ColumnDef<IDetailUser, any>[] = useMemo(
 	() => [
@@ -73,28 +76,27 @@ export const UserTable = ({ data, isLoading = false }: UserTableProps) => {
 		    );
 		}
 	    }),
-	    // columnHelper.accessor('createdAt', {
-		// header: 'Created At',
-		// size: 200,
-		// cell: (info) => {
-		//     const rawValue = info.getValue();
-		//     if (!rawValue) return '-';
-		//     return new Date(rawValue).toLocaleTimeString('en-UK', {
-		// 	day: 'numeric',
-		// 	month: '2-digit',
-		// 	year: 'numeric',
-		// 	hour: '2-digit',
-		// 	minute: '2-digit',
-		// 	timeZone: 'Asia/Jakarta'
-		//     });
-		// }
-	    // }),
+	    columnHelper.accessor('signaturePath', {
+		header: 'Signature',
+		size: 130,
+		cell: (info) => {
+		    const hasSig = !!info.getValue();
+		    return (
+			<span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+			    hasSig ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'
+			}`}>
+                            {hasSig ? 'Uploaded' : 'No Signature'}
+                        </span>
+		    );
+		}
+	    }),
 	    columnHelper.display({
 		id: 'actions',
 		header: 'Actions',
-		size: 150,
+		size: 180,
 		cell: (info) => {
-		    const id = info.row.original.id;
+		    const user = info.row.original;
+		    const id = user.id;
 		    return (
 			<ActionButtons
 			    detail={{
@@ -104,6 +106,24 @@ export const UserTable = ({ data, isLoading = false }: UserTableProps) => {
 			    edit={{
 				to: `${id}/update`,
 				tooltip: "Edit User"
+			    }}
+			    uploadDocument={{
+				onClick: () => {
+				    setSelectedUserForSignature({ id: user.id, fullName: user.fullName });
+				    setOpenUploadSignatureDialog(true);
+				},
+				tooltip: "Upload Signature"
+			    }}
+			    seeDocument={user.signaturePath ? {
+				onClick: () => UserRepository.viewSignature(user.id),
+				tooltip: "View Signature"
+			    } : undefined}
+			    keyButton={{
+				onClick: () => {
+				    setOpenChangePasswordDialog(true)
+				    setSelectedId(id)
+				},
+				tooltip: "Change Password"
 			    }}
 			    remove={{
 				alert:{
@@ -115,14 +135,6 @@ export const UserTable = ({ data, isLoading = false }: UserTableProps) => {
 				},
 				tooltip: "Remove User"
 			    }}
-			    keyButton={{
-				onClick: () => {
-				    setOpenChangePasswordDialog(true)
-				    setSelectedId(id)
-				},
-				tooltip: "Change Password"
-			    }}
-
 			/>
 		    )
 		},
@@ -155,6 +167,11 @@ export const UserTable = ({ data, isLoading = false }: UserTableProps) => {
 	    <ChangePasswordDialogContent open={openChangePasswordDialog}
 					 setOpen={setOpenChangePasswordDialog}
 					 id={selectedId}
+	    />
+	    <UploadSignatureDialog open={openUploadSignatureDialog}
+				   onOpenChange={setOpenUploadUploadSignatureDialog => setOpenUploadSignatureDialog(openUploadUploadSignatureDialog)}
+				   userId={selectedUserForSignature?.id}
+				   userName={selectedUserForSignature?.fullName}
 	    />
 	    <DataTable table={table}
 		       name='All Users'

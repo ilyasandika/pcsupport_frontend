@@ -40,7 +40,29 @@ const userApi: IUserRepository = {
 	} catch (e) {
 	    throw e
 	}
-    }
+    },
+    uploadSignature: async (id: number, file: File): Promise<void> => {
+	const formData = new FormData();
+	formData.append('file', file);
+	const res = await api.post(`users/${id}/signature`, formData, {
+	    headers: {
+		'Content-Type': 'multipart/form-data',
+	    },
+	});
+	return res.data;
+    },
+    viewSignature: async (id: number): Promise<void> => {
+	try {
+	    const res = await api.get(`users/${id}/signature`, {
+		responseType: 'blob',
+	    });
+	    const blob = new Blob([res.data], { type: res.headers['content-type'] || 'image/png' });
+	    const blobUrl = URL.createObjectURL(blob);
+	    window.open(blobUrl, '_blank');
+	} catch (error) {
+	    console.error('Error fetching signature:', error);
+	}
+    },
 }
 
 const createAssetRepository = () => {

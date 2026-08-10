@@ -9,6 +9,7 @@ export interface IDetailUser {
     nik?: string;
     role: string;
     active: boolean;
+    signaturePath?: string;
     tickets?: ITicketForAsset[]
     workLocation: IWorkLocation
     createdAt: string;
@@ -43,4 +44,6 @@ export interface IUserRepository {
     updateUser: (id: number, data: IUpdateUserDTO) => Promise<void>
     deleteUser: (id: number) => Promise<void>
     changePassword: (id: number, oldPassword: string, newPassword: string) => Promise<void>
+    uploadSignature: (id: number, file: File) => Promise<void>
+    viewSignature: (id: number) => Promise<void>
 }
