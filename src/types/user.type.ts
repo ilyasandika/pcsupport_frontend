@@ -1,5 +1,5 @@
-import type {ITicketForAsset} from "./ticket.type.ts";
-import type {IWorkLocation} from "@/types/work-location.type.ts";
+import type { ITicketForAsset } from "./ticket.type.ts";
+import type { IWorkLocation } from "@/types/work-location.type.ts";
 
 export interface IDetailUser {
     id: number;
@@ -46,4 +46,5 @@ export interface IUserRepository {
     changePassword: (id: number, oldPassword: string, newPassword: string) => Promise<void>
     uploadSignature: (id: number, file: File) => Promise<void>
     viewSignature: (id: number) => Promise<void>
+    deleteSignature: (id: number) => Promise<void>
 }

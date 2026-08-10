@@ -4,6 +4,7 @@ import {
     Eye, FileSearch,
     FileText,
     FileUp,
+    FileX,
     Info, KeyRound,
     type LucideIcon,
     SquarePen,
@@ -144,12 +145,13 @@ interface ActionButtonsProps {
     check?: ActionButtonsOptions;
     seeDocument?: ActionButtonsOptions;
     uploadDocument?: ActionButtonsOptions;
+    deleteDocument?: ActionButtonsOptions;
     keyButton?: ActionButtonsOptions;
     assign?: ActionButtonsOptions;
     returnAsset?: ActionButtonsOptions;
 }
 
-export const ActionButtons = ({edit, info, detail, download, remove, generateDocument, check, seeDocument, uploadDocument, keyButton, assign, returnAsset}: ActionButtonsProps) => {
+export const ActionButtons = ({edit, info, detail, download, remove, generateDocument, check, seeDocument, uploadDocument, deleteDocument, keyButton, assign, returnAsset}: ActionButtonsProps) => {
     return (
 	<div className='flex gap-2 items-center'>
 	    {(edit && !edit.disabled) && 				<ActionButton Logo={SquarePen}  	to={edit.to}  			onClick={edit.onClick}			tooltip={edit.tooltip} 			alert={edit.alert}     			/>}
@@ -161,6 +163,7 @@ export const ActionButtons = ({edit, info, detail, download, remove, generateDoc
 	    {(generateDocument && !generateDocument.disabled) && 	<ActionButton Logo={FileText}		to={generateDocument.to} 	onClick={generateDocument.onClick} 	tooltip={generateDocument.tooltip} 	alert={generateDocument.alert}    	className='text-ptba-tertiary-green'/>}
 	    {(uploadDocument && !uploadDocument.disabled) &&		<ActionButton Logo={FileUp}  		to={uploadDocument.to} 		onClick={uploadDocument.onClick}	tooltip={uploadDocument.tooltip} 	alert={uploadDocument.alert}    	className='text-ptba-tertiary-green'/>}
 	    {(seeDocument && !seeDocument.disabled) &&			<ActionButton Logo={FileSearch}  	to={seeDocument.to}  		onClick={seeDocument.onClick}		tooltip={seeDocument.tooltip} 		alert={seeDocument.alert}    		className='text-ptba-tertiary-green'/> }
+	    {(deleteDocument && !deleteDocument.disabled) &&		<ActionButton Logo={FileX}  		to={deleteDocument.to} 		onClick={deleteDocument.onClick}	tooltip={deleteDocument.tooltip} 	alert={deleteDocument.alert}    	className='text-danger'/> }
 	    {(keyButton && !keyButton.disabled) &&					<ActionButton Logo={KeyRound} to={keyButton.to} onClick={keyButton.onClick} tooltip={keyButton.tooltip} alert={keyButton.alert} className='text-ptba-primary-navy'/> }
 	    {(assign && !assign.disabled) && 				<ActionButton Logo={UserPlus}  	to={assign.to}  		onClick={assign.onClick}		tooltip={assign.tooltip} 		alert={assign.alert}     		className='text-ptba-tertiary-green'/>}
 	    {(returnAsset && !returnAsset.disabled) && 			<ActionButton Logo={Undo2}  		to={returnAsset.to}  		onClick={returnAsset.onClick}		tooltip={returnAsset.tooltip} 		alert={returnAsset.alert}     		className='text-ptba-secondary-orange'/>}

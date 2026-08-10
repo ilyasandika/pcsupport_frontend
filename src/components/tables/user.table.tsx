@@ -116,6 +116,19 @@ export const UserTable = ({ data, isLoading = false }: UserTableProps) => {
 								onClick: () => UserRepository.viewSignature(user.id),
 								tooltip: "View Signature"
 							} : undefined}
+							deleteDocument={user.signaturePath ? {
+								alert: {
+									title: 'Delete Signature',
+									description: `Are you sure you want to delete signature for ${user.fullName}?`,
+									onContinue: async () => {
+										await UserRepository.deleteSignature(user.id);
+										window.location.reload();
+									},
+									variant: 'danger',
+									icon: <Info className={"text-danger w-4 h-4"} />
+								},
+								tooltip: "Delete Signature"
+							} : undefined}
 							keyButton={{
 								onClick: () => {
 									setOpenChangePasswordDialog(true)
@@ -142,7 +155,7 @@ export const UserTable = ({ data, isLoading = false }: UserTableProps) => {
 	);
 
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-	const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
+	const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
 
 	const table = useReactTable<IDetailUser>({
 		data,

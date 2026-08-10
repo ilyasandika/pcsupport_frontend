@@ -15,6 +15,7 @@ import { useFormErrors } from "@/hooks/use-errors.tsx";
 import type { IErrorResponse } from "@/types/api.type.ts";
 import { UploadFile } from "@/components/upload-file.tsx";
 import { useNotificationDialog } from "@/context/NotificationDialogContext";
+import { AlertDialogContainer } from "@/components/alert-dialog-container";
 
 interface UploadSignatureDialogProps {
 	open: boolean;
@@ -81,41 +82,50 @@ export const UploadSignatureDialog = ({
 	const handleCancel = () => {
 		setFile(null);
 		fileRef.current = null;
-		clearErrors();
 		onOpenChange(false);
 	};
 
 	return (
-		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent>
-				<DialogHeader>
-					<DialogTitle>Upload Signature</DialogTitle>
-					<DialogDescription>
-						{userName
-							? `Upload signature image for ${userName}`
-							: "Upload signature image for this user"}
-					</DialogDescription>
-				</DialogHeader>
-				<div className="flex flex-col gap-4 py-2">
-					<UploadFile
-						label="Signature Image"
-						description="Upload PNG or JPG image (max 1MB)"
-						fileRef={fileRef}
-						setFile={setFile}
-						acceptedFileTypes="image/png,image/jpeg,image/jpg"
-					/>
-				</div>
+		// <Dialog open={open} onOpenChange={onOpenChange}>
+		// 	<DialogContent>
+		// 		<DialogHeader>
+		// 			<DialogTitle>Upload Signature</DialogTitle>
+		// 			<DialogDescription>
+		// 				{userName
+		// 					? `Upload signature image for ${userName}`
+		// 					: "Upload signature image for this user"}
+		// 			</DialogDescription>
+		// 		</DialogHeader>
 
-				<DialogFooter>
-					<Button variant="outline" onClick={handleCancel} disabled={isUploading}>
-						Cancel
-					</Button>
-					<Button onClick={handleUpload} disabled={isUploading || !file}>
-						<Upload className="size-4 mr-1.5" />
-						{isUploading ? "Uploading..." : "Upload Signature"}
-					</Button>
-				</DialogFooter>
-			</DialogContent>
-		</Dialog>
+
+		// 		<DialogFooter>
+		// 			<Button variant="outline" onClick={handleCancel} disabled={isUploading}>
+		// 				Cancel
+		// 			</Button>
+		// 			<Button onClick={handleUpload} disabled={isUploading || !file}>
+		// 				<Upload className="size-4 mr-1.5" />
+		// 				{isUploading ? "Uploading..." : "Upload Signature"}
+		// 			</Button>
+		// 		</DialogFooter>
+		// 	</DialogContent>
+		// </Dialog>
+
+		<AlertDialogContainer
+			open={open}
+			setOpen={onOpenChange}
+			title={"Upload Signature"}
+			description={userName ? `Upload signature image for ${userName}` : "Upload signature image for this user"}
+			onContinue={handleUpload}
+		>
+			<div className="flex flex-col gap-4 py-2">
+				<UploadFile
+					label="Signature Image"
+					description="Upload PNG or JPG image (max 1MB)"
+					fileRef={fileRef}
+					setFile={setFile}
+					acceptedFileTypes="image/png,image/jpeg,image/jpg"
+				/>
+			</div>
+		</AlertDialogContainer>
 	);
 };
