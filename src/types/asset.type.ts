@@ -7,8 +7,7 @@ export interface IAssetPayload {
     serialNumber?: string;
     assetTag: string;
     hostname: string;
-    brand: string;
-    model?: string;
+    type: string;
     processor?: string;
     storageType?: string;
     storageCapacityByte?: number;

@@ -86,7 +86,6 @@ export const EmployeeTimelineByAsset = ({
 	const activeAssignment = assetAssignments?.find((a) => !a.returnedAt);
 	const allowedStatus = [
 		AssetStatus.Backup,
-		AssetStatus.Returned,
 		AssetStatus.ReadyStock,
 		AssetStatus.Undeployed,
 	] as const;
