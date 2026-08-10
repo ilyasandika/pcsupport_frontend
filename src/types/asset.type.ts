@@ -25,6 +25,7 @@ export interface IAssetRepository {
     getAssetSummary: () => Promise<IAssetSummary>
     getAssets: (filter?: IAssetFilter) => Promise<ISuccessResponse<IAsset[]>>
     getBackupAssets: () => Promise<IAsset[]>
+    getAssetsByEmployeeNik: (nik: string) => Promise<IAsset[]>
     getAssetBySn: (assetTag: string) => Promise<IDetailAsset>
     getActiveAssetList: () => Promise<IAsset[]>
     createAsset: (payload: IAssetPayload) => Promise<IDetailAsset>;

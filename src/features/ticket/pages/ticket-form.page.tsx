@@ -19,6 +19,7 @@ import type { ISlaPolicy } from "@/types/sla.type.ts";
 import type { IWorkLocation } from "@/types/work-location.type.ts";
 import { getLocalDatetime, isTicketSolved, secondsToHMS } from "@/helper/helper.tsx";
 import { TicketRepository } from "@/data/repositories/ticket.repository.ts";
+import { AssetRepository } from "@/data/repositories/asset.repository.ts";
 import { useFormErrors } from "@/hooks/use-errors.tsx";
 import type { IErrorResponse } from "@/types/api.type.ts";
 import { type ICreateTicketPayload, type ITicket, type IUpdateTicketPayload, TicketStatus } from "@/types/ticket.type.ts";
@@ -106,10 +107,7 @@ export const TicketFormPage = () => {
 		return null;
 	}, [selectedEmployee, selectedAsset, selectedEngineer, engineers, user, initialValue]);
 
-	const getAssetsByEmployeeNik = (nik: string) => {
-		const employeeAssets = assets.filter((asset) => asset.assetAssignment?.employee.nik === nik)
-		return employeeAssets || null
-	}
+
 
 
 	const getEmployeeByNik = (nik: string) => {
@@ -260,12 +258,12 @@ export const TicketFormPage = () => {
 										<EntityCombobox<IAsset>
 											items={assetList}
 											value={selectedAsset}
-											getLabel={(a) => `${a.assetTag} | ${a.type}`}
+											getLabel={(a: IAsset) => `${a.assetTag} | ${a.type} | ${a.assetAssignment?.userNonEmployeeName}`}
 											disabled={disabledAsset}
-											getKey={(a) => a.serialNumber}
-											getSearchValue={(a) => `${a.assetTag} | ${a.type}`}
-											getTitle={(a) => a.assetTag}
-											getDescription={(a) => `${a.type}`}
+											getKey={(a: IAsset) => a.serialNumber}
+											getSearchValue={(a: IAsset) => `${a.assetTag} | ${a.type}`}
+											getTitle={(a: IAsset) => a.assetTag}
+											getDescription={(a: IAsset) => `${a.type} | ${a.assetAssignment?.userNonEmployeeName}`}
 											onSelect={(asset) => {
 												setSelectedAsset(asset)
 												if (asset.assetAssignment) {
@@ -291,11 +289,15 @@ export const TicketFormPage = () => {
 									getSearchValue={(e) => `${e.nik} | ${e.name}`}
 									getTitle={(e) => e.name}
 									getDescription={(e) => `${e.nik} | ${e.department}`}
-									onSelect={(employee) => {
-										const asset = getAssetsByEmployeeNik(employee.nik)
+									onSelect={async (employee) => {
 										setSelectedEmployee(employee)
 										setSelectedAsset(null)
-										setAssetList(asset)
+										try {
+											const empAssets = await AssetRepository.getAssetsByEmployeeNik(employee.nik)
+											setAssetList(empAssets)
+										} catch {
+											setAssetList([])
+										}
 									}}
 									onClear={() => {
 										setSelectedEmployee(null)
