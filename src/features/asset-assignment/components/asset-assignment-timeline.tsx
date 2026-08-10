@@ -286,28 +286,6 @@ export const EmployeeTimelineByAsset = ({
 															</DropdownMenu>
 														)
 													}
-													<Tooltip>
-														<TooltipTrigger>
-															<Button variant="outline" size="sm" onClick={() => setEditTarget(u)}>
-																<Pencil className="size-4" />
-															</Button>
-														</TooltipTrigger>
-														<TooltipContent>
-															Edit Assignment
-														</TooltipContent>
-													</Tooltip>
-
-													<Tooltip>
-														<TooltipTrigger>
-															<Button variant="outline" size="sm" className="text-red-500 hover:text-red-600 hover:bg-red-50" onClick={() => setDeleteTarget(u)}>
-																<Trash2 className="size-4" />
-															</Button>
-														</TooltipTrigger>
-														<TooltipContent>
-															Delete Assignment
-														</TooltipContent>
-													</Tooltip>
-
 													{isCurrent && (
 														<Tooltip>
 															<TooltipTrigger>
@@ -320,6 +298,29 @@ export const EmployeeTimelineByAsset = ({
 															</TooltipContent>
 														</Tooltip>
 													)}
+													<Tooltip>
+														<TooltipTrigger>
+															<Button variant="outline" size="sm" onClick={() => setEditTarget(u)}>
+																<Pencil className="size-4" />
+															</Button>
+														</TooltipTrigger>
+														<TooltipContent>
+															Edit Assignment
+														</TooltipContent>
+													</Tooltip>
+
+
+
+													<Tooltip>
+														<TooltipTrigger>
+															<Button variant="outline" size="sm" className="text-red-500 hover:text-red-600 hover:bg-red-50" onClick={() => setDeleteTarget(u)}>
+																<Trash2 className="size-4" />
+															</Button>
+														</TooltipTrigger>
+														<TooltipContent>
+															Delete Assignment
+														</TooltipContent>
+													</Tooltip>
 
 												</div>
 											</div>

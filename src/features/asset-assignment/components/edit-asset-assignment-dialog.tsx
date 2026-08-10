@@ -49,6 +49,7 @@ export const EditAssetAssignmentDialog = ({
 	const [openNonPic, setOpenNonPic] = useState<boolean>(false);
 	const [assignedAt, setAssignedAt] = useState("");
 	const [returnedAt, setReturnedAt] = useState("");
+	const [isReturned, setIsReturned] = useState<boolean>(false);
 	const [contact, setContact] = useState<string | undefined>("");
 	const [assignRemarks, setAssignRemarks] = useState("");
 	const [returnRemarks, setReturnRemarks] = useState("");
@@ -86,6 +87,8 @@ export const EditAssetAssignmentDialog = ({
 			setUserNonEmployeeName(assignment.userNonEmployeeName || "");
 			setOpenNonPic(!!assignment.userNonEmployeeName);
 			setAssignedAt(assignment.assignedAt ? getLocalDatetime(assignment.assignedAt) : "");
+			const hasReturn = !!assignment.returnedAt;
+			setIsReturned(hasReturn);
 			setReturnedAt(assignment.returnedAt ? getLocalDatetime(assignment.returnedAt) : "");
 			setContact(assignment.contact || "");
 			setAssignRemarks(assignment.assignRemarks || "");
@@ -133,11 +136,11 @@ export const EditAssetAssignmentDialog = ({
 			picEmployeeNik: selectedEmployee.nik,
 			userNonEmployeeName: openNonPic ? (userNonEmployeeName.trim() || null) : null,
 			assignedAt: assignedAt ? new Date(assignedAt).toISOString() : undefined,
-			returnedAt: returnedAt ? new Date(returnedAt).toISOString() : undefined,
+			returnedAt: isReturned && returnedAt ? new Date(returnedAt).toISOString() : null,
 			assignById: selectedEngineer?.id,
 			contact: contact ? contact.trim() : null,
 			assignRemarks: assignRemarks ? assignRemarks.trim() : null,
-			returnRemarks: returnRemarks ? returnRemarks.trim() : null,
+			returnRemarks: isReturned && returnRemarks ? returnRemarks.trim() : null,
 			isBackup,
 		};
 
@@ -213,18 +216,6 @@ export const EditAssetAssignmentDialog = ({
 						errors={getFieldErrors("assignedAt")}
 					/>
 
-					{assignment?.returnedAt && (
-						<InputText
-							label="Return Date"
-							id="editReturnedAt"
-							Icon={CalendarDays}
-							type="datetime-local"
-							value={returnedAt}
-							onChange={(e) => setReturnedAt(e.target.value)}
-							errors={getFieldErrors("returnedAt")}
-						/>
-					)}
-
 					<InputText
 						label="Contact"
 						id="editContact"
@@ -243,15 +234,45 @@ export const EditAssetAssignmentDialog = ({
 						errors={getFieldErrors("assignRemarks")}
 					/>
 
-					{assignment?.returnedAt && (
-						<InputText
-							label="Return Remarks"
-							id="editReturnRemarks"
-							Icon={MessageSquare}
-							value={returnRemarks}
-							onChange={(e) => setReturnRemarks(e.target.value)}
-							errors={getFieldErrors("returnRemarks")}
+					<div className="flex items-center gap-2 pt-2 border-t border-slate-100">
+						<Switch
+							id="editIsReturned"
+							onCheckedChange={(checked) => {
+								setIsReturned(checked);
+								if (checked && !returnedAt) {
+									setReturnedAt(getLocalDatetime());
+								} else if (!checked) {
+									setReturnedAt("");
+									setReturnRemarks("");
+								}
+							}}
+							checked={isReturned}
 						/>
+						<Label htmlFor="editIsReturned" className="flex items-center gap-1 text-sm font-medium">
+							Is Asset Returned?
+						</Label>
+					</div>
+
+					{isReturned && (
+						<>
+							<InputText
+								label="Return Date"
+								id="editReturnedAt"
+								Icon={CalendarDays}
+								type="datetime-local"
+								value={returnedAt}
+								onChange={(e) => setReturnedAt(e.target.value)}
+								errors={getFieldErrors("returnedAt")}
+							/>
+							<InputText
+								label="Return Remarks"
+								id="editReturnRemarks"
+								Icon={MessageSquare}
+								value={returnRemarks}
+								onChange={(e) => setReturnRemarks(e.target.value)}
+								errors={getFieldErrors("returnRemarks")}
+							/>
+						</>
 					)}
 				</div>
 
