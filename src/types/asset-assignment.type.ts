@@ -73,6 +73,7 @@ export interface IAssetAssignmentRepository {
         id: number | string,
         payload: IUpdateAssetAssignmentPayload,
     ) => Promise<IDetailAssetAssignment>;
+    deleteAssignment: (id: number | string) => Promise<void>;
     returnAssignment: (
         id: number | string,
         payload: IReturnAssetAssignmentPayload,

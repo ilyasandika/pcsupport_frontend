@@ -26,6 +26,9 @@ const assetAssignmentApi: IAssetAssignmentRepository = {
 	const res = await api.patch(`/asset-assignments/${id}`, payload);
 	return res.data;
     },
+    deleteAssignment: async (id: number | string): Promise<void> => {
+	await api.delete(`/asset-assignments/${id}`);
+    },
     returnAssignment: async (
 	id: number | string,
 	payload: IReturnAssetAssignmentPayload,

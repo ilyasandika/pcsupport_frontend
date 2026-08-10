@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { UserPlus, Undo2, Clock, FilePlusCorner, FileSearchCorner, FileCog, Search, Pencil } from "lucide-react";
+import { UserPlus, Undo2, Clock, FilePlusCorner, FileSearchCorner, FileCog, Search, Pencil, Trash2 } from "lucide-react";
 import { TimelineWrap } from "@/components/timeline-wrap.tsx";
 import { fmtDate, monthsDaysBetween } from "@/helper/helper.tsx";
 import type { IDetailAssetAssignment } from "@/types/asset-assignment.type.ts";
@@ -24,6 +24,10 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { GeneratePdfDialog } from "@/features/user/components/generate-pdf-dialog.tsx";
 import { AssetStatus, type IDetailAsset } from "@/types/asset.type.ts";
+import { AlertDialogContainer } from "@/components/alert-dialog-container.tsx";
+import { useNotificationDialog } from "@/context/NotificationDialogContext.tsx";
+import { useMutation } from "@tanstack/react-query";
+import type { IErrorResponse } from "@/types/api.type.ts";
 
 
 interface AssetAssignmentTimelineEmployeeProps {
@@ -40,9 +44,37 @@ export const EmployeeTimelineByAsset = ({
 	maxHeight = "420px",
 }: AssetAssignmentTimelineEmployeeProps) => {
 	const navigate = useNavigate();
+	const { showNotification } = useNotificationDialog();
 	const [assignOpen, setAssignOpen] = useState(false);
 	const [returnTarget, setReturnTarget] = useState<{ id: number; employeeName?: string } | null>(null);
 	const [editTarget, setEditTarget] = useState<IDetailAssetAssignment | null>(null);
+	const [deleteTarget, setDeleteTarget] = useState<IDetailAssetAssignment | null>(null);
+
+	const deleteMutation = useMutation({
+		mutationFn: (id: number) => AssetAssignmentRepository.deleteAssignment(id),
+		onSuccess: () => {
+			setDeleteTarget(null);
+			showNotification({
+				variant: "success",
+				title: "Assignment Deleted",
+				description: "Assignment record has been deleted successfully.",
+				onClose: () => {
+					if (onChanged) {
+						onChanged();
+					} else {
+						window.location.reload();
+					}
+				},
+			});
+		},
+		onError: (err: IErrorResponse) => {
+			showNotification({
+				variant: "error",
+				title: "Failed to delete assignment",
+				description: err.message || "An error occurred while deleting assignment.",
+			});
+		},
+	});
 
 	const [generateTarget, setGenerateTarget] = useState<IDetailAssetAssignment>({} as IDetailAssetAssignment);
 	const [type, setType] = useState<'assign' | 'return'>('assign');
@@ -266,6 +298,17 @@ export const EmployeeTimelineByAsset = ({
 														</TooltipContent>
 													</Tooltip>
 
+													<Tooltip>
+														<TooltipTrigger>
+															<Button variant="outline" size="sm" className="text-red-500 hover:text-red-600 hover:bg-red-50" onClick={() => setDeleteTarget(u)}>
+																<Trash2 className="size-4" />
+															</Button>
+														</TooltipTrigger>
+														<TooltipContent>
+															Delete Assignment
+														</TooltipContent>
+													</Tooltip>
+
 													{isCurrent && (
 														<Tooltip>
 															<TooltipTrigger>
@@ -321,6 +364,15 @@ export const EmployeeTimelineByAsset = ({
 						window.location.reload();
 					}
 				}}
+			/>
+
+			<AlertDialogContainer
+				open={!!deleteTarget}
+				setOpen={(open) => !open && setDeleteTarget(null)}
+				title="Delete Assignment"
+				description="Are you sure you want to delete this assignment record? This action cannot be undone."
+				variant="danger"
+				onContinue={() => deleteTarget && deleteMutation.mutate(deleteTarget.id)}
 			/>
 
 			<ReturnAssetDialog
