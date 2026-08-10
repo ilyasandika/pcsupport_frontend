@@ -1,7 +1,8 @@
 import type {
     IDetailAssetAssignment,
     IAssetAssignmentRepository,
-    IReturnAssetAssignmentPayload, ICreateAssetAssignmentPayload, IGenerateAssetAssignmentPayload
+    IReturnAssetAssignmentPayload, ICreateAssetAssignmentPayload, IGenerateAssetAssignmentPayload,
+    IUpdateAssetAssignmentPayload
 } from "@/types/asset-assignment.type.ts";
 import api from "@/data/api/interceptors.ts";
 
@@ -16,6 +17,13 @@ const assetAssignmentApi: IAssetAssignmentRepository = {
     },
     create: async (payload: ICreateAssetAssignmentPayload): Promise<IDetailAssetAssignment> => {
 	const res = await api.post('/asset-assignments', payload);
+	return res.data;
+    },
+    update: async (
+	id: number | string,
+	payload: IUpdateAssetAssignmentPayload,
+    ): Promise<IDetailAssetAssignment> => {
+	const res = await api.patch(`/asset-assignments/${id}`, payload);
 	return res.data;
     },
     returnAssignment: async (

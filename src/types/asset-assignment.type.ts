@@ -19,7 +19,10 @@ export interface IDetailAssetAssignment {
     assignBy: IUser;
     assignFilePath?: string;
     returnFilePath?: string;
+    assignRemarks?: string;
+    returnRemarks?: string;
     remarks?: string;
+    contact?: string;
     createdAt: string;
 }
 
@@ -39,6 +42,20 @@ export interface ICreateAssetAssignmentPayload {
     isLegacyData?: boolean;
 }
 
+export interface IUpdateAssetAssignmentPayload {
+    picEmployeeNik?: string;
+    userNonEmployeeName?: string | null;
+    assignedAt?: string;
+    returnedAt?: string;
+    assignById?: number;
+    contact?: string | null;
+    assignRemarks?: string | null;
+    returnRemarks?: string | null;
+    remarks?: string | null;
+    isBackup?: boolean;
+    isUnderMaintenance?: boolean;
+}
+
 export interface IReturnAssetAssignmentPayload {
     returnedAt: string;
     remarks?: string;
@@ -52,6 +69,10 @@ export interface IAssetAssignmentRepository {
     getAssetAssignmentsByAssetId: (assetId: number) => Promise<IDetailAssetAssignment[]>;
     getAssetAssignmentsByEmployeeId: (employeeId: number) => Promise<IDetailAssetAssignment[]>;
     create: (payload: ICreateAssetAssignmentPayload) => Promise<IDetailAssetAssignment>;
+    update: (
+        id: number | string,
+        payload: IUpdateAssetAssignmentPayload,
+    ) => Promise<IDetailAssetAssignment>;
     returnAssignment: (
         id: number | string,
         payload: IReturnAssetAssignmentPayload,
