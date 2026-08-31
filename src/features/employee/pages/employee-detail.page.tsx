@@ -11,10 +11,20 @@ import {AssetAssignmentTimelineAsset} from "../../asset-assignment/components/as
 import {DetailCard} from "@/components/detail-card.tsx";
 import {DetailCardItem} from "@/components/detail-card.tsx";
 import {TicketTimeline} from "../../ticket/components/ticket-timeline.tsx";
+import {getEmployeeStatusStyles} from "@/helper/style-helper.tsx";
 
 export const EmployeeDetailPage = () => {
     const [tab, setTab] = useState<'assets' | 'tickets'>('assets');
     const employee = useLoaderData<IDetailEmployee>()
+
+    const getStatusLabel = (status: string | null | undefined) => {
+        if (status === "ON_BA") return "ON BA";
+        if (status === "OFF_BA") return "OFF BA";
+        if (status) return String(status).replace("_", " ");
+        return "Unknown";
+    };
+
+    const statusStyle = getEmployeeStatusStyles(employee.status);
 
     return (
 	<div className="w-full space-y-6">
@@ -27,11 +37,6 @@ export const EmployeeDetailPage = () => {
 		    <div>
 			<h1 className="text-2xl font-bold text-ptba-text flex items-center gap-2">
 			    {employee.name}
-			    <span className={`px-2 py-0.5 text-xs font-semibold rounded uppercase ${
-				employee.contractType === 'organik' ? 'bg-blue-100 text-blue-800' : 'bg-orange-100 text-orange-800'
-			    }`}>
-                                {employee.contractType}
-                            </span>
 			</h1>
 			<p className="text-sm text-gray-500 font-medium">NIK: {employee.nik || '-'}</p>
 		    </div>
@@ -39,9 +44,8 @@ export const EmployeeDetailPage = () => {
 
 		<div className="flex flex-col items-end gap-1">
 		    <span className="text-xs font-semibold uppercase text-gray-400 tracking-wider">Status</span>
-		    <span className={`text-sm font-semibold flex items-center gap-1.5 ${employee.status ? 'text-green-600' : 'text-red-500'}`}>
-                        <span className={`w-2 h-2 rounded-full ${employee.status ? 'bg-green-600' : 'bg-red-500'}`} />
-			{employee.status ? 'Aktif' : 'Non-Aktif'}
+		    <span className={`text-xs font-semibold px-2.5 py-1 rounded-md uppercase border ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}`}>
+			{getStatusLabel(employee.status)}
                     </span>
 		</div>
 	    </div>
