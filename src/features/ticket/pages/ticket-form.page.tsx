@@ -104,10 +104,6 @@ export const TicketFormPage = () => {
 		return slaPolicies.find(sla => sla.isDefault) || slaPolicies[0]
 	})
 
-
-	useEffect(() => {
-		console.log(selectedEmployee)
-	}, [selectedEmployee])
 	const [disabledAsset, setDisabledAsset] = useState<boolean>(false)
 
 	const [withAsset, setWithAsset] = useState<boolean>(!!initialValue?.asset)
