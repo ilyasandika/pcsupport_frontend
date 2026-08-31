@@ -36,6 +36,7 @@ export const UserFormPage = () => {
 	}))
 
 	const [fullName, setFullName] = useState("")
+	const [nik, setNik] = useState("")
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 	const [username, setUsername] = useState("")
@@ -47,6 +48,7 @@ export const UserFormPage = () => {
 	useEffect(() => {
 		if (user) {
 			setFullName(user.fullName)
+			setNik(user.nik || "")
 			setEmail(user.email)
 			setUsername(user.username)
 			setRole(user.role)
@@ -78,6 +80,7 @@ export const UserFormPage = () => {
 		if (isUpdate) {
 			mutate({
 				fullName,
+				nik,
 				email,
 				username,
 				role,
@@ -86,6 +89,7 @@ export const UserFormPage = () => {
 		} else {
 			mutate({
 				fullName,
+				nik,
 				email,
 				username,
 				password,
@@ -109,7 +113,7 @@ export const UserFormPage = () => {
 				<Card>
 					<CardContent className="flex flex-col gap-4">
 						<SeparatorWithLabel label="Personal Information" />
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+						<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 							<InputText
 								label="Full Name"
 								id="fullName"
@@ -117,6 +121,14 @@ export const UserFormPage = () => {
 								value={fullName}
 								onChange={(e) => setFullName(e.target.value)}
 								errors={getFieldErrors("fullName")}
+							/>
+							<InputText
+								label="NIK"
+								id="nik"
+								Icon={Contact}
+								value={nik}
+								onChange={(e) => setNik(e.target.value)}
+								errors={getFieldErrors("nik")}
 							/>
 							<InputText
 								label="Email"
