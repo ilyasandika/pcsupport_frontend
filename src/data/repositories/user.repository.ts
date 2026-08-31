@@ -1,4 +1,4 @@
-import type { IDetailUser, IUserRepository, ICreateUserDTO, IUpdateUserDTO } from "@/types/user.type.ts";
+import type { IDetailUser, IUserRepository, ICreateUserDTO, IUpdateUserDTO, ISyncUserTagsDTO } from "@/types/user.type.ts";
 import api from "../api/interceptors.ts";
 
 const userApi: IUserRepository = {
@@ -25,6 +25,33 @@ const userApi: IUserRepository = {
 	updateUser: async (id: number, data: IUpdateUserDTO): Promise<void> => {
 		const res = await api.patch(`users/${id}`, data)
 		return res.data
+	},
+	toggleUserStatus: async (id: number): Promise<void> => {
+		try {
+			const res = await api.patch(`users/${id}/status`);
+			return res.data;
+		} catch (error) {
+			try {
+				const res = await api.patch(`users/${id}/toggle-status`);
+				return res.data;
+			} catch {
+				const currentUser = await userApi.getUserById(id);
+				const res = await api.patch(`users/${id}`, { active: !currentUser.active });
+				return res.data;
+			}
+		}
+	},
+	activateUser: async (id: number): Promise<void> => {
+		const res = await api.patch(`users/${id}/activate`);
+		return res.data;
+	},
+	deactivateUser: async (id: number): Promise<void> => {
+		const res = await api.patch(`users/${id}/deactivate`);
+		return res.data;
+	},
+	setActiveStatus: async (id: number, active: boolean): Promise<void> => {
+		const res = await api.patch(`users/${id}/status`, { active });
+		return res.data;
 	},
 	deleteUser: async (id: number): Promise<void> => {
 		const res = await api.delete(`users/${id}`)
@@ -68,6 +95,10 @@ const userApi: IUserRepository = {
 	},
 	deleteSignature: async (id: number): Promise<void> => {
 		const res = await api.delete(`users/${id}/signature`);
+		return res.data;
+	},
+	syncUserTags: async (id: number, dto?: ISyncUserTagsDTO): Promise<IDetailUser> => {
+		const res = await api.post(`users/${id}/sync-tags`, dto);
 		return res.data;
 	},
 }
