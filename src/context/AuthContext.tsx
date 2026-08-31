@@ -10,6 +10,7 @@ interface AuthContextType {
     isAdmin: () => boolean;
     isHelpdesk: () => boolean;
     isEngineer: () => boolean;
+    isSupervisor: () => boolean;
     login: (username: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
 }
@@ -29,7 +30,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	try {
 	    setIsLoading(true);
 	    const res = await api.get('/auth/me');
-	    setUser(res.data);
+	    setUser(res?.data || res);
 	} catch (err) {
 	    setUser(null);
 	} finally {
@@ -57,17 +58,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	return user?.role === 'engineer';
     }
 
+    const isSupervisor = () => {
+	return user?.role === 'supervisor';
+    }
+
     const logout = async () => {
 	AuthRepository.logout();
 	setUser(null);
     };
 
-    if (isLoading) {
-	return;
-    }
-
     return (
-	<AuthContext.Provider value={{ user, isLoading, login, logout, isAdmin, isHelpdesk, isEngineer}}>
+	<AuthContext.Provider value={{ user, isLoading, login, logout, isAdmin, isHelpdesk, isEngineer, isSupervisor}}>
 	    {children}
 	</AuthContext.Provider>
     );
