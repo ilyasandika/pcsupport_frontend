@@ -28,4 +28,6 @@ export interface ITemplateRepository {
     getById: (id: number | string) => Promise<ITemplate>;
     upload: (payload: IUploadTemplatePayload) => Promise<ITemplate>;
     remove: (id: number | string) => Promise<void>;
+    downloadDocument: (id: number | string, fileName?: string) => Promise<void>;
+    getDocumentBlob: (id: number | string) => Promise<Blob>;
 }

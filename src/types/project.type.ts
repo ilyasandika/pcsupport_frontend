@@ -1,9 +1,9 @@
 import type {IVendor} from "@/types/vendor.type.ts";
 
 export interface IProject {
-    id: number;
+    id?: number;
     name: string;
-    description: string;
+    description?: string;
     vendorId: number;
     vendor?: IVendor;
 }

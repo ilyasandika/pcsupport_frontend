@@ -9,7 +9,11 @@ export interface IDetailUser {
     nik?: string;
     role: string;
     active: boolean;
+    tags?: string[];
+    review?: string;
+    tagsUpdatedAt?: string;
     signaturePath?: string;
+    isUserHasTicket?: boolean;
     tickets?: ITicketForAsset[]
     workLocation: IWorkLocation
     createdAt: string;
@@ -18,10 +22,17 @@ export interface IDetailUser {
 
 export type IUser = Pick<IDetailUser, 'id' | 'username' | 'fullName' | 'role' | 'nik' | 'workLocation'>;
 
+export interface ISyncUserTagsDTO {
+    period?: string; // Format: "YYYY-MM"
+    year?: number;
+    month?: number;
+}
+
 export interface ICreateUserDTO {
     username: string;
     fullName: string;
     email: string;
+    nik?: string;
     password: string;
     role: string;
     workLocationId: number;
@@ -31,6 +42,7 @@ export interface IUpdateUserDTO {
     username: string;
     fullName: string;
     email: string;
+    nik?: string;
     role: string;
     workLocationId: number;
 }
@@ -42,9 +54,14 @@ export interface IUserRepository {
     getSupervisors: () => Promise<IDetailUser[]>
     createUser: (data: ICreateUserDTO) => Promise<void>
     updateUser: (id: number, data: IUpdateUserDTO) => Promise<void>
+    toggleUserStatus: (id: number) => Promise<void>
+    activateUser: (id: number) => Promise<void>
+    deactivateUser: (id: number) => Promise<void>
+    setActiveStatus: (id: number, active: boolean) => Promise<void>
     deleteUser: (id: number) => Promise<void>
     changePassword: (id: number, oldPassword: string, newPassword: string) => Promise<void>
     uploadSignature: (id: number, file: File) => Promise<void>
     viewSignature: (id: number) => Promise<void>
     deleteSignature: (id: number) => Promise<void>
+    syncUserTags: (id: number, dto?: ISyncUserTagsDTO) => Promise<IDetailUser>
 }

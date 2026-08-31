@@ -19,6 +19,8 @@ export interface IDetailAssetAssignment {
     assignBy: IUser;
     assignFilePath?: string;
     returnFilePath?: string;
+    assignUserSignaturePath?: string | null;
+    returnUserSignaturePath?: string | null;
     assignRemarks?: string;
     returnRemarks?: string;
     remarks?: string;
@@ -92,4 +94,13 @@ export interface IAssetAssignmentRepository {
         id: number | string,
         type: 'assign' | 'return',
     ) => Promise<void>;
+    uploadUserSignature: (
+        id: number | string,
+        file: File,
+        type: 'assign' | 'return',
+    ) => Promise<void>;
+    getUserSignature: (
+        id: number | string,
+        type: 'assign' | 'return',
+    ) => Promise<string | null>;
 }

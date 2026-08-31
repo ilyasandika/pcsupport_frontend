@@ -12,10 +12,12 @@ export interface ISlaPolicy {
 
 export interface ISlaPolicyPayload {
     name: string;
-    description: string;
+    description?: string;
+    priority?: "low" | "normal" | "medium" | "high";
     responseTimeSeconds: number;
     resolutionTimeSeconds: number;
     isBusinessHourOnly: boolean;
+    isDefault?: boolean;
 }
 
 export interface ISlaPolicyRepository {

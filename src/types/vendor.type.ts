@@ -1,10 +1,19 @@
+export interface IVendorContact {
+    type: string;
+    value: string;
+}
+
 export interface IVendor {
+    id: number;
     name: string;
-    description?: string;
+    contacts?: IVendorContact[];
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export interface IVendorPayload {
     name: string;
+    contacts?: IVendorContact[];
 }
 
 export interface IVendorRepository {

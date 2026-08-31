@@ -56,6 +56,7 @@ export interface ITicketFilters {
   asset?: string;
   assetTag?: string;
   assetSn?: string;
+  category?: string | string[];
 
   employee?: string;
   employeeName?: string;
@@ -71,6 +72,8 @@ export interface ITicketFilters {
   startAt?: string;
   solvedAt?: string;
   solution?: string;
+  hasBackupAsset?: boolean;
+  isNeedBackup?: boolean;
   page?: number;
   limit?: number;
 }
@@ -103,6 +106,9 @@ export interface ITicket {
   slaPolicy: ISlaPolicy
   location: IWorkLocation
   filePath?: string;
+  userSignaturePath?: string;
+  approvedBy?: IUser;
+  isAssetAssignment?: boolean;
 }
 
 
@@ -137,9 +143,10 @@ export interface IUpdateTicketPayload extends Partial<ICreateTicketPayload> {
 
 
 export type IPrintTicketPayload = {
-  // engineerId: number;
-  supervisorId: number;
-  // date: string;
+  phoneNumber?: string;
+  eSignEngineer?: boolean;
+  eSignSupervisor?: boolean;
+  eSignUser?: boolean;
 }
 
 export interface ITicketRepository {
@@ -156,6 +163,10 @@ export interface ITicketRepository {
   updateTicket: (id: number, ticket: IUpdateTicketPayload) => any
   getSolvedTicketPdf: (id: number) => void
   uploadTicket: (id: number, file: File) => Promise<void>
+  uploadUserSignature: (id: number, file: File) => Promise<void>
+  getUserSignature: (id: number) => Promise<string | null>
+  deleteUploadedPdf: (id: number) => Promise<void>
+  approveTicket: (id: number, supervisorId: number) => Promise<void>
 
   hardRemoveTicket: (id: number) => any
 }
