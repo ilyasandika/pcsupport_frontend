@@ -3,6 +3,8 @@ import {
 	type ColumnFiltersState,
 	createColumnHelper,
 	getCoreRowModel,
+	getFilteredRowModel,
+	getPaginationRowModel,
 	useReactTable
 } from "@tanstack/react-table";
 import {
@@ -24,6 +26,7 @@ import {
 } from "../../helper/helper.tsx";
 import { TicketRepository } from "@/data/repositories/ticket.repository.ts";
 import { WorkLocationRepository } from "@/data/repositories/work-location.repository.ts";
+import { AssetCategoryRepository } from "@/data/repositories/asset-category.repository.ts";
 import { CloseTicketDialog } from "@/features/ticket/components/close-ticket-dialog.tsx";
 import { useAuth } from "@/context/AuthContext.tsx";
 import { useNotificationDialog } from "@/context/NotificationDialogContext.tsx";
@@ -41,7 +44,7 @@ interface TicketTableProps {
 	isLoading?: boolean
 }
 
-export const TicketTable = ({ locations: initialLocations, isLoading = false }: TicketTableProps) => {
+export const TicketTable = ({ data: initialData, locations: initialLocations, isLoading = false }: TicketTableProps) => {
 
 	const [selectedTicket, setSelectedTicket] = useState<ITicket>({} as ITicket);
 	const { showNotification } = useNotificationDialog()
@@ -52,7 +55,29 @@ export const TicketTable = ({ locations: initialLocations, isLoading = false }: 
 	const [_a, setFile] = useState<File | null>(null)
 	const fileRef = useRef<File | null>(null);
 
-	const { isEngineer, isAdmin, isHelpdesk, user } = useAuth()
+	const { isEngineer, isAdmin, isHelpdesk, isSupervisor, user } = useAuth()
+
+	const approveTicketMutation = useMutation({
+		mutationFn: (ticketId: number) => {
+			if (!user) throw new Error("User not authenticated");
+			return TicketRepository.approveTicket(ticketId, user.sub);
+		},
+		onSuccess: () => {
+			showNotification({
+				variant: "success",
+				title: "Ticket Approved",
+				description: "Ticket has been approved successfully",
+				onClose: () => window.location.reload(),
+			});
+		},
+		onError: (error: any) => {
+			showNotification({
+				variant: "error",
+				title: "Failed to approve ticket",
+				description: error.message || "Failed to approve ticket",
+			});
+		},
+	});
 
 	const deleteTicketMutation = useMutation({
 		mutationFn: (id: number) => TicketRepository.hardRemoveTicket(id),
@@ -73,6 +98,25 @@ export const TicketTable = ({ locations: initialLocations, isLoading = false }: 
 			})
 		}
 	})
+
+	const deleteTicketPdfMutation = useMutation({
+		mutationFn: (ticketId: number) => TicketRepository.deleteUploadedPdf(ticketId),
+		onSuccess: () => {
+			showNotification({
+				variant: "success",
+				title: "Document Deleted",
+				description: "Uploaded ticket PDF document has been deleted successfully",
+				onClose: () => window.location.reload(),
+			});
+		},
+		onError: (error: any) => {
+			showNotification({
+				variant: "error",
+				title: "Failed to delete document",
+				description: error.message || "Failed to delete uploaded document",
+			});
+		},
+	});
 
 	const uploadTicket = async (id: number, file: File | null) => {
 		if (!file) {
@@ -111,6 +155,15 @@ export const TicketTable = ({ locations: initialLocations, isLoading = false }: 
 		return (locations || initialLocations)?.map((loc) => ({ label: loc.name, value: loc.id })) || [];
 	}, [locations, initialLocations]);
 
+	const { data: assetCategories } = useQuery({
+		queryKey: ['asset-categories'],
+		queryFn: () => AssetCategoryRepository.getAll(),
+	});
+
+	const categoryOptions = useMemo(() => {
+		return assetCategories?.map((cat) => ({ label: cat.name, value: cat.name })) || [];
+	}, [assetCategories]);
+
 	const columnHelper = createColumnHelper<ITicket>();
 	const columns: ColumnDef<ITicket, any>[] = useMemo(
 		() => [
@@ -125,13 +178,26 @@ export const TicketTable = ({ locations: initialLocations, isLoading = false }: 
 				cell: (info) => {
 					const value = info.getValue()
 					const ticket = info.row.original
+					const docLabel = ticket.isAssetAssignment ? 'BAST' : 'WO';
+
 					const currentStyle = getStatusBadgeStyle(value) || ''
+					const isNeedBackup = Boolean((ticket as any).backUpAsset || (ticket as any).isNeedBackup);
 					return (
-						<div className="flex flex-col gap-2 w-full">
+						<div className="flex flex-col gap-1 w-full">
 							<Badge className={`${currentStyle} capitalize`} >
 								{value}
 							</Badge>
-							{(!ticket.filePath && isTicketSolved(ticket.status)) && <Badge variant="destructive">Upload WO</Badge>}
+							{isNeedBackup && (
+								<Badge variant="outline" className="text-[10px] bg-amber-50 text-amber-700 border-amber-300">
+									Need Backup
+								</Badge>
+							)}
+							{(!ticket.filePath && isTicketSolved(ticket.status)) && <Badge variant="destructive">Upload {docLabel}</Badge>}
+							{(!ticket.approvedBy && isTicketSolved(ticket.status)) && (
+								<Badge variant="outline" className="bg-orange-50 text-orange-700">
+									Need Approval
+								</Badge>
+							)}
 						</div>
 					)
 				}
@@ -167,8 +233,21 @@ export const TicketTable = ({ locations: initialLocations, isLoading = false }: 
 						}
 						return false;
 					};
+					const isNeedBackup = Boolean((ticket as any).backUpAsset || (ticket as any).isNeedBackup);
+					const docLabel = ticket.isAssetAssignment ? 'BAST' : 'WO';
+
 					return (
 						<ActionButtons
+							approve={{
+								tooltip: ticket.approvedBy ? `Approved by ${ticket.approvedBy.fullName || 'Supervisor'}` : 'Approve Ticket',
+								disabled: !isSupervisor() || Boolean(ticket.approvedBy),
+								alert: {
+									title: "Approve Ticket",
+									description: `Are you sure you want to approve Ticket ${ticket.fullNumber}?`,
+									variant: "success",
+									onContinue: () => approveTicketMutation.mutate(ticket.id),
+								}
+							}}
 							detail={{
 								to: `${ticket.id}`,
 								tooltip: 'Detail Ticket',
@@ -178,13 +257,18 @@ export const TicketTable = ({ locations: initialLocations, isLoading = false }: 
 								tooltip: 'Edit Ticket',
 								disabled: !enableEdit()
 							}}
+							externalTicket={{
+								to: `/external-tickets/create?ticketId=${ticket.id}&ticketFullNumber=${encodeURIComponent(ticket.fullNumber || '')}`,
+								tooltip: 'Create External Ticket (Escalate to Vendor)',
+								disabled: !isNeedBackup,
+							}}
 							generateDocument={{
 								onClick: () => {
 									setSelectedTicket(ticket)
 									setOpenGeneratePdfDialog(true)
 								},
 								tooltip: 'Generate Ticket',
-								disabled: !disabledOnSolved
+								disabled: Boolean(!disabledOnSolved || ticket.filePath)
 							}}
 							remove={{
 								tooltip: 'Remove Ticket',
@@ -205,26 +289,36 @@ export const TicketTable = ({ locations: initialLocations, isLoading = false }: 
 								disabled: disabledOnSolved || disabledOnOpen || disabledOnCancelled
 							}}
 							uploadDocument={{
-								tooltip: 'Upload Ticket',
+								tooltip: `Upload ${docLabel}`,
 								alert: {
-									title: "Upload Ticket",
+									title: `Upload ${docLabel}`,
 									description: "Upload PDF Max: 1 MB",
 									content: <UploadFile
-										label="Ticket PDF"
-										description="Select a PDF File to upload."
+										label={`${docLabel} PDF`}
+										description={`Select a ${docLabel} PDF File to upload.`}
 										setFile={setFile}
 										fileRef={fileRef}
 										acceptedFileTypes=".pdf"
 									/>,
 									onContinue: () => uploadTicket(ticket.id, fileRef.current)
 								},
-								disabled: !disabledOnSolved
+								disabled: Boolean(!disabledOnSolved || ticket.filePath)
 							}}
 							seeDocument={{
 								onClick: () => {
 									TicketRepository.getSolvedTicketPdf(ticket.id)
 								},
-								tooltip: 'See Ticket',
+								tooltip: `See ${docLabel}`,
+								disabled: !ticket.filePath || !disabledOnSolved
+							}}
+							deleteDocument={{
+								tooltip: `Delete Uploaded ${docLabel}`,
+								alert: {
+									title: `Delete Uploaded ${docLabel}`,
+									description: `Are you sure you want to delete the uploaded ticket ${docLabel} PDF document?`,
+									variant: "danger",
+									onContinue: () => deleteTicketPdfMutation.mutate(ticket.id),
+								},
 								disabled: !ticket.filePath || !disabledOnSolved
 							}}
 						/>
@@ -253,12 +347,22 @@ export const TicketTable = ({ locations: initialLocations, isLoading = false }: 
 				},
 			}),
 
-			columnHelper.accessor((row) => row.employee ? `${row.employee.name} ${row.employee.nik}` : (row.userNonEmployeeSnapshot || ''), {
+			columnHelper.accessor((row) => row.asset?.category?.name, {
+				id: "category",
+				header: "Category",
+				meta: {
+					filterVariant: 'multi-select',
+					filterOptions: categoryOptions,
+				},
+				cell: (info) => info.getValue() || "-"
+			}),
+
+			columnHelper.accessor('employee', {
 				id: 'employee',
 				header: 'User',
 				size: 300,
 				cell: (info) => {
-					const userNonEmployee = info.row.original.snapshot?.userNonEmployee || info.row.original.userNonEmployeeSnapshot;
+					const userNonEmployee = info.row.original.snapshot?.userNonEmployee;
 					const employee = info.row.original.employee;
 
 					if (!employee && !userNonEmployee) return <span>-</span>;
@@ -368,8 +472,14 @@ export const TicketTable = ({ locations: initialLocations, isLoading = false }: 
 				header: 'Created By',
 				cell: (info) => info.getValue() || '-'
 			}),
+
+			columnHelper.accessor(row => row.approvedBy?.fullName, {
+				id: "approvedByName",
+				header: 'Approved By',
+				cell: (info) => info.getValue() || '-'
+			}),
 		],
-		[locationOptions]
+		[locationOptions, categoryOptions]
 	);
 
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -385,7 +495,9 @@ export const TicketTable = ({ locations: initialLocations, isLoading = false }: 
 		localStorage.setItem('table-column-sizes', JSON.stringify(columnSizing));
 	}, [columnSizing]);
 
-	const { data } = useQuery({
+	const isManual = !initialData;
+
+	const { data: queryResult } = useQuery({
 		queryKey: ['tickets', pagination, debouncedFilters],
 		queryFn: async () =>
 			await TicketRepository.getAll({
@@ -393,26 +505,33 @@ export const TicketTable = ({ locations: initialLocations, isLoading = false }: 
 				limit: pagination.pageSize,
 				...columnFiltersToParams(debouncedFilters),
 			}),
+		enabled: isManual,
 		placeholderData: (prev) => prev,
 	});
 
+	const tableData = useMemo(() => {
+		return initialData ?? queryResult?.data ?? [];
+	}, [initialData, queryResult?.data]);
+
 	const table = useReactTable<ITicket>({
-		data: data?.data ?? [],
+		data: tableData,
 		columns,
 		state: {
 			columnFilters,
 			pagination,
 			columnSizing
 		},
-		pageCount: data?.meta?.totalPages ?? -1,
+		pageCount: isManual ? (queryResult?.meta?.totalPages ?? -1) : Math.ceil(tableData.length / pagination.pageSize),
 		renderFallbackValue: '-',
 		onColumnFiltersChange: setColumnFilters,
 		onPaginationChange: setPagination,
 		getCoreRowModel: getCoreRowModel(),
+		getFilteredRowModel: !isManual ? getFilteredRowModel() : undefined,
+		getPaginationRowModel: !isManual ? getPaginationRowModel() : undefined,
 		columnResizeMode: 'onChange',
 		onColumnSizingChange: setColumnSizing,
-		manualPagination: true,
-		manualFiltering: true,
+		manualPagination: isManual,
+		manualFiltering: isManual,
 	});
 
 
