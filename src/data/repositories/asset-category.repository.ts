@@ -3,32 +3,52 @@ import type {IAssetCategory, ICreateAssetCategoryDto, IAssetCategoryRepository} 
 import api from "../api/interceptors.ts";
 
 
+let mockAssetCategories: IAssetCategory[] = [
+    { id: 1, name: 'Laptop & Notebook', description: 'Laptop and portable notebook computers assigned to staff' },
+    { id: 2, name: 'PC Desktop', description: 'Desktop computers, towers, and workstations' },
+    { id: 3, name: 'Printer & Scanner', description: 'Office printers, plotters, and document scanners' },
+    { id: 4, name: 'Network Equipment', description: 'Routers, switches, access points, and network hardware' },
+    { id: 5, name: 'Monitors & Displays', description: 'External monitors, dual-screen displays, and TVs' },
+];
+
 const assetCategoryLocal: IAssetCategoryRepository = {
     getAll: async (): Promise<IAssetCategory[]> => {
 	await delay();
-	console.log('masukLocal')
-	return [] as IAssetCategory[];
+	return [...mockAssetCategories];
     },
     getById: async (id: number | string): Promise<IAssetCategory> => {
 	await delay();
-	console.log('masukLocal', id)
-	return {} as IAssetCategory;
+	const item = mockAssetCategories.find(c => String(c.id) === String(id));
+	if (!item) throw new Error("Category not found");
+	return { ...item };
     },
     create: async (payload: ICreateAssetCategoryDto): Promise<IAssetCategory> => {
 	await delay();
-	console.log('masukLocal', payload)
-	return {} as IAssetCategory;
+	const newCategory: IAssetCategory = {
+	    id: Date.now(),
+	    name: payload.name,
+	    description: payload.description || '',
+	};
+	mockAssetCategories.push(newCategory);
+	return newCategory;
     },
     update: async (id: number | string, payload: ICreateAssetCategoryDto): Promise<IAssetCategory> => {
 	await delay();
-	console.log('masukLocal', id, payload)
-	return {} as IAssetCategory;
+	const index = mockAssetCategories.findIndex(c => String(c.id) === String(id));
+	if (index === -1) throw new Error("Category not found");
+	mockAssetCategories[index] = {
+	    ...mockAssetCategories[index],
+	    name: payload.name,
+	    description: payload.description || '',
+	};
+	return mockAssetCategories[index];
     },
     remove: async (id: number | string) => {
 	await delay();
-	console.log('masukLocal', id)
+	mockAssetCategories = mockAssetCategories.filter(c => String(c.id) !== String(id));
     }
 }
+
 
 
 const assetCategoryApi: IAssetCategoryRepository = {
