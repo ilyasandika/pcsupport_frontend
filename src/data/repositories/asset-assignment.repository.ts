@@ -87,6 +87,43 @@ const assetAssignmentApi: IAssetAssignmentRepository = {
 	    console.error('Error fetching PDF:', error);
 	}
     },
+    uploadUserSignature: async (
+	id: number | string,
+	file: File,
+	type: 'assign' | 'return',
+    ) => {
+	const formData = new FormData();
+	formData.append('file', file);
+	const endpoint = type === 'assign'
+	    ? `/asset-assignments/${id}/user-signature/assign`
+	    : `/asset-assignments/${id}/user-signature/return`;
+	const res = await api.post(endpoint, formData, {
+	    headers: {
+		'Content-Type': 'multipart/form-data',
+	    },
+	});
+	return res.data;
+    },
+    getUserSignature: async (
+	id: number | string,
+	type: 'assign' | 'return',
+    ): Promise<string | null> => {
+	try {
+	    const endpoint = type === 'assign'
+		? `/asset-assignments/${id}/user-signature/assign`
+		: `/asset-assignments/${id}/user-signature/return`;
+	    const res = await api.get(endpoint, {
+		responseType: 'blob',
+	    });
+	    const blob = res instanceof Blob
+		? res
+		: new Blob([res.data], { type: (res.headers?.['content-type'] as string) || 'image/png' });
+	    return URL.createObjectURL(blob);
+	} catch (error) {
+	    console.error('Error fetching asset assignment user signature:', error);
+	    return null;
+	}
+    },
 };
 
 export const createAssetAssignmentRepository = () => {
