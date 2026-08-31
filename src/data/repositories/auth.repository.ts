@@ -21,7 +21,7 @@ const authApi: IAuthRepository = {
 	    username,
 	    password,
 	})
-	return res.data;
+	return res?.data || res;
     },
     logout: async () => {
 	return await api.post('/auth/logout')
