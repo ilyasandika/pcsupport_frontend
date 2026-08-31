@@ -16,6 +16,7 @@ import {
 	Building2,
 	ClockAlert, FilePlusCorner, Printer, SquarePen,
 	SquareUserRound,
+	UserCheck,
 	UserKey
 } from "lucide-react";
 import { DetailCard, DetailCardRow, DetailCardItem } from "@/components/detail-card.tsx";
@@ -32,11 +33,13 @@ import { GeneratePdfDialog } from "@/features/user/components/generate-pdf-dialo
 import { Button } from "@/components/ui/button.tsx";
 import { useAuth } from "@/context/AuthContext.tsx";
 import { BackButton } from "@/components/back-button";
+import { useResourceAccess } from "@/hooks/use-resource-access.ts";
 
 export const TicketDetailPage = () => {
 
 	const navigate = useNavigate()
-	const { isEngineer } = useAuth()
+	const { isSupervisor, user } = useAuth()
+	const { canAccess } = useResourceAccess()
 	const { showNotification } = useNotificationDialog()
 	const ticket = useLoaderData<ITicket>()
 	const slaStyle = getSlaStyleByDuration(ticket.slaPolicy.resolutionTimeSeconds)
@@ -57,6 +60,7 @@ export const TicketDetailPage = () => {
 
 
 	const [claimDialogOpen, setClaimDialogOpen] = useState<boolean>(false)
+	const [approveDialogOpen, setApproveDialogOpen] = useState<boolean>(false)
 
 	const claimTicketMutation = useMutation({
 		mutationFn: () => TicketRepository.claimTicket(ticket.id),
@@ -78,11 +82,46 @@ export const TicketDetailPage = () => {
 		}
 	})
 
+	const approveTicketMutation = useMutation({
+		mutationFn: () => {
+			if (!user) throw new Error("User not authenticated");
+			return TicketRepository.approveTicket(ticket.id, user.sub);
+		},
+		onSuccess: () => {
+			showNotification({
+				variant: "success",
+				title: "Ticket Approved",
+				description: "Ticket has been approved successfully",
+				onClose: () => window.location.reload(),
+			});
+		},
+		onError: (err: IErrorResponse) => {
+			showNotification({
+				variant: "error",
+				title: "Cannot approve ticket",
+				description: `Error: ${err.message}`,
+			});
+		},
+	})
+
 	return (
 		<div className="max-w-7xl mx-auto space-y-6">
 			<div className="flex items-center justify-between">
 				<BackButton />
 				<ButtonGroup aria-label="Button group" className="w-full justify-end">
+					{
+						isSupervisor() && (
+							<Button
+								variant={ticket.approvedBy ? "outline" : "default"}
+								className={ticket.approvedBy ? "" : "bg-emerald-600 hover:bg-emerald-700 text-white"}
+								disabled={Boolean(ticket.approvedBy) || approveTicketMutation.isPending}
+								onClick={() => setApproveDialogOpen(true)}
+							>
+								<UserCheck className="size-4 mr-1.5" />
+								{ticket.approvedBy ? `Approved by ${ticket.approvedBy.fullName || 'Supervisor'}` : "Approve Ticket"}
+							</Button>
+						)
+					}
 					{
 						isTicketSolved(ticket.status) &&
 
@@ -91,10 +130,12 @@ export const TicketDetailPage = () => {
 						</Button>
 					}
 					{
-						!isEngineer() &&
-						<Button variant="outline" onClick={() => navigate(`/tickets/${ticket.id}/update`)}>
-							<SquarePen /> Edit Ticket
-						</Button>}
+						canAccess({ resourceOwnerId: ticket.engineer?.id, bypassRoles: ['admin', 'helpdesk'] }) && (
+							<Button variant="outline" onClick={() => navigate(`/tickets/${ticket.id}/update`)}>
+								<SquarePen /> Edit Ticket
+							</Button>
+						)
+					}
 					{
 						!ticket.engineer &&
 						<Button variant="outline" onClick={() => setClaimDialogOpen(true)}>
@@ -284,6 +325,14 @@ export const TicketDetailPage = () => {
 					open={claimDialogOpen}
 					setOpen={setClaimDialogOpen}
 					onContinue={claimTicketMutation.mutate}
+				/>
+
+				<AlertDialogContainer title={"Approve Ticket"}
+					description={`Are you sure you want to approve Ticket ${ticket.fullNumber}?`}
+					open={approveDialogOpen}
+					setOpen={setApproveDialogOpen}
+					onContinue={approveTicketMutation.mutate}
+					variant="success"
 				/>
 
 				<GeneratePdfDialog open={openGeneratePdfDialog}
