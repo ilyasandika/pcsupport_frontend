@@ -1,15 +1,5 @@
 import { useRef, useState } from "react";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Upload } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
 import { UserRepository } from "@/data/repositories/user.repository.ts";
 import { useFormErrors } from "@/hooks/use-errors.tsx";
 import type { IErrorResponse } from "@/types/api.type.ts";
@@ -36,22 +26,12 @@ export const UploadSignatureDialog = ({
 	const { setErrors } = useFormErrors();
 	const fileRef = useRef<File | null>(null);
 	const [file, setFile] = useState<File | null>(null);
-	const [isUploading, setIsUploading] = useState(false);
 
-	const handleUpload = async () => {
-		if (!userId || !file) {
-			setErrors([
-				{
-					field: "file",
-					message: ["Please select a signature file"],
-				},
-			]);
-			return;
-		}
-
-		setIsUploading(true);
-		try {
-			await UserRepository.uploadSignature(userId, file);
+	const uploadMutation = useMutation({
+		mutationFn: async ({ userId, file }: { userId: number; file: File }) => {
+			return await UserRepository.uploadSignature(userId, file);
+		},
+		onSuccess: () => {
 			onOpenChange(false);
 			setFile(null);
 			fileRef.current = null;
@@ -67,49 +47,46 @@ export const UploadSignatureDialog = ({
 					}
 				},
 			});
-		} catch (error) {
-			setErrors((error as IErrorResponse).errors || [
+		},
+		onError: (error: IErrorResponse) => {
+			setErrors(
+				error?.errors || [
+					{
+						field: "file",
+						message: ["Failed to upload signature. Ensure file size is < 1MB and format is PNG/JPG."],
+					},
+				]
+			);
+			showNotification({
+				variant: "error",
+				title: "Signature upload failed",
+				description: error?.errors?.map((err) => err.message).join(", ") || "Failed to upload signature. Ensure file size is < 1MB and format is PNG/JPG.",
+				onClose: () => {
+					if (onSuccess) {
+						onSuccess();
+					} else {
+						window.location.reload();
+					}
+				},
+			});
+		},
+	});
+
+	const handleUpload = () => {
+		if (!userId || !file) {
+			setErrors([
 				{
 					field: "file",
-					message: ["Failed to upload signature. Ensure file size is < 1MB and format is PNG/JPG."],
+					message: ["Please select a signature file"],
 				},
 			]);
-		} finally {
-			setIsUploading(false);
+			return;
 		}
-	};
 
-	const handleCancel = () => {
-		setFile(null);
-		fileRef.current = null;
-		onOpenChange(false);
+		uploadMutation.mutate({ userId, file });
 	};
 
 	return (
-		// <Dialog open={open} onOpenChange={onOpenChange}>
-		// 	<DialogContent>
-		// 		<DialogHeader>
-		// 			<DialogTitle>Upload Signature</DialogTitle>
-		// 			<DialogDescription>
-		// 				{userName
-		// 					? `Upload signature image for ${userName}`
-		// 					: "Upload signature image for this user"}
-		// 			</DialogDescription>
-		// 		</DialogHeader>
-
-
-		// 		<DialogFooter>
-		// 			<Button variant="outline" onClick={handleCancel} disabled={isUploading}>
-		// 				Cancel
-		// 			</Button>
-		// 			<Button onClick={handleUpload} disabled={isUploading || !file}>
-		// 				<Upload className="size-4 mr-1.5" />
-		// 				{isUploading ? "Uploading..." : "Upload Signature"}
-		// 			</Button>
-		// 		</DialogFooter>
-		// 	</DialogContent>
-		// </Dialog>
-
 		<AlertDialogContainer
 			open={open}
 			setOpen={onOpenChange}
@@ -129,3 +106,4 @@ export const UploadSignatureDialog = ({
 		</AlertDialogContainer>
 	);
 };
+
