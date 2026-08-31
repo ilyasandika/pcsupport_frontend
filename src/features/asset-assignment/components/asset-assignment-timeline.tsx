@@ -199,9 +199,15 @@ export const EmployeeTimelineByAsset = ({
 														<Badge variant="outline" className={`text-[11px] font-normal ${u.assignFilePath ? 'bg-ptba-tertiary-light-green/30 text-ptba-tertiary-green' : 'bg-ptba-primary-yellow/30 text-ptba-secondary-orange'}`}>
 															{u.assignFilePath ? 'Done BAST Assign' : 'Pending BAST Assign'}
 														</Badge>
-														<Badge variant="outline" className={`text-[11px] font-normal ${u.assignFilePath ? 'bg-ptba-tertiary-light-green/30 text-ptba-tertiary-green' : 'bg-ptba-primary-yellow/30 text-ptba-secondary-orange'}`}>
-															{u.returnFilePath ? 'Done BAST Return' : 'Pending BAST Return'}
-														</Badge>
+														{u.returnFilePath ? (
+															<Badge variant="outline" className="text-[11px] font-normal bg-ptba-tertiary-light-green/30 text-ptba-tertiary-green">
+																Done BAST Return
+															</Badge>
+														) : u.returnedAt ? (
+															<Badge variant="outline" className="text-[11px] font-normal bg-ptba-primary-yellow/30 text-ptba-secondary-orange">
+																Pending BAST Return
+															</Badge>
+														) : null}
 													</div>
 													<ScrollBar orientation="horizontal" hidden />
 												</ScrollArea>
@@ -312,13 +318,21 @@ export const EmployeeTimelineByAsset = ({
 
 
 													<Tooltip>
-														<TooltipTrigger>
-															<Button variant="outline" size="sm" className="text-red-500 hover:text-red-600 hover:bg-red-50" onClick={() => setDeleteTarget(u)}>
-																<Trash2 className="size-4" />
-															</Button>
+														<TooltipTrigger asChild>
+															<span>
+																<Button
+																	variant="outline"
+																	size="sm"
+																	className="text-red-500 hover:text-red-600 hover:bg-red-50"
+																	onClick={() => setDeleteTarget(u)}
+																	disabled={!isCurrent}
+																>
+																	<Trash2 className="size-4" />
+																</Button>
+															</span>
 														</TooltipTrigger>
 														<TooltipContent>
-															Delete Assignment
+															{!isCurrent ? "Cannot delete returned assignment" : "Delete Assignment"}
 														</TooltipContent>
 													</Tooltip>
 
