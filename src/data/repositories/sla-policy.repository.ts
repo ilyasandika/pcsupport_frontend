@@ -2,31 +2,90 @@ import {delay} from "../../helper/helper.tsx";
 import type {ISlaPolicy, ISlaPolicyPayload, ISlaPolicyRepository} from "@/types/sla.type.ts";
 import api from "../api/interceptors.ts";
 
+let mockSlaPolicies: ISlaPolicy[] = [
+    {
+        id: 1,
+        name: "Standard SLA - Normal Priority",
+        description: "Standard SLA policy for regular tickets and IT requests.",
+        priority: "normal",
+        responseTimeSeconds: 3600, // 1 hour
+        resolutionTimeSeconds: 86400, // 24 hours
+        isBusinessHourOnly: true,
+        isDefault: true,
+    },
+    {
+        id: 2,
+        name: "High Priority SLA - Critical Support",
+        description: "Fast response and resolution SLA for critical IT issues.",
+        priority: "high",
+        responseTimeSeconds: 900, // 15 mins
+        resolutionTimeSeconds: 14400, // 4 hours
+        isBusinessHourOnly: false,
+        isDefault: false,
+    },
+    {
+        id: 3,
+        name: "Low Priority SLA - General Inquiry",
+        description: "Relaxed SLA for non-urgent tasks and general inquiries.",
+        priority: "low",
+        responseTimeSeconds: 7200, // 2 hours
+        resolutionTimeSeconds: 172800, // 48 hours
+        isBusinessHourOnly: true,
+        isDefault: false,
+    },
+];
 
 const slaPolicyLocal: ISlaPolicyRepository = {
     getAll: async (): Promise<ISlaPolicy[]> => {
 	await delay();
-	console.log('masukLocal')
-	return [] as ISlaPolicy[];
+	return [...mockSlaPolicies];
     },
     getById: async (id: number | string): Promise<ISlaPolicy> => {
 	await delay();
-	console.log('masukLocal', id)
-	return {} as ISlaPolicy;
+	const item = mockSlaPolicies.find(s => String(s.id) === String(id));
+	if (!item) throw new Error(`SLA Policy with id ${id} not found`);
+	return { ...item };
     },
     create: async (payload: ISlaPolicyPayload): Promise<ISlaPolicy> => {
 	await delay();
-	console.log('masukLocal', payload)
-	return {} as ISlaPolicy;
+	const newPolicy: ISlaPolicy = {
+	    id: Date.now(),
+	    name: payload.name,
+	    description: payload.description || '',
+	    priority: payload.priority || 'normal',
+	    responseTimeSeconds: Number(payload.responseTimeSeconds) || 0,
+	    resolutionTimeSeconds: Number(payload.resolutionTimeSeconds) || 0,
+	    isBusinessHourOnly: Boolean(payload.isBusinessHourOnly),
+	    isDefault: Boolean(payload.isDefault),
+	};
+	if (newPolicy.isDefault) {
+	    mockSlaPolicies.forEach(p => p.isDefault = false);
+	}
+	mockSlaPolicies.push(newPolicy);
+	return { ...newPolicy };
     },
     update: async (id: number | string, payload: ISlaPolicyPayload): Promise<ISlaPolicy> => {
 	await delay();
-	console.log('masukLocal', id, payload)
-	return {} as ISlaPolicy;
+	const index = mockSlaPolicies.findIndex(s => String(s.id) === String(id));
+	if (index === -1) throw new Error(`SLA Policy with id ${id} not found`);
+	if (payload.isDefault) {
+	    mockSlaPolicies.forEach(p => p.isDefault = false);
+	}
+	mockSlaPolicies[index] = {
+	    ...mockSlaPolicies[index],
+	    name: payload.name,
+	    description: payload.description || mockSlaPolicies[index].description,
+	    priority: payload.priority || mockSlaPolicies[index].priority,
+	    responseTimeSeconds: Number(payload.responseTimeSeconds),
+	    resolutionTimeSeconds: Number(payload.resolutionTimeSeconds),
+	    isBusinessHourOnly: Boolean(payload.isBusinessHourOnly),
+	    isDefault: payload.isDefault !== undefined ? Boolean(payload.isDefault) : mockSlaPolicies[index].isDefault,
+	};
+	return { ...mockSlaPolicies[index] };
     },
     remove: async (id: number | string) => {
 	await delay();
-	console.log('masukLocal', id)
+	mockSlaPolicies = mockSlaPolicies.filter(s => String(s.id) !== String(id));
     }
 }
 
