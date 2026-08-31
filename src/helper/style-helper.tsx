@@ -129,25 +129,25 @@ export const getStatusBadgeStyle = (status: TicketStatusType | string): string =
 
 export const getEmployeeStatusStyles = (val: string | undefined | null): IStyleHelper => {
 	if (val) {
-		const safeVal = val.toUpperCase();
-		if (safeVal.includes("ON")) {
+		const safeVal = String(val).toUpperCase();
+		if (safeVal === "ON_BA" || safeVal.includes("ON")) {
 			return {
-				bg: "bg-success",
-				text: "text-white",
-				border: "border-green-500"
+				bg: "bg-emerald-100",
+				text: "text-emerald-800",
+				border: "border-emerald-200"
 			};
 		}
-		if (safeVal.includes("OFF")) {
+		if (safeVal === "OFF_BA" || safeVal.includes("OFF")) {
 			return {
-				bg: "bg-ptba-gray",
-				text: "text-white",
-				border: "border-gray-500"
+				bg: "bg-slate-100",
+				text: "text-slate-700",
+				border: "border-slate-200"
 			};
 		}
 	}
 	return {
 		bg: "bg-zinc-100",
-		text: "text-zinc-500",
+		text: "text-zinc-600",
 		border: "border-zinc-300"
 	};
 };
