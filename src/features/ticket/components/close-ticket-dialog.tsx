@@ -45,6 +45,15 @@ export const CloseTicketDialog = ({ open, setOpen, ticket }: ITicketPopoverProps
 	]
 
 	const closeTicket = async () => {
+
+		if (!solution) {
+			setErrors([{
+				field: 'solution',
+				message: ['please submit solution']
+			}])
+			return
+		}
+
 		const ticketData: IUpdateTicketPayload = {
 			status: selectedStatus,
 			solution: solution,
