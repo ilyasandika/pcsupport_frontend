@@ -7,7 +7,7 @@ import {
 	UserRoundCog,
 	BriefcaseBusiness, Phone, ShieldAlert, MapPin, Calendar
 } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useLoaderData, useNavigate } from "react-router";
 import type { IEmployee } from "@/types/employee.type.ts";
 import type { IAsset } from "@/types/asset.type.ts";
@@ -37,6 +37,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useNotificationDialog } from "@/context/NotificationDialogContext.tsx";
 import { InputText } from "@/components/input-text.tsx";
 import { FieldInputWrapper } from "@/components/field-input-wrapper.tsx";
+import { useResourceAccess } from "@/hooks/use-resource-access.ts";
 
 interface ITicketFormLoader {
 	employees: IEmployee[],
@@ -50,6 +51,7 @@ export const TicketFormPage = () => {
 	const { employees, assets, engineers, slaPolicies, ticket }: ITicketFormLoader = useLoaderData()
 	const { setErrors, getFieldErrors, generalErrors } = useFormErrors()
 	const { isAdmin, isHelpdesk, isEngineer, user } = useAuth()
+	const { canAccess } = useResourceAccess()
 
 	const [initialValue, _] = useState<ITicket | null>(ticket || null)
 
@@ -57,6 +59,30 @@ export const TicketFormPage = () => {
 	const navigate = useNavigate()
 
 	const { showNotification } = useNotificationDialog()
+
+	const isAllowedToAccess = useMemo(() => {
+		if (!isUpdate || !initialValue) return true;
+		return canAccess({
+			resourceOwnerId: initialValue.engineer?.id,
+			bypassRoles: ["admin", "helpdesk"],
+		});
+	}, [isUpdate, initialValue, canAccess]);
+
+	useEffect(() => {
+		if (isUpdate && initialValue && !isAllowedToAccess) {
+			showNotification({
+				variant: "error",
+				title: "Access Denied",
+				description: "You do not have permission to edit this ticket.",
+				onClose: () => navigate(-1),
+			});
+		}
+	}, [isUpdate, initialValue, isAllowedToAccess, navigate, showNotification]);
+
+	if (isUpdate && !isAllowedToAccess) {
+		return null;
+	}
+
 	const [assetList, setAssetList] = useState<IAsset[]>(assets)
 
 	const [problem, setProblem] = useState<string>(initialValue?.problem ?? "")
@@ -78,6 +104,10 @@ export const TicketFormPage = () => {
 		return slaPolicies.find(sla => sla.isDefault) || slaPolicies[0]
 	})
 
+
+	useEffect(() => {
+		console.log(selectedEmployee)
+	}, [selectedEmployee])
 	const [disabledAsset, setDisabledAsset] = useState<boolean>(false)
 
 	const [withAsset, setWithAsset] = useState<boolean>(!!initialValue?.asset)
@@ -108,10 +138,9 @@ export const TicketFormPage = () => {
 	}, [selectedEmployee, selectedAsset, selectedEngineer, engineers, user, initialValue]);
 
 
-
-
-	const getEmployeeByNik = (nik: string) => {
-		const employee = employees.find((emp) => emp.nik === nik)
+	const getEmployeeByNik = (nik?: string | null) => {
+		if (!nik) return null
+		const employee = employees.find((emp) => String(emp.nik).trim() === String(nik).trim())
 		return employee || null
 	}
 
@@ -258,16 +287,20 @@ export const TicketFormPage = () => {
 										<EntityCombobox<IAsset>
 											items={assetList}
 											value={selectedAsset}
-											getLabel={(a: IAsset) => `${a.assetTag} | ${a.type} | ${a.assetAssignment?.userNonEmployeeName}`}
+											getLabel={(a: IAsset) => `${a.assetTag} | ${a.type}`}
 											disabled={disabledAsset}
 											getKey={(a: IAsset) => a.serialNumber}
 											getSearchValue={(a: IAsset) => `${a.assetTag} | ${a.type}`}
 											getTitle={(a: IAsset) => a.assetTag}
-											getDescription={(a: IAsset) => `${a.type} | ${a.assetAssignment?.userNonEmployeeName}`}
+											getDescription={(a: IAsset) => `${a.type}`}
 											onSelect={(asset) => {
 												setSelectedAsset(asset)
-												if (asset.assetAssignment) {
-													setSelectedEmployee(getEmployeeByNik(asset.assetAssignment.employee.nik))
+												const assignedNik = asset.assetAssignment?.employee?.nik
+												if (assignedNik) {
+													const emp = getEmployeeByNik(assignedNik) || asset.assetAssignment?.employee
+													if (emp) {
+														setSelectedEmployee(emp)
+													}
 												}
 											}}
 											onClear={() => {
