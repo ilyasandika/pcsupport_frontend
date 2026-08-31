@@ -98,6 +98,7 @@ const ticketApi: ITicketRepository = {
 	},
 
 	generateTicketPdf: async (id: number, payload: IPrintTicketPayload): Promise<void> => {
+		console.log("generate masuk")
 		const res: AxiosResponse = await api.post(`/tickets/${id}/pdf`, payload, {
 			responseType: 'blob'
 		})
@@ -128,6 +129,40 @@ const ticketApi: ITicketRepository = {
 		const formData = new FormData();
 		formData.append('file', file);
 		const res = await api.post(`tickets/${id}/upload`, formData)
+		return res.data
+	},
+	uploadUserSignature: async (id: number, file: File) => {
+
+		console.log("masuk signature")
+		try {
+			const formData = new FormData();
+			formData.append('file', file);
+			const res = await api.post(`tickets/${id}/user-signature`, formData)
+			return res.data
+		} catch (e) {
+			console.log(e)
+		}
+	},
+	getUserSignature: async (id: number): Promise<string | null> => {
+		try {
+			const res = await api.get(`tickets/${id}/user-signature`, {
+				responseType: 'blob',
+			});
+			const blob = res instanceof Blob
+				? res
+				: new Blob([res.data], { type: (res.headers?.['content-type'] as string) || 'image/png' });
+			return URL.createObjectURL(blob);
+		} catch (error) {
+			console.error('Error fetching user signature:', error);
+			return null;
+		}
+	},
+	deleteUploadedPdf: async (id: number) => {
+		const res = await api.delete(`tickets/${id}/pdf`);
+		return res.data;
+	},
+	approveTicket: async (id: number, supervisorId: number) => {
+		const res = await api.post(`tickets/${id}/approve`, { supervisorId })
 		return res.data
 	}
 
