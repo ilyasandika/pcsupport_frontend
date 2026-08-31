@@ -77,7 +77,7 @@ export const TicketFormPage = () => {
 				onClose: () => navigate(-1),
 			});
 		}
-	}, [isUpdate, initialValue, isAllowedToAccess, navigate, showNotification]);
+	}, [isUpdate, initialValue, isAllowedToAccess]);
 
 	if (isUpdate && !isAllowedToAccess) {
 		return null;
