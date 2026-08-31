@@ -1,4 +1,4 @@
-import type {IDetailEmployee, IEmployee, IEmployeeRepository} from "@/types/employee.type.ts";
+import type {IDetailEmployee, IEmployee, IEmployeeRepository, ICreateEmployeeDto, IUpdateEmployeeDto} from "@/types/employee.type.ts";
 import api from "../api/interceptors.ts";
 
 const employeeApi: IEmployeeRepository = {
@@ -24,6 +24,17 @@ const employeeApi: IEmployeeRepository = {
 	    console.error('Error importing employees:', error);
 	    throw error;
 	}
+    },
+    createEmployee: async (dto: ICreateEmployeeDto): Promise<IDetailEmployee> => {
+	const res = await api.post('/employees', dto);
+	return res.data;
+    },
+    updateEmployee: async (nik: string, dto: IUpdateEmployeeDto): Promise<IDetailEmployee> => {
+	const res = await api.patch(`/employees/${nik}`, dto);
+	return res.data;
+    },
+    deleteEmployee: async (nik: string): Promise<void> => {
+	await api.delete(`/employees/${nik}`);
     }
 };
 
@@ -32,3 +43,4 @@ export const createEmployeeRepository = () => {
 };
 
 export const EmployeeRepository = createEmployeeRepository();
+
