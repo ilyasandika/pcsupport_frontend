@@ -33,7 +33,7 @@ import { Card, CardContent } from "@/components/ui/card.tsx";
 import { Separator } from "@/components/ui/separator";
 import { getPriorityStyles } from "@/helper/style-helper.tsx";
 import { cn } from "@/lib/utils.ts";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNotificationDialog } from "@/context/NotificationDialogContext.tsx";
 import { InputText } from "@/components/input-text.tsx";
 import { FieldInputWrapper } from "@/components/field-input-wrapper.tsx";
@@ -41,14 +41,13 @@ import { useResourceAccess } from "@/hooks/use-resource-access.ts";
 
 interface ITicketFormLoader {
 	employees: IEmployee[],
-	assets: IAsset[],
 	engineers: IDetailUser[],
 	slaPolicies: ISlaPolicy[]
 	ticket?: ITicket
 }
 
 export const TicketFormPage = () => {
-	const { employees, assets, engineers, slaPolicies, ticket }: ITicketFormLoader = useLoaderData()
+	const { employees, engineers, slaPolicies, ticket }: ITicketFormLoader = useLoaderData()
 	const { setErrors, getFieldErrors, generalErrors } = useFormErrors()
 	const { isAdmin, isHelpdesk, isEngineer, user } = useAuth()
 	const { canAccess } = useResourceAccess()
@@ -79,11 +78,7 @@ export const TicketFormPage = () => {
 		}
 	}, [isUpdate, initialValue, isAllowedToAccess]);
 
-	if (isUpdate && !isAllowedToAccess) {
-		return null;
-	}
-
-	const [assetList, setAssetList] = useState<IAsset[]>(assets)
+	const [assetList, setAssetList] = useState<IAsset[]>([])
 
 	const [problem, setProblem] = useState<string>(initialValue?.problem ?? "")
 	const [remarks, setRemarks] = useState<string>(initialValue?.remarks ?? "")
@@ -104,9 +99,36 @@ export const TicketFormPage = () => {
 		return slaPolicies.find(sla => sla.isDefault) || slaPolicies[0]
 	})
 
-	const [disabledAsset, setDisabledAsset] = useState<boolean>(false)
-
 	const [withAsset, setWithAsset] = useState<boolean>(!!initialValue?.asset)
+	const [disabledAsset, setDisabledAsset] = useState<boolean>(false)
+	const [assetFilter, setAssetFilter] = useState<string>("")
+	const [debounceAssetFilter, setDebounceAssetFilter] = useState<string>("")
+
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setDebounceAssetFilter(assetFilter)
+		}, 500)
+		return () => clearTimeout(timer)
+	}, [assetFilter])
+
+
+
+	const { data } = useQuery({
+		queryKey: ['assets', 'active', debounceAssetFilter],
+		queryFn: async () =>
+			await AssetRepository.getAssets({
+				asset: debounceAssetFilter
+			}),
+		enabled: !selectedEmployee && withAsset
+	})
+
+	useEffect(() => {
+		if (data) {
+			setAssetList(data.data)
+		}
+	}, [data])
+
+
 
 	const derivedLocation = useMemo<IWorkLocation | null>(() => {
 		// 1. If employee selected, take employee's default location
@@ -139,10 +161,7 @@ export const TicketFormPage = () => {
 		const employee = employees.find((emp) => String(emp.nik).trim() === String(nik).trim())
 		return employee || null
 	}
-
-
 	const ticketStatus = Object.values(TicketStatus).map((status) => ({ label: status, value: status }))
-
 	const slaItems = slaPolicies.map((sla) => (
 		{
 			label: sla.name,
@@ -216,6 +235,13 @@ export const TicketFormPage = () => {
 		}
 	}
 
+
+
+
+	if (isUpdate && !isAllowedToAccess) {
+		return null;
+	}
+
 	return (
 		<FormWrapper
 			label={"Ticket"}
@@ -282,6 +308,7 @@ export const TicketFormPage = () => {
 									{withAsset &&
 										<EntityCombobox<IAsset>
 											items={assetList}
+											onInputValueChange={(value) => setAssetFilter(value)}
 											value={selectedAsset}
 											getLabel={(a: IAsset) => `${a.assetTag} | ${a.type}`}
 											disabled={disabledAsset}
@@ -331,7 +358,7 @@ export const TicketFormPage = () => {
 									onClear={() => {
 										setSelectedEmployee(null)
 										setSelectedAsset(null)
-										setAssetList(assets)
+										setAssetList(assetList)
 									}}
 								/>
 							</FieldInputWrapper>
