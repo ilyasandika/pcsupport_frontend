@@ -14,6 +14,7 @@ interface UseServerTableOptions<TData> {
 export function useServerTable<TData>({
 					  queryKey,
 					  fetcher,
+					  enabled = true,
 				      }: UseServerTableOptions<TData>) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
@@ -29,6 +30,7 @@ export function useServerTable<TData>({
 		...columnFiltersToParams(debouncedFilters),
 	    }),
 	placeholderData: (prev) => prev,
+	enabled
     });
 
     return {
