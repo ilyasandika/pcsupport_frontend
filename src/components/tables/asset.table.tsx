@@ -14,7 +14,7 @@ import { getAssetStatusStyles } from "@/helper/style-helper.tsx";
 import { cn } from "@/lib/utils.ts";
 import { Link } from "react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useDebouncedValue } from "@/hooks/use-debounced-value.tsx";
+import { useDebouncedValue } from "@/hooks/use-debounced-value.ts";
 import { columnFiltersToParams } from "@/helper/helper.tsx";
 import { AssetRepository } from "@/data/repositories/asset.repository.ts";
 
