@@ -470,7 +470,6 @@ export const TicketTable = () => {
     );
 
     const {
-	isLoading,
 	columnFilters,
 	setColumnFilters,
 	pagination,
@@ -510,7 +509,6 @@ export const TicketTable = () => {
 		   data={tableData}
 		   columns={columns}
 		   name='All Tickets'
-		   isLoading={isLoading}
 		   create={{
 		       label: 'Create new ticket',
 		       to: '/tickets/create'
