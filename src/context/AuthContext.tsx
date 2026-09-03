@@ -2,11 +2,11 @@ import {createContext, useContext, useState, useEffect, type ReactNode} from 're
 import api from "../data/api/interceptors.ts";
 import {AuthRepository} from "../data/repositories/auth.repository.ts";
 import type {IAuth} from "../types/auth.type.ts";
-import {useLoading} from "@/context/LoadingContext.tsx";
+import {Spinner} from "@/components/ui/spinner.tsx";
 
 interface AuthContextType {
     user: IAuth | null;
-    isLoading: boolean;
+    isAuthLoading: boolean;
     isAdmin: () => boolean;
     isHelpdesk: () => boolean;
     isEngineer: () => boolean;
@@ -20,7 +20,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<IAuth | null>(null);
-    const {isLoading, setIsLoading} = useLoading();
+    const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true);
 
     useEffect(() => {
 	checkAuth();
@@ -28,13 +28,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const checkAuth = async () => {
 	try {
-	    setIsLoading(true);
+	    setIsAuthLoading(true);
 	    const res = await api.get('/auth/me');
 	    setUser(res?.data || res);
 	} catch (err) {
 	    setUser(null);
 	} finally {
-	    setIsLoading(false);
+	    setIsAuthLoading(false);
 	}
     };
 
@@ -67,8 +67,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	setUser(null);
     };
 
+
+    if (isAuthLoading) {
+	return (
+	    <div className="flex items-center justify-center h-screen">
+		<Spinner />
+	    </div>
+	)
+    }
+
     return (
-	<AuthContext.Provider value={{ user, isLoading, login, logout, isAdmin, isHelpdesk, isEngineer, isSupervisor}}>
+	<AuthContext.Provider value={{ user, isAuthLoading, login, logout, isAdmin, isHelpdesk, isEngineer, isSupervisor}}>
 	    {children}
 	</AuthContext.Provider>
     );
