@@ -1,6 +1,6 @@
 import {KeyRound} from "lucide-react";
 import {InputText} from "@/components/input-text.tsx";
-import {useFormErrors} from "@/hooks/use-errors.tsx";
+import {useFormErrors} from "@/hooks/use-errors.ts";
 import {useState} from "react";
 import {AlertDialogContainer} from "@/components/alert-dialog-container.tsx";
 import { AlertDialogFooter, AlertDialogCancel} from "@/components/ui/alert-dialog";

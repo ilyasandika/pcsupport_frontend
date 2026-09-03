@@ -7,7 +7,7 @@ import {Check, Moon, Sun} from "lucide-react";
 import type {IErrorResponse} from "@/types/api.type.ts";
 import {useNavigate} from "react-router";
 import {useAuth} from "@/context/AuthContext.tsx";
-import {useFormErrors} from "@/hooks/use-errors.tsx";
+import {useFormErrors} from "@/hooks/use-errors.ts";
 
 export const LoginPage = () => {
     const [password, setPassword] = useState("");

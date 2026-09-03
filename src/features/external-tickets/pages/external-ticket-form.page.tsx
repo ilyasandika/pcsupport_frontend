@@ -22,7 +22,7 @@ import type {
 import type { IErrorResponse } from "@/types/api.type.ts";
 
 import { ExternalTicketRepository } from "@/data/repositories/external-ticket.repository.ts";
-import { useFormErrors } from "@/hooks/use-errors.tsx";
+import { useFormErrors } from "@/hooks/use-errors.ts";
 import { useNotificationDialog } from "@/context/NotificationDialogContext.tsx";
 
 import { Item, ItemContent } from "@/components/ui/item.tsx";

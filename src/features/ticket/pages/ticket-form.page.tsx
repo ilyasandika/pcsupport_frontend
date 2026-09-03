@@ -20,7 +20,7 @@ import type { IWorkLocation } from "@/types/work-location.type.ts";
 import { getLocalDatetime, isTicketSolved, secondsToHMS } from "@/helper/helper.tsx";
 import { TicketRepository } from "@/data/repositories/ticket.repository.ts";
 import { AssetRepository } from "@/data/repositories/asset.repository.ts";
-import { useFormErrors } from "@/hooks/use-errors.tsx";
+import { useFormErrors } from "@/hooks/use-errors.ts";
 import type { IErrorResponse } from "@/types/api.type.ts";
 import { type ICreateTicketPayload, type ITicket, type IUpdateTicketPayload, TicketStatus } from "@/types/ticket.type.ts";
 import { useAuth } from "@/context/AuthContext.tsx";

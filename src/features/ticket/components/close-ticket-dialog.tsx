@@ -1,7 +1,7 @@
 import { type ITicket, type IUpdateTicketPayload, TicketStatus } from "@/types/ticket.type.ts";
 import { FileText, Info, Laptop } from "lucide-react";
 import { useState } from "react";
-import { useFormErrors } from "@/hooks/use-errors.tsx";
+import { useFormErrors } from "@/hooks/use-errors.ts";
 import { TicketRepository } from "@/data/repositories/ticket.repository.ts";
 import type { IErrorResponse } from "@/types/api.type.ts";
 import { useNotificationDialog } from "@/context/NotificationDialogContext.tsx";

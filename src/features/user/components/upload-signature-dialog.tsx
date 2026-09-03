@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { UserRepository } from "@/data/repositories/user.repository.ts";
-import { useFormErrors } from "@/hooks/use-errors.tsx";
+import { useFormErrors } from "@/hooks/use-errors.ts";
 import type { IErrorResponse } from "@/types/api.type.ts";
 import { UploadFile } from "@/components/upload-file.tsx";
 import { useNotificationDialog } from "@/context/NotificationDialogContext";

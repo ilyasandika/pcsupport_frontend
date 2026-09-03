@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { AssetCategoryRepository } from "@/data/repositories/asset-category.repository";
-import { useFormErrors } from "@/hooks/use-errors";
+import { useFormErrors } from "@/hooks/use-errors.ts";
 import type { IErrorResponse } from "@/types/api.type";
 import type { IAssetCategory, ICreateAssetCategoryDto } from "@/types/asset-category.type";
 import { useNotificationDialog } from "@/context/NotificationDialogContext";

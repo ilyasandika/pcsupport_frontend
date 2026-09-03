@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Upload } from "lucide-react";
 import { TemplateRepository } from "@/data/repositories/template.repository.ts";
-import { useFormErrors } from "@/hooks/use-errors.tsx";
+import { useFormErrors } from "@/hooks/use-errors.ts";
 import type { IErrorResponse } from "@/types/api.type.ts";
 import { UploadFile } from "@/components/upload-file.tsx";
 import { TemplateType, type ITemplate } from "@/types/template.type.ts";

@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Field, FieldLabel } from "@/components/ui/field.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 import { VendorRepository } from "@/data/repositories/vendor.repository.ts";
-import { useFormErrors } from "@/hooks/use-errors.tsx";
+import { useFormErrors } from "@/hooks/use-errors.ts";
 import type { IErrorResponse } from "@/types/api.type.ts";
 import type { IVendor, IVendorContact, IVendorPayload } from "@/types/vendor.type.ts";
 import { useNotificationDialog } from "@/context/NotificationDialogContext.tsx";

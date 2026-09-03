@@ -4,7 +4,7 @@ import {TicketCard} from "../components/ticket-card.tsx";
 import {useLoaderData} from "react-router";
 
 import {ChartPieDonutText} from "@/components/charts/pie.chart.tsx";
-import {useTimeSinceRefresh} from "@/hooks/use-time-since-refresh.tsx";
+import {useTimeSinceRefresh} from "@/hooks/use-time-since-refresh.ts";
 import {LatestTicketCard} from "@/features/dashboard/components/latest-ticket-card.tsx";
 import {DashboardCardWrapper} from "@/features/dashboard/components/dashboard-card-wrapper.tsx";
 

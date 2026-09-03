@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { Field, FieldLabel } from "@/components/ui/field.tsx";
 import { WorkLocationRepository } from "@/data/repositories/work-location.repository.ts";
-import { useFormErrors } from "@/hooks/use-errors.tsx";
+import { useFormErrors } from "@/hooks/use-errors.ts";
 import type { IErrorResponse } from "@/types/api.type.ts";
 import type { ICreateWorkLocationDto, IDetailWorkLocation } from "@/types/work-location.type.ts";
 import { useNotificationDialog } from "@/context/NotificationDialogContext.tsx";

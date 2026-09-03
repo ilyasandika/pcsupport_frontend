@@ -14,7 +14,7 @@ import { Field, FieldDescription, FieldLabel } from "@/components/ui/field.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { SlaPolicyRepository } from "@/data/repositories/sla-policy.repository.ts";
-import { useFormErrors } from "@/hooks/use-errors.tsx";
+import { useFormErrors } from "@/hooks/use-errors.ts";
 import type { IErrorResponse } from "@/types/api.type.ts";
 import type { ISlaPolicy } from "@/types/sla.type.ts";
 import { useNotificationDialog } from "@/context/NotificationDialogContext.tsx";

@@ -25,7 +25,7 @@ import {
 import { InputSelect } from "@/components/input-select.tsx";
 import type { IAssetCategory } from "@/types/asset-category.type.ts";
 import { SeparatorWithLabel } from "@/components/separator-with-label.tsx";
-import { useFormErrors } from "@/hooks/use-errors.tsx";
+import { useFormErrors } from "@/hooks/use-errors.ts";
 import { useNotificationDialog } from "@/context/NotificationDialogContext.tsx";
 import type { IProject } from "@/types/project.type.ts";
 import { InputCapacity } from "@/components/input-capacity.tsx";

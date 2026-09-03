@@ -8,7 +8,7 @@ import type { IDetailUser, ICreateUserDTO, IUpdateUserDTO } from "@/types/user.t
 import { InputSelect } from "@/components/input-select.tsx";
 import type { IWorkLocation } from "@/types/work-location.type.ts";
 import { SeparatorWithLabel } from "@/components/separator-with-label.tsx";
-import { useFormErrors } from "@/hooks/use-errors.tsx";
+import { useFormErrors } from "@/hooks/use-errors.ts";
 import { useNotificationDialog } from "@/context/NotificationDialogContext.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 import { useMutation } from "@tanstack/react-query";

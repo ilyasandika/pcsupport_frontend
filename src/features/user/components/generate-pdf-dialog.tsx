@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Eraser, FileText, Save } from "lucide-react";
-import { useFormErrors } from "@/hooks/use-errors.tsx";
+import { useFormErrors } from "@/hooks/use-errors.ts";
 import { TicketRepository } from "@/data/repositories/ticket.repository.ts";
 import { useMutation } from "@tanstack/react-query";
 import type { IErrorResponse } from "@/types/api.type.ts";
