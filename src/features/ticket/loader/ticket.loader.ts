@@ -4,16 +4,6 @@ import { EmployeeRepository } from "@/data/repositories/employee.repository.ts";
 import { UserRepository } from "@/data/repositories/user.repository.ts";
 import { SlaPolicyRepository } from "@/data/repositories/sla-policy.repository.ts";
 
-import { WorkLocationRepository } from "@/data/repositories/work-location.repository.ts";
-
-export const ticketLoader = async () => {
-    const [tickets, locations] = await Promise.all([
-        TicketRepository.getAll(),
-        WorkLocationRepository.getAll(),
-    ]);
-    return { tickets, locations };
-}
-
 export const ticketDetailLoader = async ({ params }: LoaderFunctionArgs) => {
     const { id } = params as unknown as { id: number }
     return await TicketRepository.getTicketById(id)

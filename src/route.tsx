@@ -7,7 +7,6 @@ import { assetDetailLoader, assetFormLoader, assetLoader } from "./features/asse
 import {
 	ticketFormLoader,
 	ticketDetailLoader,
-	ticketLoader
 } from "./features/ticket/loader/ticket.loader.ts";
 import { UserPage } from "./features/user/pages/user.page.tsx";
 import { userDetailLoader, userFormLoader, userLoader } from "./features/user/loader/user.loader.tsx";
@@ -72,7 +71,6 @@ export const router = createBrowserRouter([
 							{
 								index: true,
 								element: <TicketPage />,
-								loader: ticketLoader,
 							},
 							{
 								path: 'create',

@@ -27,17 +27,11 @@ import {UploadFile} from "@/components/upload-file.tsx";
 import {GeneratePdfDialog} from "@/features/user/components/generate-pdf-dialog.tsx";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import {AlertDialogContainer} from "@/components/alert-dialog-container.tsx";
-import type {IDetailWorkLocation} from "@/types/work-location.type.ts";
 import {Badge} from "../ui/badge.tsx";
 import {useServerTable} from "@/hooks/use-server-table.ts";
 
-interface TicketTableProps {
-    data?: ITicket[]
-    locations?: IDetailWorkLocation[]
-}
 
-export const TicketTable = ({data: initialData, locations: initialLocations}: TicketTableProps) => {
-
+export const TicketTable = () => {
     const [selectedTicket, setSelectedTicket] = useState<ITicket>({} as ITicket);
     const {showNotification} = useNotificationDialog()
     const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -140,12 +134,11 @@ export const TicketTable = ({data: initialData, locations: initialLocations}: Ti
     const {data: locations} = useQuery({
 	queryKey: ['work-locations'],
 	queryFn: () => WorkLocationRepository.getAll(),
-	initialData: initialLocations,
     });
 
     const locationOptions = useMemo(() => {
-	return (locations || initialLocations)?.map((loc) => ({label: loc.name, value: loc.id})) || [];
-    }, [locations, initialLocations]);
+	return (locations)?.map((loc) => ({label: loc.name, value: loc.id})) || [];
+    }, [locations]);
 
     const {data: assetCategories} = useQuery({
 	queryKey: ['asset-categories'],
@@ -477,19 +470,16 @@ export const TicketTable = ({data: initialData, locations: initialLocations}: Ti
     );
 
     const {
-	// data: queryResult,
 	isLoading,
 	columnFilters,
 	setColumnFilters,
 	pagination,
 	setPagination,
-	isManual,
 	tableData,
 	pageCount
     } = useServerTable({
 	queryKey: 'tickets',
 	fetcher: (params) => TicketRepository.getAll(params),
-	initialData,
     });
 
     return (
@@ -517,21 +507,20 @@ export const TicketTable = ({data: initialData, locations: initialLocations}: Ti
 		/>
 	    </AlertDialogContainer>
 	    <DataTable<ITicket>
-		       data={tableData}
-		       columns={columns}
-		       name='All Tickets'
-		       isLoading={isLoading}
-		       create={{
-			   label: 'Create new ticket',
-			   to: '/tickets/create'
-		       }}
-		       pageCount={pageCount}
-		       columnFilters ={columnFilters}
-		       onColumnFiltersChange={setColumnFilters}
-		       isManual={isManual}
-		       pagination = {pagination}
-		       onPaginationChange={setPagination}
-
+		   data={tableData}
+		   columns={columns}
+		   name='All Tickets'
+		   isLoading={isLoading}
+		   create={{
+		       label: 'Create new ticket',
+		       to: '/tickets/create'
+		   }}
+		   pageCount={pageCount}
+		   columnFilters ={columnFilters}
+		   onColumnFiltersChange={setColumnFilters}
+		   isManual
+		   pagination = {pagination}
+		   onPaginationChange={setPagination}
 	    />
 	</>
 
