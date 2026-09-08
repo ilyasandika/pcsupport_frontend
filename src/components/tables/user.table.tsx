@@ -209,19 +209,22 @@ export const UserTable = ({data, isLoading = false}: UserTableProps) => {
 
     return (
 	<>
-	    <ChangePasswordDialogContent open={openChangePasswordDialog}
-					 setOpen={setOpenChangePasswordDialog}
-					 id={selectedId}
+	    <ChangePasswordDialogContent
+		open={openChangePasswordDialog}
+		setOpen={setOpenChangePasswordDialog}
+		id={selectedId}
 	    />
-	    <UploadSignatureDialog open={openUploadSignatureDialog}
-				   onOpenChange={setOpenUploadSignatureDialog}
-				   userId={selectedUserForSignature?.id}
-				   userName={selectedUserForSignature?.fullName}
+	    <UploadSignatureDialog
+		open={openUploadSignatureDialog}
+		onOpenChange={setOpenUploadSignatureDialog}
+		userId={selectedUserForSignature?.id}
+		userName={selectedUserForSignature?.fullName}
 	    />
-	    <SyncUserTagsDialog open={openSyncAiDialog}
-				onOpenChange={setOpenSyncAiDialog}
-				userId={selectedUserForSyncAi?.id}
-				userName={selectedUserForSyncAi?.fullName}
+	    <SyncUserTagsDialog
+		open={openSyncAiDialog}
+		onOpenChange={setOpenSyncAiDialog}
+		userId={selectedUserForSyncAi?.id}
+		userName={selectedUserForSyncAi?.fullName}
 	    />
 	    <DataTable
 		data={data}
