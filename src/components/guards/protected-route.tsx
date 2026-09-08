@@ -2,25 +2,23 @@ import { Navigate, Outlet } from "react-router";
 import { useAuth } from "@/context/AuthContext"; // Sesuaikan path import
 
 export const RequireAuth = () => {
-    const { user, isLoading } = useAuth();
+    const { user, isAuthLoading } = useAuth();
 
-    if (isLoading) {
+    if (isAuthLoading) {
         return null;
     }
 
     if (!user) {
-        // Jika belum login, lempar ke halaman login
         return <Navigate to="/login" replace />;
     }
 
-    // Jika sudah login, render anak-anaknya (Outlet)
     return <Outlet />;
 };
 
 export const RequireRole = ({ allowed, redirectTo = "/" }: { allowed: string[]; redirectTo?: string }) => {
-    const { user, isLoading } = useAuth();
+    const { user, isAuthLoading } = useAuth();
 
-    if (isLoading) {
+    if (isAuthLoading) {
         return null;
     }
 
@@ -37,4 +35,12 @@ export const RequireRole = ({ allowed, redirectTo = "/" }: { allowed: string[]; 
 
 export const RequireAdmin = () => {
     return <RequireRole allowed={['admin']} />;
+};
+
+export const RequireNoLogin = () => {
+    const { user, isAuthLoading } = useAuth();
+    if (isAuthLoading && user) {
+        return null;
+    }
+    return user ? <Navigate to="/" replace /> : <Outlet />;
 };
