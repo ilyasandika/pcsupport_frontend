@@ -31,6 +31,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	    setIsAuthLoading(true);
 	    const res = await api.get('/auth/me');
 	    setUser(res?.data || res);
+	    if (window.location.pathname == '/login') {
+		window.location.href = '/';
+	    }
 	} catch (err) {
 	    setUser(null);
 	} finally {
