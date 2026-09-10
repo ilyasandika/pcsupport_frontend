@@ -1,29 +1,19 @@
 import {
 	type ColumnDef,
-	type ColumnFiltersState,
-	createColumnHelper,
-	getCoreRowModel,
-	useReactTable
-} from "@tanstack/react-table";
-import { useMemo, useState } from "react";
+    createColumnHelper} from "@tanstack/react-table";
+import { useMemo } from "react";
 import DataTable from "./data-table.tsx";
-import { ActionButtons } from "./action-button.tsx";
 import { AssetStatus, type IAsset } from "@/types/asset.type.ts";
 import { Badge } from "@/components/ui/badge";
 import { getAssetStatusStyles } from "@/helper/style-helper.tsx";
 import { cn } from "@/lib/utils.ts";
 import { Link } from "react-router";
-import { useQuery } from "@tanstack/react-query";
-import { useDebouncedValue } from "@/hooks/use-debounced-value.ts";
-import { columnFiltersToParams } from "@/helper/helper.tsx";
+
 import { AssetRepository } from "@/data/repositories/asset.repository.ts";
+import {useServerTable} from "@/hooks/use-server-table.ts";
+import {ActionButtons} from "@/components/tables/action-button.tsx";
 
-interface AssetTableProps {
-	// data: IAsset[]
-	isLoading?: boolean
-}
-
-export const AssetTable = ({ isLoading = false }: AssetTableProps) => {
+export const AssetTable = () => {
 	const columnHelper = createColumnHelper<IAsset>();
 	const columns: ColumnDef<IAsset, any>[] = useMemo(
 		() => [
@@ -187,53 +177,34 @@ export const AssetTable = ({ isLoading = false }: AssetTableProps) => {
 		[]
 	);
 
-	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-	const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
-	const debouncedFilters = useDebouncedValue(columnFilters, 400);
 
+    const {
+	columnFilters,
+	setColumnFilters,
+	pagination,
+	setPagination,
+	tableData,
+	pageCount
+    } = useServerTable({
+	queryKey: 'assets',
+	fetcher: (params) => AssetRepository.getAssets(params),
+    });
 
-	const [columnSizing, setColumnSizing] = useState(() => {
-		const savedSizes = localStorage.getItem('table-column-sizes');
-		return savedSizes ? JSON.parse(savedSizes) : {};
-	});
-
-	const { data } = useQuery({
-		queryKey: ['assets', pagination, debouncedFilters],
-		queryFn: async () =>
-			await AssetRepository.getAssets({
-				page: pagination.pageIndex + 1,
-				limit: pagination.pageSize,
-				...columnFiltersToParams(debouncedFilters),
-			}),
-		placeholderData: (prev) => prev,
-	});
-
-	const table = useReactTable<IAsset>({
-		data: data?.data ?? [],
-		columns,
-		state: {
-			columnFilters,
-			pagination,
-			columnSizing
-		},
-		pageCount: data?.meta?.totalPages ?? -1,
-		renderFallbackValue: '-',
-		onColumnFiltersChange: setColumnFilters,
-		onPaginationChange: setPagination,
-		getCoreRowModel: getCoreRowModel(),
-		columnResizeMode: 'onChange',
-		onColumnSizingChange: setColumnSizing,
-		manualPagination: true,
-		manualFiltering: true,
-	});
-
-	return (<DataTable table={table}
+	return (
+	    <DataTable
+		data={tableData}
+		columns={columns}
 		name='All Assets'
-		isLoading={isLoading}
 		create={{
 			label: "create new asset",
 			to: "/assets/create"
 		}}
+	       pageCount={pageCount}
+	       columnFilters ={columnFilters}
+	       onColumnFiltersChange={setColumnFilters}
+	       isManual
+	       pagination = {pagination}
+	       onPaginationChange={setPagination}
 	/>)
 
 }
