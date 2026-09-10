@@ -20,7 +20,7 @@ export const DashboardPage = () => {
 
 
     return (
-	<div className="flex-1 space-y-6 lg:space-y-8 overflow-auto">
+	<div className="flex flex-col space-y-6 lg:space-y-8 overflow-auto">
 	    <div>
 		<h1 className="font-bold text-lg">Dashboard Overview</h1>
 		<span className="text-sm">{new Date().toLocaleDateString('en-UK', {
@@ -63,12 +63,13 @@ export const DashboardPage = () => {
 			    engineerBreakdown={ticketSummary?.byEngineer?.cancelled}
 		/>
 	    </div>
-	    <div className="flex flex-row gap-6">
-		<DashboardCardWrapper title="Latest Ticket" to="/tickets" className="w-3/4" >
+
+	    <div className="flex flex-col lg:flex-row gap-6">
+		<DashboardCardWrapper title="Latest Ticket" to="/tickets" className="lg:w-3/4" >
 		    <LatestTicketCard className="w-3/4" data={latestTicket}/>
 		</DashboardCardWrapper>
 
-		<div className="w-1/4">
+		<div className="lg:w-1/4">
 		    <DashboardCardWrapper title="Asset Summary" to="/assets" className="">
 			<ChartPieDonutText data={assetSummaryData} centerLabel={"Asset"}/>
 		    </DashboardCardWrapper>
