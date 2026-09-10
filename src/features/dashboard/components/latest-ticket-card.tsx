@@ -50,7 +50,6 @@ export const LatestTicketCard = ({data}: LatestTicketCardProps) => {
 
 	    columnHelper.accessor("status", {
 		header: 'status',
-		size: 100,
 		cell: (info) => {
 		    const status = info.row.original.status
 		    return (
@@ -66,7 +65,7 @@ export const LatestTicketCard = ({data}: LatestTicketCardProps) => {
 		    return (
 			engineer?.fullName ?
 			    <div className="flex items-center gap-2">
-				<Avatar size={"sm"}>
+				<Avatar size={"sm"} className={"hidden lg:block"}>
 				    <AvatarImage alt="avatar"/>
 				    <AvatarFallback>
 					<User className="w-3"/>
@@ -81,7 +80,7 @@ export const LatestTicketCard = ({data}: LatestTicketCardProps) => {
 	    }),
 
 	    columnHelper.accessor('slaPolicy', {
-		header: 'SLA Policy',
+		header: 'Prioirty',
 		size: 75,
 		cell: (info) => {
 
@@ -125,9 +124,6 @@ export const LatestTicketCard = ({data}: LatestTicketCardProps) => {
 			   	 <Progress value={progressValue.percentage} className={cn("w-[70%] h-1.5", getProgressStyle(progressValue.percentage))}/>
 				<span className={progressValue.percentage > 75 ? "text-xs text-ptba-primary-red animate-pulse" : "text-xs text-ptba-gray"}>{hoursLeft > 0 ? hoursLeft : 0}h {minutesLeft > 0 ? minutesLeft : 0}m remaining for {ticket.startAt ? "resolution" : "response"}</span>
 			    </div>
-
-
-
 		    )
 		}
 	    }),
@@ -142,8 +138,7 @@ export const LatestTicketCard = ({data}: LatestTicketCardProps) => {
     });
 
     return (
-
-		<TicketDataTable table={table}/>
+	<TicketDataTable table={table}/>
 
     );
 }
