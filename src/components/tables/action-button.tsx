@@ -6,6 +6,7 @@ import {
     FileText,
     FileUp,
     FileX,
+    FilePlus,
     Info,
     KeyRound,
     type LucideIcon,
@@ -159,6 +160,7 @@ export interface ActionButtonsProps {
     download?: ActionButtonsOptions;
     generateDocument?: ActionButtonsOptions;
     check?: ActionButtonsOptions;
+    addDocument?: ActionButtonsOptions;
     seeDocument?: ActionButtonsOptions;
     uploadDocument?: ActionButtonsOptions;
     deleteDocument?: ActionButtonsOptions;
@@ -274,6 +276,16 @@ export const ActionButtons = (props: ActionButtonsProps) => {
 	});
     }
 
+    if (props.addDocument && !props.addDocument.disabled) {
+	allActions.push({
+	    key: 'addDocument',
+	    label: props.addDocument.tooltip || 'Generate Document',
+	    icon: props.addDocument.icon || FilePlus,
+	    options: props.addDocument,
+	    className: props.addDocument.className || 'text-emerald-600',
+	});
+    }
+
     if (props.generateDocument && !props.generateDocument.disabled) {
 	allActions.push({
 	    key: 'generateDocument',
@@ -355,6 +367,9 @@ export const ActionButtons = (props: ActionButtonsProps) => {
 	    isDestructive: true,
 	});
     }
+
+
+
 
     let visibleActions: ActionItem[] = [];
     let dropdownActions: ActionItem[] = [];
