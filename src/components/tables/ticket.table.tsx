@@ -14,7 +14,6 @@ import {getStatusBadgeStyle} from "@/helper/style-helper.tsx";
 import {
     isTicketCancelled,
     isTicketOpen,
-    isTicketProgressGroup,
     isTicketSolved
 } from "../../helper/helper.tsx";
 import {TicketRepository} from "@/data/repositories/ticket.repository.ts";
@@ -29,6 +28,7 @@ import {useMutation, useQuery} from "@tanstack/react-query";
 import {AlertDialogContainer} from "@/components/alert-dialog-container.tsx";
 import {Badge} from "../ui/badge.tsx";
 import {useServerTable} from "@/hooks/use-server-table.ts";
+import {useApproveTicket} from "@/features/ticket/hooks/use-approve-ticket.ts";
 
 
 export const TicketTable = () => {
@@ -41,29 +41,8 @@ export const TicketTable = () => {
     const [_a, setFile] = useState<File | null>(null)
     const fileRef = useRef<File | null>(null);
 
-    const {isEngineer, isAdmin, isHelpdesk, isSupervisor, user} = useAuth()
+    const {isEngineer, isAdmin, isHelpdesk, isSupervisor, user, isAuthLoading} = useAuth()
 
-    const approveTicketMutation = useMutation({
-	mutationFn: (ticketId: number) => {
-	    if (!user) throw new Error("User not authenticated");
-	    return TicketRepository.approveTicket(ticketId, user.sub);
-	},
-	onSuccess: () => {
-	    showNotification({
-		variant: "success",
-		title: "Ticket Approved",
-		description: "Ticket has been approved successfully",
-		onClose: () => window.location.reload(),
-	    });
-	},
-	onError: (error: any) => {
-	    showNotification({
-		variant: "error",
-		title: "Failed to approve ticket",
-		description: error.message || "Failed to approve ticket",
-	    });
-	},
-    });
 
     const deleteTicketMutation = useMutation({
 	mutationFn: (id: number) => TicketRepository.hardRemoveTicket(id),
@@ -148,7 +127,7 @@ export const TicketTable = () => {
     const categoryOptions = useMemo(() => {
 	return assetCategories?.map((cat) => ({label: cat.name, value: cat.name})) || [];
     }, [assetCategories]);
-
+    const {mutate: approveTicket} = useApproveTicket()
     const columnHelper = createColumnHelper<ITicket>();
     const columns: ColumnDef<ITicket, any>[] = useMemo(
 	() => [
@@ -196,32 +175,26 @@ export const TicketTable = () => {
 		size: 200,
 		cell: (info) => {
 		    const ticket = info.row.original;
-		    const disabledOnSolved = isTicketSolved(ticket.status);
-		    const disabledOnOpen = isTicketOpen(ticket.status);
-		    const disabledOnCancelled = isTicketCancelled(ticket.status);
 
-		    const enableEdit = () => {
-			if (isTicketSolved(ticket.status)) {
-			    // return isAdmin();
-			    return true;
-			}
-			if (isTicketOpen(ticket.status)) {
-			    return isAdmin() || isHelpdesk();
-			}
-			if (isTicketProgressGroup(ticket.status)) {
-			    if (isAdmin() || isHelpdesk()) {
-				return true;
-			    }
-			    if (isEngineer()) {
-				return ticket?.engineer?.id === user?.sub;
-			    }
+		    const isPrivilegedRole = isAdmin() || isHelpdesk() || isSupervisor();
+		    const isAssignedEngineer = isEngineer() && ticket?.engineer?.id === user?.sub;
+		    const hasAccess = isAuthLoading ? false : (isPrivilegedRole || isAssignedEngineer);
 
-			    return false;
-			}
-			return false;
-		    };
+		    const isOpen = isTicketOpen(ticket.status);
+		    const isSolved = isTicketSolved(ticket.status);
+		    const isCancelled = isTicketCancelled(ticket.status);
+		    const isClosed = isTicketSolved(ticket.status);
+
+		    const isFinishedState = isSolved || isClosed || isCancelled;
+
+		    const hasPdf = Boolean(ticket.filePath);
 		    const isNeedBackup = Boolean((ticket as any).backUpAsset || (ticket as any).isNeedBackup);
 		    const docLabel = ticket.isAssetAssignment ? 'BAST' : 'WO';
+
+		    const disableRemove = !hasAccess || !(isOpen && !ticket.fullNumber);
+		    const disableGenerateUpload = !hasAccess || hasPdf || !(isSolved || isClosed);
+
+		    const disableSeeDelete = !hasAccess || !hasPdf;
 
 		    return (
 			<ActionButtons
@@ -232,7 +205,7 @@ export const TicketTable = () => {
 				    title: "Approve Ticket",
 				    description: `Are you sure you want to approve Ticket ${ticket.fullNumber}?`,
 				    variant: "success",
-				    onContinue: () => approveTicketMutation.mutate(ticket.id),
+				    onContinue: () => approveTicket(ticket.id),
 				}
 			    }}
 			    detail={{
@@ -242,30 +215,30 @@ export const TicketTable = () => {
 			    edit={{
 				to: `/tickets/${ticket.id}/update`,
 				tooltip: 'Edit Ticket',
-				disabled: !enableEdit()
+				disabled: !hasAccess,
 			    }}
 			    externalTicket={{
 				to: `/external-tickets/create?ticketId=${ticket.id}&ticketFullNumber=${encodeURIComponent(ticket.fullNumber || '')}`,
 				tooltip: 'Create External Ticket (Escalate to Vendor)',
-				disabled: !isNeedBackup,
+				disabled: !hasAccess || !isNeedBackup,
 			    }}
 			    generateDocument={{
 				onClick: () => {
 				    setSelectedTicket(ticket)
 				    setOpenGeneratePdfDialog(true)
 				},
-				tooltip: 'Generate Ticket',
-				disabled: Boolean(!disabledOnSolved || ticket.filePath)
+				tooltip: `Generate ${docLabel}`,
+				disabled: disableGenerateUpload
 			    }}
 			    remove={{
 				tooltip: 'Remove Ticket',
 				alert: {
 				    title: "Are you sure remove this ticket?",
-				    description: "this action cannot be undone",
+				    description: "This action cannot be undone",
 				    variant: "danger",
 				    onContinue: () => deleteTicketMutation.mutate(ticket.id),
 				},
-				disabled: !disabledOnOpen || isEngineer()
+				disabled: disableRemove
 			    }}
 			    check={{
 				onClick: () => {
@@ -273,8 +246,9 @@ export const TicketTable = () => {
 				    setOpenDialog(true)
 				},
 				tooltip: 'Close Ticket',
-				disabled: disabledOnSolved || disabledOnOpen || disabledOnCancelled
+				disabled: !hasAccess || isFinishedState || isOpen || isSupervisor()
 			    }}
+
 			    uploadDocument={{
 				tooltip: `Upload ${docLabel}`,
 				alert: {
@@ -289,14 +263,14 @@ export const TicketTable = () => {
 				    />,
 				    onContinue: () => uploadTicket(ticket.id, fileRef.current)
 				},
-				disabled: Boolean(!disabledOnSolved || ticket.filePath)
+				disabled: disableGenerateUpload
 			    }}
 			    seeDocument={{
 				onClick: () => {
 				    TicketRepository.getSolvedTicketPdf(ticket.id)
 				},
 				tooltip: `See ${docLabel}`,
-				disabled: !ticket.filePath || !disabledOnSolved
+				disabled: disableSeeDelete
 			    }}
 			    deleteDocument={{
 				tooltip: `Delete Uploaded ${docLabel}`,
@@ -306,7 +280,7 @@ export const TicketTable = () => {
 				    variant: "danger",
 				    onContinue: () => deleteTicketPdfMutation.mutate(ticket.id),
 				},
-				disabled: !ticket.filePath || !disabledOnSolved
+				disabled: disableSeeDelete
 			    }}
 			/>
 		    )
@@ -466,7 +440,7 @@ export const TicketTable = () => {
 		cell: (info) => info.getValue() || '-'
 	    }),
 	],
-	[locationOptions, categoryOptions]
+	[locationOptions, categoryOptions, user, isAuthLoading]
     );
 
     const {
@@ -509,6 +483,7 @@ export const TicketTable = () => {
 		   data={tableData}
 		   columns={columns}
 		   name='All Tickets'
+		   isLoading={isAuthLoading}
 		   create={{
 		       label: 'Create new ticket',
 		       to: '/tickets/create'
