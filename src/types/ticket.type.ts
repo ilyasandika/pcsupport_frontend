@@ -65,6 +65,8 @@ export interface ITicketFilters {
   engineerName?: string;
   createdByName?: string;
 
+  contact?: string;
+
   status?: string;
   ticketNumber?: string;
   location?: string;
