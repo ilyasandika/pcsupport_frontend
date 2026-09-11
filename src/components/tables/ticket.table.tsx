@@ -29,6 +29,7 @@ import {AlertDialogContainer} from "@/components/alert-dialog-container.tsx";
 import {Badge} from "../ui/badge.tsx";
 import {useServerTable} from "@/hooks/use-server-table.ts";
 import {useApproveTicket} from "@/features/ticket/hooks/use-approve-ticket.ts";
+import {useClaimTicket} from "@/features/ticket/hooks/use-claim-ticket.ts";
 
 
 export const TicketTable = () => {
@@ -128,6 +129,7 @@ export const TicketTable = () => {
 	return assetCategories?.map((cat) => ({label: cat.name, value: cat.name})) || [];
     }, [assetCategories]);
     const {mutate: approveTicket} = useApproveTicket()
+    const {mutate: claimTicket} = useClaimTicket()
     const columnHelper = createColumnHelper<ITicket>();
     const columns: ColumnDef<ITicket, any>[] = useMemo(
 	() => [
@@ -247,6 +249,16 @@ export const TicketTable = () => {
 				},
 				tooltip: 'Close Ticket',
 				disabled: !hasAccess || isFinishedState || isOpen || isSupervisor()
+			    }}
+
+			    addDocument={{
+				tooltip: `Claim Ticket`,
+				alert: {
+				    title: `Claim Ticket`,
+				    description: `Are you sure you want to claim this ticket?`,
+				    onContinue: () => claimTicket(ticket.id),
+				},
+				disabled: !isSupervisor(),
 			    }}
 
 			    uploadDocument={{
