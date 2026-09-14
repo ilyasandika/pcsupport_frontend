@@ -18,7 +18,6 @@ import type {IDetailUser, IUser} from "@/types/user.type.ts";
 import type {ISlaPolicy} from "@/types/sla.type.ts";
 import type {IWorkLocation} from "@/types/work-location.type.ts";
 import {getLocalDatetime, isTicketSolved, secondsToHMS} from "@/helper/helper.tsx";
-import {TicketRepository} from "@/data/repositories/ticket.repository.ts";
 import {AssetRepository} from "@/data/repositories/asset.repository.ts";
 import {useFormErrors} from "@/hooks/use-errors.ts";
 import type {IErrorResponse} from "@/types/api.type.ts";
@@ -33,7 +32,7 @@ import {Card, CardContent} from "@/components/ui/card.tsx";
 import {Separator} from "@/components/ui/separator";
 import {getPriorityStyles} from "@/helper/style-helper.tsx";
 import {cn} from "@/lib/utils.ts";
-import {useMutation, useQuery} from "@tanstack/react-query";
+import {useQuery} from "@tanstack/react-query";
 import {useNotificationDialog} from "@/context/NotificationDialogContext.tsx";
 import {InputText} from "@/components/input-text.tsx";
 import {FieldInputWrapper} from "@/components/field-input-wrapper.tsx";
@@ -50,7 +49,7 @@ interface ITicketFormLoader {
 
 export const TicketFormPage = () => {
     const {employees, engineers, slaPolicies, ticket}: ITicketFormLoader = useLoaderData()
-    const {setErrors, getFieldErrors, generalErrors, errors} = useFormErrors()
+    const {setErrors, getFieldErrors, generalErrors} = useFormErrors()
     const {isAdmin, isHelpdesk, isEngineer, user, isSupervisor} = useAuth()
     const {canAccess} = useResourceAccess()
 
@@ -207,7 +206,7 @@ export const TicketFormPage = () => {
 	    }
 
 	    try {
-		updateTicket({id: initialValue.id, payload: ticketData})
+		await updateTicket({id: initialValue.id, payload: ticketData})
 	    } catch (err) {
 		const errorResponse = err as IErrorResponse;
 		setErrors(errors => [...errors, ...errorResponse.errors])
