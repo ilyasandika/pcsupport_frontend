@@ -9,7 +9,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import DataTable from "./data-table.tsx";
 import { ActionButtons } from "./action-button.tsx";
 import type { IDetailEmployee } from "@/types/employee.type.ts";
-import { AlertDialogContainer } from "@/components/alert-dialog-container.tsx";
+import { DialogContainer } from "@/components/dialog-container.tsx";
 import { Button } from "@/components/ui/button";
 import { FileDown } from "lucide-react";
 import { UploadFile } from "@/components/upload-file.tsx";
@@ -239,7 +239,7 @@ export const ExcelUpload = ({ onSuccess }: { onSuccess?: () => void }) => {
 	};
 
 	return (
-		<AlertDialogContainer
+		<DialogContainer
 			triggerRender={
 				<Button className="hover:bg-ptba-tertiary-light-green bg-ptba-tertiary-green cursor-pointer">
 					<FileDown className="w-4 h-4" data-icon="inline-start" /> Import Employee

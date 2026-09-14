@@ -24,7 +24,7 @@ import {twMerge} from "tailwind-merge";
 import {Link} from "react-router";
 import {Button} from "@/components/ui/button";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
-import {AlertDialogContainer} from "@/components/alert-dialog-container.tsx";
+import {DialogContainer} from "@/components/dialog-container.tsx";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -95,7 +95,7 @@ const ActionButton = ({Logo, onClick, className, to, tooltip, alert}: ActionButt
     }
 
     const renderElement = alert ? (
-	<AlertDialogContainer
+	<DialogContainer
 	    triggerRender={to ? <LinkComp/> : <ButtonComp/>}
 	    title={alert.title}
 	    description={alert.description}
@@ -442,7 +442,7 @@ export const ActionButtons = (props: ActionButtonsProps) => {
 
 			    if (opt.alert) {
 				return (
-				    <AlertDialogContainer
+				    <DialogContainer
 					key={action.key}
 					title={opt.alert.title}
 					description={opt.alert.description}

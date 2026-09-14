@@ -23,7 +23,7 @@ import {DetailCard, DetailCardRow, DetailCardItem} from "@/components/detail-car
 import {Progress} from "@/components/ui/progress";
 import {Badge} from "@/components/ui/badge";
 import {ButtonGroup} from "@/components/ui/button-group";
-import {AlertDialogContainer} from "@/components/alert-dialog-container.tsx";
+import {DialogContainer} from "@/components/dialog-container.tsx";
 import {useState} from "react";
 import {GeneratePdfDialog} from "@/features/user/components/generate-pdf-dialog.tsx";
 import {Button} from "@/components/ui/button.tsx";
@@ -291,19 +291,19 @@ export const TicketDetailPage = () => {
 		</div>
 
 
-		<AlertDialogContainer title={"Claim Ticket"}
-				      description={"are you sure to claim this ticket?"}
-				      open={claimDialogOpen}
-				      setOpen={setClaimDialogOpen}
-				      onContinue={() => claimTicket(ticket.id)}
+		<DialogContainer title={"Claim Ticket"}
+				 description={"are you sure to claim this ticket?"}
+				 open={claimDialogOpen}
+				 setOpen={setClaimDialogOpen}
+				 onContinue={() => claimTicket(ticket.id)}
 		/>
 
-		<AlertDialogContainer title={"Approve Ticket"}
-				      description={`Are you sure you want to approve Ticket ${ticket.fullNumber}?`}
-				      open={approveDialogOpen}
-				      setOpen={setApproveDialogOpen}
-				      onContinue={() => approveTicket(ticket.id)}
-				      variant="success"
+		<DialogContainer title={"Approve Ticket"}
+				 description={`Are you sure you want to approve Ticket ${ticket.fullNumber}?`}
+				 open={approveDialogOpen}
+				 setOpen={setApproveDialogOpen}
+				 onContinue={() => approveTicket(ticket.id)}
+				 variant="success"
 		/>
 
 		<GeneratePdfDialog open={openGeneratePdfDialog}

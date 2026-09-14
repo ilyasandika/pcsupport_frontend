@@ -2,7 +2,7 @@ import {KeyRound} from "lucide-react";
 import {InputText} from "@/components/input-text.tsx";
 import {useFormErrors} from "@/hooks/use-errors.ts";
 import {useState} from "react";
-import {AlertDialogContainer} from "@/components/alert-dialog-container.tsx";
+import {DialogContainer} from "@/components/dialog-container.tsx";
 import { AlertDialogFooter, AlertDialogCancel} from "@/components/ui/alert-dialog";
 import {UserRepository} from "@/data/repositories/user.repository.ts";
 import {useNotificationDialog} from "@/context/NotificationDialogContext.tsx";
@@ -39,7 +39,7 @@ export const ChangePasswordDialogContent = ({id, open = false, setOpen}: {id?: n
     }
 
     return (
-	<AlertDialogContainer open={open} title={"Change Password"} setOpen={setOpen} description={""}>
+	<DialogContainer open={open} title={"Change Password"} setOpen={setOpen} description={""}>
 	    <InputText
 		label="Old Password"
 		id="oldPassword"
@@ -62,6 +62,6 @@ export const ChangePasswordDialogContent = ({id, open = false, setOpen}: {id?: n
 		<AlertDialogCancel>Cancel</AlertDialogCancel>
 		<Button variant="default" onClick={changePassword}>Continue</Button>
 	    </AlertDialogFooter>
-	</AlertDialogContainer>
+	</DialogContainer>
     )
 }

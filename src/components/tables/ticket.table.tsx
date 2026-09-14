@@ -25,7 +25,7 @@ import {useNotificationDialog} from "@/context/NotificationDialogContext.tsx";
 import {UploadFile} from "@/components/upload-file.tsx";
 import {GeneratePdfDialog} from "@/features/user/components/generate-pdf-dialog.tsx";
 import {useMutation, useQuery} from "@tanstack/react-query";
-import {AlertDialogContainer} from "@/components/alert-dialog-container.tsx";
+import {DialogContainer} from "@/components/dialog-container.tsx";
 import {Badge} from "../ui/badge.tsx";
 import {useServerTable} from "@/hooks/use-server-table.ts";
 import {useApproveTicket} from "@/features/ticket/hooks/use-approve-ticket.ts";
@@ -464,8 +464,8 @@ export const TicketTable = () => {
 		ticket={selectedTicket}
 	    />
 
-	    <AlertDialogContainer open={openUploadPdfDialog} setOpen={setOpenUploadPdfDialog} title={"Upload PDF"}
-				  description={"Upload your BAST PDF File"}>
+	    <DialogContainer open={openUploadPdfDialog} setOpen={setOpenUploadPdfDialog} title={"Upload PDF"}
+			     description={"Upload your BAST PDF File"}>
 		<UploadFile
 		    label="Ticket PDF"
 		    description="Select a PDF File to upload."
@@ -473,7 +473,7 @@ export const TicketTable = () => {
 		    fileRef={fileRef}
 		    acceptedFileTypes=".pdf"
 		/>
-	    </AlertDialogContainer>
+	    </DialogContainer>
 	    <DataTable<ITicket>
 		   data={tableData}
 		   columns={columns}

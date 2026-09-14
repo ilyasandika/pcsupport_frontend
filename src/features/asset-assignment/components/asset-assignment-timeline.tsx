@@ -24,7 +24,7 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { GeneratePdfDialog } from "@/features/user/components/generate-pdf-dialog.tsx";
 import { AssetStatus, type IDetailAsset } from "@/types/asset.type.ts";
-import { AlertDialogContainer } from "@/components/alert-dialog-container.tsx";
+import { DialogContainer } from "@/components/dialog-container.tsx";
 import { useNotificationDialog } from "@/context/NotificationDialogContext.tsx";
 import { useMutation } from "@tanstack/react-query";
 import type { IErrorResponse } from "@/types/api.type.ts";
@@ -380,7 +380,7 @@ export const EmployeeTimelineByAsset = ({
 				}}
 			/>
 
-			<AlertDialogContainer
+			<DialogContainer
 				open={!!deleteTarget}
 				setOpen={(open) => !open && setDeleteTarget(null)}
 				title="Delete Assignment"

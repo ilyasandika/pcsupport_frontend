@@ -5,7 +5,7 @@ import { useFormErrors } from "@/hooks/use-errors.ts";
 import type { IErrorResponse } from "@/types/api.type.ts";
 import { UploadFile } from "@/components/upload-file.tsx";
 import { useNotificationDialog } from "@/context/NotificationDialogContext";
-import { AlertDialogContainer } from "@/components/alert-dialog-container";
+import { DialogContainer } from "@/components/dialog-container.tsx";
 
 interface UploadSignatureDialogProps {
 	open: boolean;
@@ -87,7 +87,7 @@ export const UploadSignatureDialog = ({
 	};
 
 	return (
-		<AlertDialogContainer
+		<DialogContainer
 			open={open}
 			setOpen={onOpenChange}
 			title={"Upload Signature"}
@@ -103,7 +103,7 @@ export const UploadSignatureDialog = ({
 					acceptedFileTypes="image/png,image/jpeg,image/jpg"
 				/>
 			</div>
-		</AlertDialogContainer>
+		</DialogContainer>
 	);
 };
 

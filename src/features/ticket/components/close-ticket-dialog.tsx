@@ -6,7 +6,7 @@ import { TicketRepository } from "@/data/repositories/ticket.repository.ts";
 import type { IErrorResponse } from "@/types/api.type.ts";
 import { useNotificationDialog } from "@/context/NotificationDialogContext.tsx";
 import { TextAreaField } from "@/components/textarea-field.tsx";
-import { AlertDialogContainer } from "@/components/alert-dialog-container.tsx";
+import { DialogContainer } from "@/components/dialog-container.tsx";
 import { InputSelect } from "@/components/input-select.tsx";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AssetRepository } from "@/data/repositories/asset.repository.ts";
@@ -79,7 +79,7 @@ export const CloseTicketDialog = ({ open, setOpen, ticket }: ITicketPopoverProps
 	})
 
 	return (
-		<AlertDialogContainer title="Close Ticket" description={""} open={open} setOpen={setOpen} onContinue={() => closeTicket()}>
+		<DialogContainer title="Close Ticket" description={""} open={open} setOpen={setOpen} onContinue={() => closeTicket()}>
 			<div className="space-y-3">
 				<TextAreaField
 					label="Solution"
@@ -122,6 +122,6 @@ export const CloseTicketDialog = ({ open, setOpen, ticket }: ITicketPopoverProps
 					</FieldInputWrapper>
 				}
 			</div>
-		</AlertDialogContainer>
+		</DialogContainer>
 	)
 }

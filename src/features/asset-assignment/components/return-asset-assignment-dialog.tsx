@@ -5,7 +5,7 @@ import { AssetAssignmentRepository } from "@/data/repositories/asset-assignment.
 import { useFormErrors } from "@/hooks/use-errors.ts";
 import { useNotificationDialog } from "@/context/NotificationDialogContext.tsx";
 import { capitalizeWords, getLocalDatetime } from "@/helper/helper.tsx";
-import { AlertDialogContainer } from "@/components/alert-dialog-container.tsx";
+import { DialogContainer } from "@/components/dialog-container.tsx";
 import { EntityCombobox } from "@/components/entity-combobox.tsx";
 import { FieldInputWrapper } from "@/components/field-input-wrapper.tsx";
 import type { IUser } from "@/types/user.type.ts";
@@ -82,7 +82,7 @@ export const ReturnAssetDialog = ({ open, onOpenChange, assignmentId, onSuccess 
 	}
 
 	return (
-		<AlertDialogContainer open={open} title={"Return Asset"} setOpen={onOpenChange} description={"Marking this asset as returned"} onContinue={() => handleSubmit(assignmentId)}>
+		<DialogContainer open={open} title={"Return Asset"} setOpen={onOpenChange} description={"Marking this asset as returned"} onContinue={() => handleSubmit(assignmentId)}>
 			<div className="flex flex-col gap-4 py-2">
 				<InputText
 					label="Return Date"
@@ -115,6 +115,6 @@ export const ReturnAssetDialog = ({ open, onOpenChange, assignmentId, onSuccess 
 					errors={getFieldErrors("remarks")}
 				/>
 			</div>
-		</AlertDialogContainer>
+		</DialogContainer>
 	)
 }

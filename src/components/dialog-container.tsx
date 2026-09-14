@@ -21,7 +21,7 @@ export interface IAlertDialogContainerProps {
 	className?: string,
 }
 
-export const AlertDialogContainer = ({ icon, triggerRender, title, description, content, onContinue, children, variant = "info", open, setOpen, className }: IAlertDialogContainerProps) => {
+export const DialogContainer = ({ icon, triggerRender, title, description, content, onContinue, children, variant = "info", open, setOpen, className }: IAlertDialogContainerProps) => {
 	return (
 		<AlertDialog open={open} onOpenChange={setOpen}>
 			<AlertDialogTrigger>

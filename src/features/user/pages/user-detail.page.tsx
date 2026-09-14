@@ -8,7 +8,7 @@ import { useLoaderData } from "react-router";
 import { BackButton } from "@/components/back-button.tsx";
 import { DetailCard, DetailCardItem } from "@/components/detail-card.tsx";
 import { TicketCard } from "@/features/dashboard/components/ticket-card.tsx";
-import { AlertDialogContainer } from "@/components/alert-dialog-container.tsx";
+import { DialogContainer } from "@/components/dialog-container.tsx";
 import { SyncUserTagsDialog } from "@/features/user/components/sync-user-tags-dialog.tsx";
 import { UserRepository } from "@/data/repositories/user.repository.ts";
 import type { IDetailUser } from "@/types/user.type.ts";
@@ -69,7 +69,7 @@ export const UserDetailPage = () => {
 							<span>Sync AI Tags & Review</span>
 						</button>
 
-						<AlertDialogContainer
+						<DialogContainer
 							triggerRender={
 								<button
 									type="button"
@@ -98,7 +98,7 @@ export const UserDetailPage = () => {
 						/>
 
 						{!isUserInUse && (
-							<AlertDialogContainer
+							<DialogContainer
 								triggerRender={
 									<button
 										type="button"
