@@ -241,7 +241,7 @@ export const TicketTable = () => {
 				    description: `Are you sure you want to claim this ticket?`,
 				    onContinue: () => claimTicket(ticket.id),
 				},
-				disabled: !isSupervisor(),
+				disabled: isSupervisor() || isHelpdesk() || !isOpen,
 			    }}
 
 			    uploadDocument={{
