@@ -94,45 +94,27 @@ const ActionButton = ({Logo, onClick, className, to, tooltip, alert}: ActionButt
 	)
     }
 
-    if (to) {
-	return (
-	    <ToolTipContainer text={tooltip}>
-		{
-		    alert ?
-			<AlertDialogContainer
-			    triggerRender={<LinkComp/>}
-			    title={alert.title}
-			    description={alert.description}
-			    content={alert.content}
-			    onContinue={alert.onContinue}
-			    variant={alert.variant}
-			    icon={alert.icon}
-			/>
-			:
-			<LinkComp/>
-		}
-	    </ToolTipContainer>
-	)
-    } else {
-	return (
-	    <ToolTipContainer text={tooltip}>
-		{
-		    alert ?
-			<AlertDialogContainer
-			    triggerRender={<ButtonComp/>}
-			    title={alert.title}
-			    content={alert.content}
-			    description={alert.description}
-			    onContinue={alert.onContinue}
-			    variant={alert.variant}
-			    icon={alert.icon}
-			/>
-			:
-			<ButtonComp/>
-		}
-	    </ToolTipContainer>
-	)
-    }
+    const renderElement = alert ? (
+	<AlertDialogContainer
+	    triggerRender={to ? <LinkComp/> : <ButtonComp/>}
+	    title={alert.title}
+	    description={alert.description}
+	    content={alert.content}
+	    onContinue={alert.onContinue}
+	    variant={alert.variant}
+	    icon={alert.icon}
+	/>
+    ) : (
+	to ? <LinkComp/> : <ButtonComp/>
+    );
+
+    return (
+	<ToolTipContainer text={tooltip}>
+	    <div>
+		{renderElement}
+	    </div>
+	</ToolTipContainer>
+    )
 }
 
 export interface ActionButtonsOptions {
@@ -279,7 +261,7 @@ export const ActionButtons = (props: ActionButtonsProps) => {
     if (props.addDocument && !props.addDocument.disabled) {
 	allActions.push({
 	    key: 'addDocument',
-	    label: props.addDocument.tooltip || 'Generate Document',
+	    label: props.addDocument.tooltip || 'Add Document',
 	    icon: props.addDocument.icon || FilePlus,
 	    options: props.addDocument,
 	    className: props.addDocument.className || 'text-emerald-600',
@@ -371,8 +353,8 @@ export const ActionButtons = (props: ActionButtonsProps) => {
 
 
 
-    let visibleActions: ActionItem[] = [];
-    let dropdownActions: ActionItem[] = [];
+    let visibleActions: ActionItem[];
+    let dropdownActions: ActionItem[];
 
     if (allActions.length <= 2) {
 	visibleActions = allActions;
@@ -424,7 +406,6 @@ export const ActionButtons = (props: ActionButtonsProps) => {
 		/>
 	    ))}
 
-	    {/* Render Dropdown hanya jika ada sisa action (> 3) */}
 	    {dropdownActions.length > 0 && (
 		<DropdownMenu>
 		    <ToolTipContainer text="More Actions">
