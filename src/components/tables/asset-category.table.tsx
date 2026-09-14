@@ -87,7 +87,7 @@ export const AssetCategoryTable = ({ data, isLoading = false, onRefresh }: Asset
                             }}
                             remove={{
                                 tooltip: "Delete Category",
-                                alert: {
+                                dialog: {
                                     title: "Delete Asset Category",
                                     description: `Are you sure you want to delete category "${category.name}"? This action cannot be undone.`,
                                     variant: "danger",

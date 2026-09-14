@@ -57,9 +57,10 @@ interface ActionButtonProps {
     to?: string;
     className?: string;
     tooltip?: string;
-    alert?: {
+    dialog?: {
 	title: string;
 	description: string;
+	type? : "alert" | "dialog"
 	variant?: "success" | "danger" | "warning" | "info";
 	content?: ReactNode;
 	onContinue?: () => void;
@@ -67,7 +68,7 @@ interface ActionButtonProps {
     };
 }
 
-const ActionButton = ({Logo, onClick, className, to, tooltip, alert}: ActionButtonProps) => {
+const ActionButton = ({Logo, onClick, className, to, tooltip, dialog}: ActionButtonProps) => {
     const LinkComp = () => {
 	if (to) {
 	    return (
@@ -94,15 +95,16 @@ const ActionButton = ({Logo, onClick, className, to, tooltip, alert}: ActionButt
 	)
     }
 
-    const renderElement = alert ? (
+    const renderElement = dialog  ? (
 	<DialogContainer
 	    triggerRender={to ? <LinkComp/> : <ButtonComp/>}
-	    title={alert.title}
-	    description={alert.description}
-	    content={alert.content}
-	    onContinue={alert.onContinue}
-	    variant={alert.variant}
-	    icon={alert.icon}
+	    title={dialog.title}
+	    type={dialog.type || "alert"}
+	    description={dialog.description}
+	    content={dialog.content}
+	    onContinue={dialog.onContinue}
+	    variant={dialog.variant}
+	    icon={dialog.icon}
 	/>
     ) : (
 	to ? <LinkComp/> : <ButtonComp/>
@@ -124,9 +126,10 @@ export interface ActionButtonsOptions {
     tooltip?: string;
     icon?: LucideIcon;
     className?: string;
-    alert?: {
+    dialog?: {
 	title: string;
 	description: string;
+	type?: "alert" | "dialog";
 	content?: ReactNode;
 	variant?: "success" | "danger" | "warning" | "info";
 	onContinue?: () => void;
@@ -376,12 +379,12 @@ export const ActionButtons = (props: ActionButtonsProps) => {
 			: "text-slate-700 focus:bg-slate-100 focus:text-slate-900"
 		)}
 		onClick={(e) => {
-		    if (!action.options.alert && !action.options.to && action.options.onClick) {
+		    if (!action.options.dialog && !action.options.to && action.options.onClick) {
 			action.options.onClick(e);
 		    }
 		}}
 		onSelect={(e) => {
-		    if (action.options.alert) {
+		    if (action.options.dialog) {
 			e.preventDefault();
 		    }
 		}}
@@ -401,7 +404,7 @@ export const ActionButtons = (props: ActionButtonsProps) => {
 		    to={action.options.to}
 		    onClick={action.options.onClick}
 		    tooltip={action.tooltip || action.label}
-		    alert={action.options.alert}
+		    dialog={action.options.dialog}
 		    className={action.className}
 		/>
 	    ))}
@@ -440,16 +443,16 @@ export const ActionButtons = (props: ActionButtonsProps) => {
 				);
 			    }
 
-			    if (opt.alert) {
+			    if (opt.dialog) {
 				return (
 				    <DialogContainer
 					key={action.key}
-					title={opt.alert.title}
-					description={opt.alert.description}
-					content={opt.alert.content}
-					onContinue={opt.alert.onContinue}
-					variant={opt.alert.variant}
-					icon={opt.alert.icon}
+					title={opt.dialog.title}
+					description={opt.dialog.description}
+					content={opt.dialog.content}
+					onContinue={opt.dialog.onContinue}
+					variant={opt.dialog.variant}
+					icon={opt.dialog.icon}
 					triggerRender={renderDropdownItemContent(action)}
 				    />
 				);

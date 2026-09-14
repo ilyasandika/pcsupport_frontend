@@ -186,7 +186,7 @@ export const TicketTable = () => {
 			    approve={{
 				tooltip: ticket.approvedBy ? `Approved by ${ticket.approvedBy.fullName || 'Supervisor'}` : 'Approve Ticket',
 				disabled: !isSupervisor() || Boolean(ticket.approvedBy),
-				alert: {
+				dialog: {
 				    title: "Approve Ticket",
 				    description: `Are you sure you want to approve Ticket ${ticket.fullNumber}?`,
 				    variant: "success",
@@ -217,7 +217,7 @@ export const TicketTable = () => {
 			    }}
 			    remove={{
 				tooltip: 'Remove Ticket',
-				alert: {
+				dialog: {
 				    title: "Are you sure remove this ticket?",
 				    description: "This action cannot be undone",
 				    variant: "danger",
@@ -236,7 +236,7 @@ export const TicketTable = () => {
 
 			    addDocument={{
 				tooltip: `Claim Ticket`,
-				alert: {
+				dialog: {
 				    title: `Claim Ticket`,
 				    description: `Are you sure you want to claim this ticket?`,
 				    onContinue: () => claimTicket(ticket.id),
@@ -246,7 +246,7 @@ export const TicketTable = () => {
 
 			    uploadDocument={{
 				tooltip: `Upload ${docLabel}`,
-				alert: {
+				dialog: {
 				    title: `Upload ${docLabel}`,
 				    description: "Upload PDF Max: 1 MB",
 				    content: <UploadFile
@@ -269,7 +269,7 @@ export const TicketTable = () => {
 			    }}
 			    deleteDocument={{
 				tooltip: `Delete Uploaded ${docLabel}`,
-				alert: {
+				dialog: {
 				    title: `Delete Uploaded ${docLabel}`,
 				    description: `Are you sure you want to delete the uploaded ticket ${docLabel} PDF document?`,
 				    variant: "danger",

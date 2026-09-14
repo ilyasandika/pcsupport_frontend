@@ -151,7 +151,7 @@ export const UserTable = ({data, isLoading = false}: UserTableProps) => {
 				tooltip: "View Signature"
 			    } : undefined}
 			    deleteDocument={user.signaturePath ? {
-				alert: {
+				dialog: {
 				    title: 'Delete Signature',
 				    description: `Are you sure you want to delete signature for ${user.fullName}?`,
 				    onContinue: async () => {
@@ -171,7 +171,7 @@ export const UserTable = ({data, isLoading = false}: UserTableProps) => {
 				tooltip: "Change Password"
 			    }}
 			    toggleStatus={{
-				alert: {
+				dialog: {
 				    title: user.active ? 'Deactivate User' : 'Activate User',
 				    description: user.active
 					? `Are you sure you want to deactivate user ${user.fullName}? The user will not be able to log in.`
@@ -189,7 +189,7 @@ export const UserTable = ({data, isLoading = false}: UserTableProps) => {
 				className: user.active ? "text-amber-600" : "text-emerald-600",
 			    }}
 			    remove={!isUserInUse ? {
-				alert: {
+				dialog: {
 				    title: 'Remove User',
 				    description: 'Are you sure to remove this user? this action cannot be undone!',
 				    onContinue: () => UserRepository.deleteUser(id),

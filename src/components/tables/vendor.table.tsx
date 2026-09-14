@@ -112,7 +112,7 @@ export const VendorTable = ({data, isLoading = false, onRefresh}: VendorTablePro
 			    }}
 			    remove={{
 				tooltip: "Delete Vendor",
-				alert: {
+				dialog: {
 				    title: "Delete Vendor",
 				    description: `Are you sure you want to delete vendor "${vendor.name}"? This action cannot be undone.`,
 				    variant: "danger",

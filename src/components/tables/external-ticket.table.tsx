@@ -78,7 +78,7 @@ export const ExternalTicketTable = ({ data = [], isLoading = false }: ExternalTi
                             }}
                             remove={{
                                 tooltip: "Delete External Ticket",
-                                alert: {
+                                dialog: {
                                     title: "Delete External Ticket?",
                                     description: `Are you sure you want to delete case #${item.caseNumber || item.id}? This action cannot be undone.`,
                                     variant: "danger",

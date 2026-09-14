@@ -101,7 +101,7 @@ export const ProjectTable = ({data, vendors, isLoading = false, onRefresh}: Proj
 			    }}
 			    remove={{
 				tooltip: "Delete Project",
-				alert: {
+				dialog: {
 				    title: "Delete Project",
 				    description: `Are you sure you want to delete project "${project.name}"? This action cannot be undone.`,
 				    variant: "danger",

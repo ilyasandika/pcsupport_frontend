@@ -151,7 +151,7 @@ export const TemplateTable = ({ data, isLoading = false, onRefresh }: TemplateTa
 							}}
 							remove={{
 								tooltip: "Delete Template",
-								alert: {
+								dialog: {
 									title: "Delete Template",
 									description: `Are you sure you want to delete template "${templateTypeLabel[template.type]}"? This action cannot be undone.`,
 									variant: "danger",

@@ -155,7 +155,7 @@ export const SlaPolicyTable = ({data, isLoading = false, onRefresh}: SlaPolicyTa
 			    }}
 			    remove={{
 				tooltip: "Delete SLA Policy",
-				alert: {
+				dialog: {
 				    title: "Delete SLA Policy",
 				    description: `Are you sure you want to delete policy "${policy.name}"? This action cannot be undone.`,
 				    variant: "danger",
@@ -219,4 +219,4 @@ export const SlaPolicyTable = ({data, isLoading = false, onRefresh}: SlaPolicyTa
 	    />
 	</>
     );
-};
+};

@@ -144,7 +144,7 @@ export const EmployeeTable = ({ data, isLoading = false, onRefresh }: EmployeeTa
 							}}
 							remove={{
 								tooltip: "Delete Employee",
-								alert: {
+								dialog: {
 									title: "Delete Employee",
 									description: `Are you sure you want to delete employee "${employee.name}" (${employee.nik})? This action cannot be undone.`,
 									variant: "danger",

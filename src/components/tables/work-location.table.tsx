@@ -118,7 +118,7 @@ export const WorkLocationTable = ({data, isLoading = false, onRefresh}: WorkLoca
 			    }}
 			    remove={{
 				tooltip: "Delete Location",
-				alert: {
+				dialog: {
 				    title: "Delete Work Location",
 				    description: `Are you sure you want to delete location "${location.name}"? This action cannot be undone.`,
 				    variant: "danger",
@@ -182,4 +182,4 @@ export const WorkLocationTable = ({data, isLoading = false, onRefresh}: WorkLoca
 	    />
 	</>
     );
-};
+};
