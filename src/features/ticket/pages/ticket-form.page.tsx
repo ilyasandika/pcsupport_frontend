@@ -1,5 +1,5 @@
 import {
-    Asterisk, CheckCircle, Clock4,
+    CheckCircle, Clock4,
     FileText,
     Info,
     Laptop, LaptopMinimalCheck,
@@ -38,6 +38,8 @@ import {useNotificationDialog} from "@/context/NotificationDialogContext.tsx";
 import {InputText} from "@/components/input-text.tsx";
 import {FieldInputWrapper} from "@/components/field-input-wrapper.tsx";
 import {useResourceAccess} from "@/hooks/use-resource-access.ts";
+import {useUpdateTicket} from "@/features/ticket/hooks/use-update-ticket.ts";
+import {useCreateTicket} from "@/features/ticket/hooks/use-create-ticket.ts";
 
 interface ITicketFormLoader {
     employees: IEmployee[],
@@ -48,7 +50,7 @@ interface ITicketFormLoader {
 
 export const TicketFormPage = () => {
     const {employees, engineers, slaPolicies, ticket}: ITicketFormLoader = useLoaderData()
-    const {setErrors, getFieldErrors, generalErrors} = useFormErrors()
+    const {setErrors, getFieldErrors, generalErrors, errors} = useFormErrors()
     const {isAdmin, isHelpdesk, isEngineer, user, isSupervisor} = useAuth()
     const {canAccess} = useResourceAccess()
 
@@ -166,40 +168,26 @@ export const TicketFormPage = () => {
 
     const slaStyle = getPriorityStyles[selectedSla.priority]
 
-    const createTicketMutation = useMutation({
-	mutationFn: (payload: ICreateTicketPayload) => TicketRepository.createTicket(payload),
-	onSuccess: () => {
-	    showNotification({
-		variant: "success",
-		title: "Ticket successfully created",
-		description: "New ticket has been created.",
-		onClose: () => navigate("/tickets"),
-	    })
-	},
-	onError: (err: IErrorResponse) => {
-	    setErrors(err.errors)
-	}
-    })
+    const {mutateAsync: updateTicket} = useUpdateTicket()
+    const {mutateAsync: createTicket} = useCreateTicket()
 
-    const updateTicketMutation = useMutation({
-	mutationFn: ({id, payload}: {
-	    id: number,
-	    payload: IUpdateTicketPayload
-	}) => TicketRepository.updateTicket(id, payload),
-	onSuccess: () => {
-	    showNotification({
-		variant: "success",
-		title: "Ticket Successfully Updated",
-		description: "Ticket has been updated successfully.",
-		onClose: () => navigate("/tickets"),
-	    })
-	},
-	onError: (err: IErrorResponse) => {
-	    setErrors(err.errors)
-	}
-    })
+
 
     const saveTicket = async () => {
+
+	if (!selectedAsset && !selectedEmployee) {
+	    setErrors([
+		{
+		field: 'employeeNik',
+		message: ['employee or asset must be selected']
+	    	},
+		{
+		    field: 'assetTag',
+		    message: ['employee or asset must be selected']
+		},
+	    ])
+	}
+
 	if (initialValue) {
 	    const ticketData: IUpdateTicketPayload = {
 		status: selectedStatus,
@@ -217,7 +205,15 @@ export const TicketFormPage = () => {
 		    : (!isTicketSolved(selectedStatus) ? null : initialValue.solvedAt),
 		contact: contact
 	    }
-	    updateTicketMutation.mutate({id: initialValue.id, payload: ticketData})
+
+	    try {
+		updateTicket({id: initialValue.id, payload: ticketData})
+	    } catch (err) {
+		const errorResponse = err as IErrorResponse;
+		setErrors(errors => [...errors, ...errorResponse.errors])
+	    }
+
+	    // updateTicketMutation.mutate({id: initialValue.id, payload: ticketData})
 	} else {
 	    const ticketData: ICreateTicketPayload = {
 		assetTag: selectedAsset?.assetTag,
@@ -229,7 +225,13 @@ export const TicketFormPage = () => {
 		slaPolicyId: selectedSla.id,
 		contact: contact
 	    }
-	    createTicketMutation.mutate(ticketData)
+	    try {
+		await createTicket(ticketData)
+	    } catch (err) {
+		const errorResponse = err as IErrorResponse;
+		setErrors(errors => [...errors, ...errorResponse.errors])
+	    }
+	    // createTicketMutation.mutate(ticketData)
 	}
     }
 
@@ -262,18 +264,9 @@ export const TicketFormPage = () => {
                     <Card>
                         <CardContent className="flex flex-col gap-4">
                             <SeparatorWithLabel label={"Employee & Asset"} className=""/>
-                            <Item variant="muted" className="border border-gray">
-                                <ItemContent className="flex gap-3">
-                                    <div className="flex items-center justify-between">
-                                        <div>
-                                            <ItemTitle className="flex items-center gap-2">
-                                                <Laptop className="w-4 h-4"/>
-                                                <div className="flex items-start gap-0.5">
-                                                    Asset <Asterisk className="text-ptba-primary-red w-3 h-3"/>
-                                                </div>
-
-                                            </ItemTitle>
-                                        </div>
+                            <FieldInputWrapper Icon={Laptop} label={"Asset"} errors={getFieldErrors("assetTag")}>
+                                <Item variant="muted" className="border border-gray">
+                                    <ItemContent className="flex flex-row gap-3 w-full">
                                         <div className="flex items-center gap-2">
                                             <Switch id="asset" checked={withAsset} onCheckedChange={(checked) => {
 						setWithAsset(checked)
@@ -284,53 +277,54 @@ export const TicketFormPage = () => {
                                                 With Asset
                                             </Label>
                                         </div>
-                                    </div>
 
-				    {!withAsset &&
-                                        <Item variant="outline" className="bg-white" size="xs">
-                                            <ItemContent>
-                                                <div className="flex gap-2 items-center">
-                                                    <Info className="w-4 h-4 text-ptba-orange"/>
-                                                    <div>
-                                                        <ItemTitle>Non Asset Ticket</ItemTitle>
-                                                        <ItemDescription>
-                                                            This ticket is not related to any asset.
-                                                        </ItemDescription>
+					{!withAsset &&
+                                            <Item variant="outline" className="bg-white w-full" size="xs">
+                                                <ItemContent>
+                                                    <div className="flex gap-2 items-center">
+                                                        <Info className="w-4 h-4 text-ptba-orange"/>
+                                                        <div>
+                                                            <ItemTitle>Non Asset Ticket</ItemTitle>
+                                                            <ItemDescription>
+                                                                This ticket is not related to any asset.
+                                                            </ItemDescription>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </ItemContent>
-                                        </Item>
-				    }
+                                                </ItemContent>
+                                            </Item>
+					}
 
-				    {withAsset &&
-                                        <EntityCombobox<IAsset>
-                                            items={assetList}
-                                            onInputValueChange={(value) => setAssetFilter(value)}
-                                            value={selectedAsset}
-                                            getLabel={(a: IAsset) => `${a.assetTag} | ${a.type}`}
-                                            disabled={disabledAsset}
-                                            getKey={(a: IAsset) => a.serialNumber}
-                                            getSearchValue={(a: IAsset) => `${a.assetTag} | ${a.type}`}
-                                            getTitle={(a: IAsset) => a.assetTag}
-                                            getDescription={(a: IAsset) => `${a.type}`}
-                                            onSelect={(asset) => {
-						setSelectedAsset(asset)
-						const assignedNik = asset.assetAssignment?.employee?.nik
-						if (assignedNik) {
-						    const emp = getEmployeeByNik(assignedNik) || asset.assetAssignment?.employee
-						    if (emp) {
-							setSelectedEmployee(emp)
+					{withAsset &&
+                                            <EntityCombobox<IAsset>
+						className={"w-full"}
+                                                items={assetList}
+                                                onInputValueChange={(value) => setAssetFilter(value)}
+                                                value={selectedAsset}
+                                                getLabel={(a: IAsset) => `${a.assetTag} | ${a.type}`}
+                                                disabled={disabledAsset}
+                                                getKey={(a: IAsset) => a.serialNumber}
+                                                getSearchValue={(a: IAsset) => `${a.assetTag} | ${a.type}`}
+                                                getTitle={(a: IAsset) => a.assetTag}
+                                                getDescription={(a: IAsset) => `${a.type}`}
+                                                onSelect={(asset) => {
+						    setSelectedAsset(asset)
+						    const assignedNik = asset.assetAssignment?.employee?.nik
+						    if (assignedNik) {
+							const emp = getEmployeeByNik(assignedNik) || asset.assetAssignment?.employee
+							if (emp) {
+							    setSelectedEmployee(emp)
+							}
 						    }
-						}
-					    }}
-                                            onClear={() => {
-						setSelectedAsset(null)
-						setDisabledAsset(false)
-					    }}
-                                        />
-				    }
-                                </ItemContent>
-                            </Item>
+						}}
+                                                onClear={() => {
+						    setSelectedAsset(null)
+						    setDisabledAsset(false)
+						}}
+                                            />
+					}
+                                    </ItemContent>
+                                </Item>
+			    </FieldInputWrapper>
 
 			    {/*employee combobox*/}
                             <FieldInputWrapper Icon={UserRoundCog} label={"User / Employee"}

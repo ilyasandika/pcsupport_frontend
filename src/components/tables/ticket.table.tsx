@@ -30,6 +30,7 @@ import {Badge} from "../ui/badge.tsx";
 import {useServerTable} from "@/hooks/use-server-table.ts";
 import {useApproveTicket} from "@/features/ticket/hooks/use-approve-ticket.ts";
 import {useClaimTicket} from "@/features/ticket/hooks/use-claim-ticket.ts";
+import {useDeleteTicket} from "@/features/ticket/hooks/use-delete-ticket.ts";
 
 
 export const TicketTable = () => {
@@ -44,26 +45,6 @@ export const TicketTable = () => {
 
     const {isEngineer, isAdmin, isHelpdesk, isSupervisor, user, isAuthLoading} = useAuth()
 
-
-    const deleteTicketMutation = useMutation({
-	mutationFn: (id: number) => TicketRepository.hardRemoveTicket(id),
-	onSuccess: () => {
-	    showNotification({
-		variant: "success",
-		title: "Ticket has been deleted",
-		description: "Ticket has been deleted successfully",
-		onClose: () => window.location.reload(),
-	    })
-	},
-	onError: () => {
-	    showNotification({
-		variant: "error",
-		title: "Failed to delete ticket",
-		description: "Failed to delete ticket",
-		onClose: () => window.location.reload(),
-	    })
-	}
-    })
 
     const deleteTicketPdfMutation = useMutation({
 	mutationFn: (ticketId: number) => TicketRepository.deleteUploadedPdf(ticketId),
@@ -130,6 +111,8 @@ export const TicketTable = () => {
     }, [assetCategories]);
     const {mutate: approveTicket} = useApproveTicket()
     const {mutate: claimTicket} = useClaimTicket()
+    const {mutate: deleteTicket} = useDeleteTicket()
+
     const columnHelper = createColumnHelper<ITicket>();
     const columns: ColumnDef<ITicket, any>[] = useMemo(
 	() => [
@@ -238,7 +221,7 @@ export const TicketTable = () => {
 				    title: "Are you sure remove this ticket?",
 				    description: "This action cannot be undone",
 				    variant: "danger",
-				    onContinue: () => deleteTicketMutation.mutate(ticket.id),
+				    onContinue: () => deleteTicket(ticket.id),
 				},
 				disabled: disableRemove
 			    }}
