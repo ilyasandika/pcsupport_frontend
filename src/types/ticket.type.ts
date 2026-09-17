@@ -130,9 +130,6 @@ export interface ICreateTicketPayload {
   slaPolicyId?: number;
   locationId?: number;
   solution?: string;
-  backupAssetTag?: string;
-  startAt?: string;
-  solvedAt?: string | null;
   remarks?: string;
   fullNumberTemplate?: string;
   contact?: string;
@@ -141,8 +138,16 @@ export interface ICreateTicketPayload {
 export interface IUpdateTicketPayload extends Partial<ICreateTicketPayload> {
   status?: TicketStatusType;
   solution?: string;
+  startAt?: string;
+  solvedAt?: string | null;
+  backupAssetTag?: string;
 }
 
+export interface ICloseTicket {
+  status: TicketStatusType;
+  solution: string;
+  backupAssetTag?: string;
+}
 
 export type IPrintTicketPayload = {
   phoneNumber?: string;
@@ -169,6 +174,8 @@ export interface ITicketRepository {
   getUserSignature: (id: number) => Promise<string | null>
   deleteUploadedPdf: (id: number) => Promise<void>
   approveTicket: (id: number, supervisorId: number) => Promise<void>
+  closeTicket: (id: number, payload: ICloseTicket) => Promise<void>
 
   hardRemoveTicket: (id: number) => any
+
 }
