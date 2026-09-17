@@ -1,10 +1,10 @@
-import type {
-    IDetailAsset,
-    IAssetRepository,
-    IAssetSummary,
-    IAsset,
-    IAssetPayload,
-    IAssetFilter
+import {
+    type IDetailAsset,
+    type IAssetRepository,
+    type IAssetSummary,
+    type IAsset,
+    type IAssetPayload,
+    type IAssetFilter,
 } from "@/types/asset.type.ts";
 import api from "../api/interceptors.ts";
 import type { ISuccessResponse } from "@/types/api.type.ts";
@@ -15,7 +15,6 @@ const assetApi: IAssetRepository = {
         return data.data
     },
     getAssets: async (filter?: IAssetFilter): Promise<ISuccessResponse<IAsset[]>> => {
-        console.log(filter)
         return await api.get('assets', {
             params: filter,
             paramsSerializer: {
@@ -24,9 +23,14 @@ const assetApi: IAssetRepository = {
         })
 
     },
-    getBackupAssets: async (): Promise<IAsset[]> => {
-        const data = await api.get('assets/list/backup')
-        return data.data
+    getBackupAssets: async (filter?: IAssetFilter): Promise<IAsset[]> => {
+        return await api.get('assets', {
+            params: filter,
+            paramsSerializer: {
+                indexes: null
+            }
+        })
+
     },
     getAssetsByEmployeeNik: async (nik: string): Promise<IAsset[]> => {
         const data = await api.get(`/assets/employee/${nik}`)
