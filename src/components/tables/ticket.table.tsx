@@ -17,20 +17,21 @@ import {
     isTicketSolved
 } from "../../helper/helper.tsx";
 import {TicketRepository} from "@/data/repositories/ticket.repository.ts";
-import {WorkLocationRepository} from "@/data/repositories/work-location.repository.ts";
-import {AssetCategoryRepository} from "@/data/repositories/asset-category.repository.ts";
 import {CloseTicketDialog} from "@/features/ticket/components/close-ticket-dialog.tsx";
 import {useAuth} from "@/context/AuthContext.tsx";
 import {useNotificationDialog} from "@/context/NotificationDialogContext.tsx";
 import {UploadFile} from "@/components/upload-file.tsx";
 import {GeneratePdfDialog} from "@/features/user/components/generate-pdf-dialog.tsx";
-import {useMutation, useQuery} from "@tanstack/react-query";
 import {DialogContainer} from "@/components/dialog-container.tsx";
 import {Badge} from "../ui/badge.tsx";
 import {useServerTable} from "@/hooks/use-server-table.ts";
 import {useApproveTicket} from "@/features/ticket/hooks/use-approve-ticket.ts";
 import {useClaimTicket} from "@/features/ticket/hooks/use-claim-ticket.ts";
 import {useDeleteTicket} from "@/features/ticket/hooks/use-delete-ticket.ts";
+import {useUploadTicket} from "@/features/ticket/hooks/use-upload-ticket.ts";
+import {useDeleteTicketPdf} from "@/features/ticket/hooks/use-delete-pdf-ticket.ts";
+import {useGetLocations} from "@/features/locations/hooks/use-get-locations.ts";
+import {useGetAssetCategories} from "@/features/asset/hooks/use-get-asset-categories.ts";
 
 
 export const TicketTable = () => {
@@ -39,32 +40,11 @@ export const TicketTable = () => {
     const [openDialog, setOpenDialog] = useState<boolean>(false);
     const [openGeneratePdfDialog, setOpenGeneratePdfDialog] = useState<boolean>(false);
     const [openUploadPdfDialog, setOpenUploadPdfDialog] = useState<boolean>(false);
-
     const [_a, setFile] = useState<File | null>(null)
     const fileRef = useRef<File | null>(null);
-
     const {isEngineer, isAdmin, isHelpdesk, isSupervisor, user, isAuthLoading} = useAuth()
-
-
-    const deleteTicketPdfMutation = useMutation({
-	mutationFn: (ticketId: number) => TicketRepository.deleteUploadedPdf(ticketId),
-	onSuccess: () => {
-	    showNotification({
-		variant: "success",
-		title: "Document Deleted",
-		description: "Uploaded ticket PDF document has been deleted successfully",
-		onClose: () => window.location.reload(),
-	    });
-	},
-	onError: (error: any) => {
-	    showNotification({
-		variant: "error",
-		title: "Failed to delete document",
-		description: error.message || "Failed to delete uploaded document",
-	    });
-	},
-    });
-
+    const {mutate: deleteTicketPdf} = useDeleteTicketPdf()
+    const {mutate: uploadTicketMutate} = useUploadTicket()
     const uploadTicket = async (id: number, file: File | null) => {
 	if (!file) {
 	    showNotification({
@@ -75,37 +55,13 @@ export const TicketTable = () => {
 	    })
 	    return
 	}
-	try {
-	    await TicketRepository.uploadTicket(id, file)
-	    showNotification({
-		variant: "success",
-		title: "Ticket file has been uploaded",
-		description: "Ticket file has been uploaded successfully",
-		onClose: () => window.location.reload(),
-	    })
-	} catch (e) {
-	    showNotification({
-		variant: "error",
-		title: "Ticket file failed to upload",
-		description: "Ticket file failed to upload",
-		onClose: () => window.location.reload(),
-	    })
-	}
+	uploadTicketMutate({id, file})
     };
-    const {data: locations} = useQuery({
-	queryKey: ['work-locations'],
-	queryFn: () => WorkLocationRepository.getAll(),
-    });
-
+    const {data: locations} = useGetLocations()
     const locationOptions = useMemo(() => {
 	return (locations)?.map((loc) => ({label: loc.name, value: loc.id})) || [];
     }, [locations]);
-
-    const {data: assetCategories} = useQuery({
-	queryKey: ['asset-categories'],
-	queryFn: () => AssetCategoryRepository.getAll(),
-    });
-
+    const {data: assetCategories} = useGetAssetCategories()
     const categoryOptions = useMemo(() => {
 	return assetCategories?.map((cat) => ({label: cat.name, value: cat.name})) || [];
     }, [assetCategories]);
@@ -244,22 +200,17 @@ export const TicketTable = () => {
 				disabled: isSupervisor() || isHelpdesk() || !isOpen,
 			    }}
 
+
 			    uploadDocument={{
 				tooltip: `Upload ${docLabel}`,
-				dialog: {
-				    title: `Upload ${docLabel}`,
-				    description: "Upload PDF Max: 1 MB",
-				    content: <UploadFile
-					label={`${docLabel} PDF`}
-					description={`Select a ${docLabel} PDF File to upload.`}
-					setFile={setFile}
-					fileRef={fileRef}
-					acceptedFileTypes=".pdf"
-				    />,
-				    onContinue: () => uploadTicket(ticket.id, fileRef.current)
+				onClick: () => {
+				    setSelectedTicket(ticket);
+				    setOpenUploadPdfDialog(true);
+				    fileRef.current = null;
 				},
 				disabled: disableGenerateUpload
 			    }}
+
 			    seeDocument={{
 				onClick: () => {
 				    TicketRepository.getSolvedTicketPdf(ticket.id)
@@ -267,13 +218,14 @@ export const TicketTable = () => {
 				tooltip: `See ${docLabel}`,
 				disabled: disableSeeDelete
 			    }}
+
 			    deleteDocument={{
 				tooltip: `Delete Uploaded ${docLabel}`,
 				dialog: {
 				    title: `Delete Uploaded ${docLabel}`,
 				    description: `Are you sure you want to delete the uploaded ticket ${docLabel} PDF document?`,
 				    variant: "danger",
-				    onContinue: () => deleteTicketPdfMutation.mutate(ticket.id),
+				    onContinue: () => deleteTicketPdf(ticket.id),
 				},
 				disabled: disableSeeDelete
 			    }}
@@ -464,16 +416,23 @@ export const TicketTable = () => {
 		ticket={selectedTicket}
 	    />
 
-	    <DialogContainer open={openUploadPdfDialog} setOpen={setOpenUploadPdfDialog} title={"Upload PDF"}
-			     description={"Upload your BAST PDF File"}>
-		<UploadFile
-		    label="Ticket PDF"
-		    description="Select a PDF File to upload."
-		    setFile={setFile}
-		    fileRef={fileRef}
-		    acceptedFileTypes=".pdf"
-		/>
+	    <DialogContainer
+		open={openUploadPdfDialog}
+		setOpen={setOpenUploadPdfDialog}
+		type="dialog"
+		title={"Upload PDF"}
+		description={"Upload your BAST PDF File"}
+		onContinue={()=>uploadTicket(selectedTicket.id, fileRef.current)}
+	    >
+		    <UploadFile
+			label="Ticket PDF"
+			description="Select a PDF File to upload."
+			setFile={setFile}
+			fileRef={fileRef}
+			acceptedFileTypes=".pdf"
+		    />
 	    </DialogContainer>
+
 	    <DataTable<ITicket>
 		   data={tableData}
 		   columns={columns}
