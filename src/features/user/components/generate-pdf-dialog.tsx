@@ -116,7 +116,6 @@ export const GeneratePdfDialog = ({
     }, [generatePdfPending]);
 
     const handleGenerate = async () => {
-
 	if (!selectedSupervisor) {
 	    setErrors([{
 		field: "supervisor",
