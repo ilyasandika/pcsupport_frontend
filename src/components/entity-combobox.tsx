@@ -78,7 +78,7 @@ export function EntityCombobox<T>({
 				className={cn("has-disabled:opacity-100 bg-background", className)}
 				disabled={disabled}
 			>
-				{value && (
+				{(value && onClear) && (
 					<InputGroupAddon
 						align="inline-end"
 						className="cursor-pointer"
