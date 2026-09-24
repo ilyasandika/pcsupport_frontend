@@ -36,7 +36,7 @@ const assetApi: IAssetRepository = {
         const data = await api.get(`/assets/employee/${nik}`)
         return data.data
     },
-    getAssetBySn: async (assetTag: string): Promise<IDetailAsset> => {
+    getAssetByAssetTag: async (assetTag: string): Promise<IDetailAsset> => {
         const data = await api.get(`/assets/${assetTag}`)
         return data.data
     },
@@ -52,6 +52,9 @@ const assetApi: IAssetRepository = {
         const res = await api.patch(`/assets/${payload.assetTag}`, payload);
         return res.data;
     },
+    deleteAsset: async (assetTag: string): Promise<void> => {
+        await api.delete(`/assets/${assetTag}`)
+    }
 }
 
 
