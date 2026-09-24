@@ -151,6 +151,7 @@ export interface ICloseTicket {
 
 export type IPrintTicketPayload = {
   phoneNumber?: string;
+  supervisorId: number;
   eSignEngineer?: boolean;
   eSignSupervisor?: boolean;
   eSignUser?: boolean;
