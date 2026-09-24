@@ -5,7 +5,7 @@ import {capitalizeWords} from "@/helper/helper.tsx";
 
 export interface IFieldInputWrapper {
     children?: ReactNode
-    Icon: LucideIcon,
+    Icon?: LucideIcon,
     label: string,
     errors?: string[],
     required?: boolean,
@@ -17,7 +17,7 @@ export const FieldInputWrapper = ({children, label, Icon, errors, required = fal
 	<Field>
 	    <FieldLabel htmlFor={label} className="flex items-center gap-1">
 		<div className="flex items-center gap-2">
-		    <Icon className="w-4 h-4"/>
+		    {Icon && <Icon className="w-4 h-4"/>}
 		    {label}
 		</div>
 		{required && <Asterisk className="text-danger w-3 h-3"/>}
