@@ -14,7 +14,6 @@ export const useCloseTicket = () => {
 		variant: "success",
 		title: "Ticket has been closed",
 		description: "Ticket has been closed successfully",
-		onClose: () => window.location.reload(),
 	    })
 	},
     });
