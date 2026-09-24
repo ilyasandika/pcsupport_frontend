@@ -41,16 +41,19 @@ const assetAssignmentApi: IAssetAssignmentRepository = {
 	payload: IGenerateAssetAssignmentPayload,
 	type: 'assign' | 'return',
     ) => {
-	console.log(id, payload)
-	const endpoint = type === 'assign'
-	    ? `/asset-assignments/${id}/assign/pdf`
-	    : `/asset-assignments/${id}/return/pdf`;
-	const res = await api.post(endpoint, payload, {
-	    responseType: 'blob',
-	});
-	const blob = new Blob([res.data], { type: 'application/pdf' });
-	const blobUrl = URL.createObjectURL(blob);
-	window.open(blobUrl, '_blank');
+	try {
+	    const endpoint = type === 'assign'
+		? `/asset-assignments/${id}/assign/pdf`
+		: `/asset-assignments/${id}/return/pdf`;
+	    const res = await api.post(endpoint, payload, {
+		responseType: 'blob',
+	    });
+	    const blob = new Blob([res.data], {type: 'application/pdf'});
+	    const blobUrl = URL.createObjectURL(blob);
+	    window.open(blobUrl, '_blank');
+	} catch (e) {
+	    throw e
+	}
     },
     uploadDocument: async (
 	id: number | string,
@@ -60,8 +63,8 @@ const assetAssignmentApi: IAssetAssignmentRepository = {
 	const formData = new FormData();
 	formData.append('file', file);
 	const endpoint = type === 'assign'
-	    ? `/asset-assignments/${id}/upload`
-	    : `/asset-assignments/${id}/return/upload`;
+	    ? `/asset-assignments/${id}/upload/assign`
+	    : `/asset-assignments/${id}/upload/return`;
 	const res = await api.post(endpoint, formData, {
 	    headers: {
 		'Content-Type': 'multipart/form-data',
@@ -75,18 +78,25 @@ const assetAssignmentApi: IAssetAssignmentRepository = {
     ) => {
 	try {
 	    const endpoint = type === 'assign'
-		? `/asset-assignments/${id}/pdf`
-		: `/asset-assignments/${id}/return/pdf`;
+		? `/asset-assignments/${id}/pdf/assign`
+		: `/asset-assignments/${id}/pdf/return`;
 	    const res = await api.get(endpoint, {
 		responseType: 'blob'
 	    });
-	    const blob = new Blob([res.data], { type: 'application/pdf' });
+	    const blob = new Blob([res.data], {type: 'application/pdf'});
 	    const blobUrl = URL.createObjectURL(blob);
 	    window.open(blobUrl, '_blank');
 	} catch (error) {
 	    console.error('Error fetching PDF:', error);
 	}
     },
+    deleteDocument: async (id: number, type: "assign" | "return"): Promise<void> => {
+	const endpoint = type === 'assign'
+	    ? `/asset-assignments/${id}/pdf/assign`
+	    : `/asset-assignments/${id}/pdf/return`;
+	return await api.delete(endpoint);
+    },
+
     uploadUserSignature: async (
 	id: number | string,
 	file: File,
@@ -117,7 +127,7 @@ const assetAssignmentApi: IAssetAssignmentRepository = {
 	    });
 	    const blob = res instanceof Blob
 		? res
-		: new Blob([res.data], { type: (res.headers?.['content-type'] as string) || 'image/png' });
+		: new Blob([res.data], {type: (res.headers?.['content-type'] as string) || 'image/png'});
 	    return URL.createObjectURL(blob);
 	} catch (error) {
 	    console.error('Error fetching asset assignment user signature:', error);
