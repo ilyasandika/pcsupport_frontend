@@ -184,13 +184,15 @@ export const GeneratePdfDialog = ({
 				    eSign Supervisor
 				</Label>
 				<Tooltip>
-				    <TooltipTrigger>
-					<Switch
-					    id="esign-supervisor"
-					    checked={eSignSupervisor}
-					    onCheckedChange={setESignSupervisor}
-					    disabled={disableESign()}
-					/>
+				    <TooltipTrigger asChild>
+					<span>
+					    <Switch
+						id="esign-supervisor"
+						checked={eSignSupervisor}
+						onCheckedChange={setESignSupervisor}
+						disabled={disableESign()}
+					    />
+					</span>
 				    </TooltipTrigger>
 				    {disableESign() && (
 					<TooltipContent>
