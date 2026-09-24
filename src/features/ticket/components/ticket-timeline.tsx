@@ -70,7 +70,7 @@ export const TicketTimeline = ({tickets, maxHeight = "420px"}: TicketTimelinePro
 					{t.fullNumber ? `Ticket No. ${t.fullNumber}` : `New Ticket`}
 				    </p>
 				</div>
-				<p className="whitespace-nowrap text-xs text-slate-400">{fmtDate(t.createdAt)}</p>
+				<p className="whitespace-nowrap text-xs text-slate-400">{fmtDate(t.startAt)} - {fmtDate(t.solvedAt)} </p>
 			    </div>
 
 			    <div className="mt-2 rounded-lg border border-slate-100 bg-slate-50 p-3.5">
