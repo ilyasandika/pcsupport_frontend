@@ -6,6 +6,7 @@ interface LoadingContextType {
 	title?: string;
 	description?: string;
 	isAi?: boolean;
+	setIsAi?: (isAi: boolean) => void;
 	setIsLoading: (isLoading: boolean) => void;
 	showLoading: (title?: string, description?: string, isAi?: boolean) => void;
 	hideLoading: () => void;
@@ -19,7 +20,7 @@ export const LoadingProvider = ({ children }: { children: ReactNode }) => {
 	const [description, setDescription] = useState<string | undefined>();
 	const [isAi, setIsAi] = useState<boolean>(false);
 
-	const showLoading = (customTitle?: string, customDescription?: string, aiMode: boolean = true) => {
+	const showLoading = (customTitle?: string, customDescription?: string, aiMode: boolean = false) => {
 		setTitle(customTitle || "Memproses...");
 		setDescription(customDescription || "Mohon tunggu sebentar, sistem sedang memproses permintaan Anda.");
 		setIsAi(aiMode);
