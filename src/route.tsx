@@ -178,7 +178,7 @@ export const router = createBrowserRouter([
 			path: 'assets',
 			children: [
 			    {
-				element: <RequireAdmin/>,
+				element: <RequireRole allowed={["admin", "helpdesk", "supervisor"]}/>,
 				children: [
 				    {
 					index: true,
@@ -190,6 +190,11 @@ export const router = createBrowserRouter([
 					element: <AssetDetailPage/>,
 					loader: (args) => assetDetailLoader(args),
 				    },
+				],
+			    },
+			    {
+				element: <RequireRole allowed={["admin"]}/>,
+				children: [
 				    {
 					path: 'create',
 					element: <AssetFormPage/>,
@@ -200,8 +205,8 @@ export const router = createBrowserRouter([
 					element: <AssetFormPage/>,
 					loader: (args) => assetFormLoader(args),
 				    }
-				],
-			    }
+				]
+			    },
 			]
 		    },
 		    {
