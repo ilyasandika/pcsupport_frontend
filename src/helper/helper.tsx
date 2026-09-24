@@ -37,19 +37,6 @@ export const byteToStringMb = (bytes: number): string => {
 };
 
 
-export const fmtDate = (d: string) =>
-    d
-        ? new Date(d).toLocaleDateString("id-ID", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-        })
-        : "—";
-
-
-
 export const monthsDaysBetween = (startStr: string, endStr: string) => {
     const start = new Date(startStr);
     const end = endStr ? new Date(endStr) : new Date();
@@ -62,6 +49,19 @@ export const monthsDaysBetween = (startStr: string, endStr: string) => {
     if (months < 0) { months = 0; days = 0; }
     return { months, days };
 }
+
+
+
+export const fmtDate = (d?: string) =>
+    d
+        ? new Date(d).toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+        })
+        : "—";
 
 export type TimeHMS = {
     hours: number;
@@ -141,8 +141,6 @@ export function calculateSlaMetric(startDateString: string, endDateString: strin
     const actualSeconds = startDateString && endDateString
         ? dateStringToSeconds(endDateString) - dateStringToSeconds(startDateString)
         : 0;
-
-    console.log("Actual Seconds:", actualSeconds);
 
     return {
         target: secondsToHMS(targetSeconds),
