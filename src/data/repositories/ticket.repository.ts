@@ -103,13 +103,16 @@ const ticketApi: ITicketRepository = {
     },
 
     generateTicketPdf: async (id: number, payload: IPrintTicketPayload): Promise<void> => {
-	console.log("generate masuk")
-	const res: AxiosResponse = await api.post(`/tickets/${id}/pdf`, payload, {
-	    responseType: 'blob'
-	})
-	const blob = new Blob([res.data], {type: 'application/pdf'});
-	const blobUrl = URL.createObjectURL(blob);
-	window.open(blobUrl, '_blank');
+	try {
+	    const res: AxiosResponse = await api.post(`/tickets/${id}/pdf`, payload, {
+		responseType: 'blob'
+	    })
+	    const blob = new Blob([res.data], {type: 'application/pdf'});
+	    const blobUrl = URL.createObjectURL(blob);
+	    window.open(blobUrl, '_blank');
+	} catch (e) {
+	    throw e
+	}
     },
 
     claimTicket: async (ticketId: number) => {
@@ -137,8 +140,6 @@ const ticketApi: ITicketRepository = {
 	return res.data
     },
     uploadUserSignature: async (id: number, file: File) => {
-
-	console.log("masuk signature")
 	try {
 	    const formData = new FormData();
 	    formData.append('file', file);
