@@ -13,7 +13,7 @@ import {
     DialogTrigger
 } from "@/components/ui/dialog.tsx";
 
-export interface IAlertDialogContainerProps {
+export interface IDialogContainerProps {
     triggerRender?: ReactNode,
     title: string,
     description: string,
@@ -40,10 +40,9 @@ export const DialogContainer = ({
 				    open,
 				    setOpen,
 				    className,
-				    type = "alert" // Default menggunakan alert-dialog
-				}: IAlertDialogContainerProps) => {
+				    type = "alert"
+				}: IDialogContainerProps) => {
 
-    // Jika tipenya "dialog", gunakan komponen Dialog biasa
     if (type === "dialog") {
 	return (
 	    <Dialog open={open} onOpenChange={setOpen}>
