@@ -20,9 +20,13 @@ export const useGeneratePdf = () => {
 	onSuccess: () => {
 	    queryClient.invalidateQueries({ queryKey: ['tickets'] });
 	    queryClient.invalidateQueries({ queryKey: ['assets'] });
+	    queryClient.invalidateQueries({ queryKey: ['asset', "detail"] });
+	    showNotification({
+		variant: "success",
+		title: "Success to Generate PDF",
+	    })
 	},
 	onError: (err: IErrorResponse) => {
-	    console.log(err)
 	    showNotification({
 		variant: "error",
 		title: "Failed to Generate PDF",
