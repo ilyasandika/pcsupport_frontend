@@ -1,11 +1,10 @@
 import type {AssetStatusType, IDetailAsset} from "./asset.type.ts";
 import type {IDetailEmployee} from "./employee.type.ts";
 import type {IUser} from "@/types/user.type.ts";
-import type {IPrintTicketPayload} from "@/types/ticket.type.ts";
+import type {IPrintTicketPayload, ITicket} from "@/types/ticket.type.ts";
 
 export interface IDetailAssetAssignment {
     id: number;
-    assetId: number;
     asset: IDetailAsset
     employee: IDetailEmployee
     userNonEmployeeName?: string;
@@ -23,9 +22,14 @@ export interface IDetailAssetAssignment {
     returnUserSignaturePath?: string | null;
     assignRemarks?: string;
     returnRemarks?: string;
+    assignTicket?: ITicket;
+    returnTicket?: ITicket;
+    assignFullTicketNumber: string;
+    returnFullTicketNumber: string;
     remarks?: string;
     contact?: string;
     createdAt: string;
+    isLegacyData: boolean;
 }
 
 export type IAssetAssignment = Pick<IDetailAssetAssignment, 'id' >
@@ -94,6 +98,11 @@ export interface IAssetAssignmentRepository {
         id: number | string,
         type: 'assign' | 'return',
     ) => Promise<void>;
+    deleteDocument: (
+        id: number,
+        type: 'assign' | 'return',
+    ) => Promise<void>;
+
     uploadUserSignature: (
         id: number | string,
         file: File,
