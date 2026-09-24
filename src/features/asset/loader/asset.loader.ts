@@ -9,14 +9,14 @@ export const assetLoader = async () => {
 
 export const assetDetailLoader = async ({params}: LoaderFunctionArgs) => {
     const {id} = params as unknown as {id: string}
-    return await AssetRepository.getAssetBySn(id)
+    return await AssetRepository.getAssetByAssetTag(id)
 }
 
 
 export const assetFormLoader = async ({params}: LoaderFunctionArgs) => {
     const {id} = params as unknown as {id: string}
     const [asset, categories, projects] = await Promise.all([
-        id ? AssetRepository.getAssetBySn(id) : Promise.resolve(null),
+        id ? AssetRepository.getAssetByAssetTag(id) : Promise.resolve(null),
         AssetCategoryRepository.getAll(),
         ProjectRepository.getAll()
     ]);
