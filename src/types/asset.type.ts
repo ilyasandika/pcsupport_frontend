@@ -25,10 +25,11 @@ export interface IAssetRepository {
     getAssets: (filter?: IAssetFilter) => Promise<ISuccessResponse<IAsset[]>>
     getBackupAssets: () => Promise<IAsset[]>
     getAssetsByEmployeeNik: (nik: string) => Promise<IAsset[]>
-    getAssetBySn: (assetTag: string) => Promise<IDetailAsset>
+    getAssetByAssetTag: (assetTag: string) => Promise<IDetailAsset>
     getActiveAssetList: () => Promise<IAsset[]>
     createAsset: (payload: IAssetPayload) => Promise<IDetailAsset>;
     updateAsset: (payload: IAssetPayload) => Promise<IDetailAsset>;
+    deleteAsset: (assetTag: string) => Promise<void>;
 }
 
 export interface IDetailAsset {
@@ -75,7 +76,9 @@ export type IAsset = Pick<IDetailAsset,
     'project' |
     'assetAssignment' |
     'workLocation'
->;
+> & {
+    isUsed: boolean,
+};
 
 export interface IAssetSummary {
     nb: number;
