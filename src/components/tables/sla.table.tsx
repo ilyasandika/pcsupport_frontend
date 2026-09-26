@@ -1,11 +1,8 @@
 import {
     type ColumnDef,
-    type ColumnFiltersState,
     createColumnHelper,
-    getCoreRowModel, getFilteredRowModel, getPaginationRowModel,
-    useReactTable
 } from "@tanstack/react-table";
-import {useEffect, useMemo, useState} from "react";
+import {useMemo, useState} from "react";
 import DataTable from "./data-table.tsx";
 import {ActionButtons} from "./action-button.tsx";
 import type {ISlaPolicy} from "@/types/sla.type.ts";
@@ -140,7 +137,6 @@ export const SlaPolicyTable = ({data, isLoading = false, onRefresh}: SlaPolicyTa
                    </span>
 		),
 	    }),
-	    // Display column untuk tombol aksi
 	    columnHelper.display({
 		id: 'actions',
 		header: 'Actions',
@@ -170,40 +166,12 @@ export const SlaPolicyTable = ({data, isLoading = false, onRefresh}: SlaPolicyTa
 	[]
     );
 
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-    const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
-    const [columnSizing, setColumnSizing] = useState(() => {
-	const savedSizes = localStorage.getItem('table-column-sizes-sla-policy');
-	return savedSizes ? JSON.parse(savedSizes) : {};
-    });
-
-    useEffect(() => {
-	localStorage.setItem('table-column-sizes-sla-policy', JSON.stringify(columnSizing));
-    }, [columnSizing]);
-
-    const table = useReactTable<ISlaPolicy>({
-	data,
-	columns,
-	state: {
-	    columnFilters,
-	    pagination,
-	    columnSizing
-	},
-	renderFallbackValue: '-',
-	onColumnFiltersChange: setColumnFilters,
-	onPaginationChange: setPagination,
-	columnResizeMode: 'onChange',
-	onColumnSizingChange: setColumnSizing,
-	getCoreRowModel: getCoreRowModel(),
-	getFilteredRowModel: getFilteredRowModel(),
-	getPaginationRowModel: getPaginationRowModel(),
-    });
-
     return (
 	<>
 	    <DataTable
-		table={table}
-		name='SLA Policies'
+		data={data}
+		columns={columns}
+		name='All Users'
 		isLoading={isLoading}
 		customActions={
 		    <Button onClick={() => handleOpenDialog()} className="flex items-center gap-1.5">

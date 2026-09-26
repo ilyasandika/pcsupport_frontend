@@ -1,11 +1,8 @@
 import {
     type ColumnDef,
-    type ColumnFiltersState,
     createColumnHelper,
-    getCoreRowModel, getFilteredRowModel, getPaginationRowModel,
-    useReactTable
 } from "@tanstack/react-table";
-import {useEffect, useMemo, useState} from "react";
+import {useMemo, useState} from "react";
 import DataTable from "./data-table.tsx";
 import {ActionButtons} from "./action-button.tsx";
 import type {IProject} from "@/types/project.type.ts";
@@ -116,39 +113,11 @@ export const ProjectTable = ({data, vendors, isLoading = false, onRefresh}: Proj
 	[]
     );
 
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-    const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
-    const [columnSizing, setColumnSizing] = useState(() => {
-	const savedSizes = localStorage.getItem('table-column-sizes-project');
-	return savedSizes ? JSON.parse(savedSizes) : {};
-    });
-
-    useEffect(() => {
-	localStorage.setItem('table-column-sizes-project', JSON.stringify(columnSizing));
-    }, [columnSizing]);
-
-    const table = useReactTable<IProject>({
-	data,
-	columns,
-	state: {
-	    columnFilters,
-	    pagination,
-	    columnSizing,
-	},
-	renderFallbackValue: '-',
-	onColumnFiltersChange: setColumnFilters,
-	onPaginationChange: setPagination,
-	columnResizeMode: 'onChange',
-	onColumnSizingChange: setColumnSizing,
-	getCoreRowModel: getCoreRowModel(),
-	getFilteredRowModel: getFilteredRowModel(),
-	getPaginationRowModel: getPaginationRowModel(),
-    });
-
     return (
 	<>
 	    <DataTable
-		table={table}
+		data={data}
+		columns={columns}
 		name='All Projects'
 		isLoading={isLoading}
 		customActions={

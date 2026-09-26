@@ -1,11 +1,8 @@
 import {
     type ColumnDef,
-    type ColumnFiltersState,
     createColumnHelper,
-    getCoreRowModel, getFilteredRowModel, getPaginationRowModel,
-    useReactTable
 } from "@tanstack/react-table";
-import {useEffect, useMemo, useState} from "react";
+import {useMemo, useState} from "react";
 import DataTable from "./data-table.tsx";
 import {ActionButtons} from "./action-button.tsx";
 import type {IVendor} from "@/types/vendor.type.ts";
@@ -127,39 +124,11 @@ export const VendorTable = ({data, isLoading = false, onRefresh}: VendorTablePro
 	[]
     );
 
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-    const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
-    const [columnSizing, setColumnSizing] = useState(() => {
-	const savedSizes = localStorage.getItem('table-column-sizes-vendor');
-	return savedSizes ? JSON.parse(savedSizes) : {};
-    });
-
-    useEffect(() => {
-	localStorage.setItem('table-column-sizes-vendor', JSON.stringify(columnSizing));
-    }, [columnSizing]);
-
-    const table = useReactTable<IVendor>({
-	data,
-	columns,
-	state: {
-	    columnFilters,
-	    pagination,
-	    columnSizing,
-	},
-	renderFallbackValue: '-',
-	onColumnFiltersChange: setColumnFilters,
-	onPaginationChange: setPagination,
-	columnResizeMode: 'onChange',
-	onColumnSizingChange: setColumnSizing,
-	getCoreRowModel: getCoreRowModel(),
-	getFilteredRowModel: getFilteredRowModel(),
-	getPaginationRowModel: getPaginationRowModel(),
-    });
-
     return (
 	<>
 	    <DataTable
-		table={table}
+		data={data}
+		columns={columns}
 		name='All Vendors'
 		isLoading={isLoading}
 		customActions={
@@ -168,6 +137,7 @@ export const VendorTable = ({data, isLoading = false, onRefresh}: VendorTablePro
 		    </Button>
 		}
 	    />
+
 	    <VendorDialog
 		open={dialogOpen}
 		onOpenChange={setDialogOpen}

@@ -1,6 +1,7 @@
 import {
     type ColumnDef,
-    createColumnHelper} from "@tanstack/react-table";
+    createColumnHelper
+} from "@tanstack/react-table";
 import {useMemo, useState} from "react";
 import DataTable from "./data-table.tsx";
 import {ActionButtons} from "./action-button.tsx";
@@ -232,9 +233,9 @@ export const UserTable = ({data, isLoading = false}: UserTableProps) => {
 		name='All Users'
 		isLoading={isLoading}
 		create={{
-		   label: "create new user",
-		   to: "/users/create",
-	       }}
+		    label: "create new user",
+		    to: "/users/create",
+		}}
 	    />
 	</>
     )

@@ -1,11 +1,8 @@
 import {
     type ColumnDef,
-    type ColumnFiltersState,
     createColumnHelper,
-    getCoreRowModel, getFilteredRowModel, getPaginationRowModel,
-    useReactTable
 } from "@tanstack/react-table";
-import {useEffect, useMemo, useState} from "react";
+import {useMemo, useState} from "react";
 import DataTable from "./data-table.tsx";
 import {ActionButtons} from "./action-button.tsx";
 import type {IDetailWorkLocation} from "@/types/work-location.type.ts";
@@ -24,29 +21,29 @@ interface WorkLocationTableProps {
 export const WorkLocationTable = ({data, isLoading = false, onRefresh}: WorkLocationTableProps) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedLocation, setSelectedLocation] = useState<IDetailWorkLocation | null>(null);
-    const { showNotification } = useNotificationDialog();
+    const {showNotification} = useNotificationDialog();
 
     const handleOpenDialog = (location?: IDetailWorkLocation) => {
-        setSelectedLocation(location || null);
-        setDialogOpen(true);
+	setSelectedLocation(location || null);
+	setDialogOpen(true);
     };
 
     const handleDelete = async (id: number | string, name: string) => {
-        try {
-            await WorkLocationRepository.remove(id);
-            showNotification({
-                variant: 'success',
-                title: 'Location Deleted',
-                description: `Work location "${name}" has been deleted successfully.`,
-            });
-            onRefresh?.();
-        } catch (error: any) {
-            showNotification({
-                variant: 'error',
-                title: 'Delete Failed',
-                description: error?.message || 'Could not delete work location.',
-            });
-        }
+	try {
+	    await WorkLocationRepository.remove(id);
+	    showNotification({
+		variant: 'success',
+		title: 'Location Deleted',
+		description: `Work location "${name}" has been deleted successfully.`,
+	    });
+	    onRefresh?.();
+	} catch (error: any) {
+	    showNotification({
+		variant: 'error',
+		title: 'Delete Failed',
+		description: error?.message || 'Could not delete work location.',
+	    });
+	}
     };
 
     const columnHelper = createColumnHelper<IDetailWorkLocation>();
@@ -60,7 +57,7 @@ export const WorkLocationTable = ({data, isLoading = false, onRefresh}: WorkLoca
 		    return (
 			<div>
 			    <div className="font-semibold text-gray-900 flex items-center gap-1.5">
-				<MapPin className="w-4 h-4 text-ptba-primary shrink-0" />
+				<MapPin className="w-4 h-4 text-ptba-primary shrink-0"/>
 				{location.name}
 			    </div>
 			    <div className="text-xs text-gray-500 line-clamp-1 mt-0.5">
@@ -98,7 +95,7 @@ export const WorkLocationTable = ({data, isLoading = false, onRefresh}: WorkLoca
 			    title="View on Google Maps"
 			>
 			    <span>Lat: {location.latitude}, Long: {location.longitude}</span>
-			    <ExternalLink className="w-3 h-3" />
+			    <ExternalLink className="w-3 h-3"/>
 			</a>
 		    );
 		}
@@ -133,44 +130,16 @@ export const WorkLocationTable = ({data, isLoading = false, onRefresh}: WorkLoca
 	[]
     );
 
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-    const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
-    const [columnSizing, setColumnSizing] = useState(() => {
-	const savedSizes = localStorage.getItem('table-column-sizes-work-location');
-	return savedSizes ? JSON.parse(savedSizes) : {};
-    });
-
-    useEffect(() => {
-	localStorage.setItem('table-column-sizes-work-location', JSON.stringify(columnSizing));
-    }, [columnSizing]);
-
-    const table = useReactTable<IDetailWorkLocation>({
-	data,
-	columns,
-	state: {
-	    columnFilters,
-	    pagination,
-	    columnSizing
-	},
-	renderFallbackValue: '-',
-	onColumnFiltersChange: setColumnFilters,
-	onPaginationChange: setPagination,
-	columnResizeMode: 'onChange',
-	onColumnSizingChange: setColumnSizing,
-	getCoreRowModel: getCoreRowModel(),
-	getFilteredRowModel: getFilteredRowModel(),
-	getPaginationRowModel: getPaginationRowModel(),
-    });
-
     return (
 	<>
 	    <DataTable
-		table={table}
+		data={data}
+		columns={columns}
 		name='Work Locations'
 		isLoading={isLoading}
 		customActions={
 		    <Button onClick={() => handleOpenDialog()} className="flex items-center gap-1.5">
-			<Plus className="w-4 h-4" /> Add Location
+			<Plus className="w-4 h-4"/> Add Location
 		    </Button>
 		}
 	    />
